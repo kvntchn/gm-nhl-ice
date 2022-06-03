@@ -1,0 +1,54 @@
+---
+output:
+  pdf_document:
+    keep_tex: true
+header-includes:
+- \usepackage{longtable}
+- \usepackage{setspace}\onehalfspacing
+- \usepackage{verbatim}
+- \usepackage{framed}
+- \usepackage{pgf}
+- \usepackage{pgfplots}
+- \pgfplotsset{compat=1.17}
+- \usepackage{tikz}
+- \usetikzlibrary{graphs, arrows, automata, positioning, decorations}
+- \tikzset{invisible/.style={opacity=0}, visible on/.style={alt={#1{}{invisible}}}, alt/.code args={<#1>#2#3}{\alt<#1>{\pgfkeysalso{#2}}{\pgfkeysalso{#3}}},}
+- \usepackage{textgreek}
+- \usepackage{framed}
+- \usepackage{xcolor}
+- \renewenvironment{quote}{\begin{minipage}{\linewidth}\colorlet{shadecolor}{orange!15}\begin{snugshade}}{\end{snugshade}\end{minipage}}
+- \usepackage{booktabs}
+- \usepackage{adjustbox}
+- \newcommand{\ind}{\perp\mkern-10mu\perp}
+bibliography: "`r path.expand('~/Box Sync/papers/EnvEpi.bib')`"
+csl: "`r path.expand('~/HeadRs/csl/asa.csl')`"
+---
+
+```{=tex}
+\renewcommand{\thetable}{S\arabic{table}}
+\renewcommand{\thefigure}{S\arabic{figure}}
+\renewcommand{\arraystretch}{1}
+```
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+	echo = F, results = 'asis',
+	warning = F,
+	tab.cap.tnd = 1,
+	ft.arraystretch = 1.15)
+if (!'tidyr' %in% loadedNamespaces()) {library(tidyverse)}
+library(flextable)
+```
+
+
+# Appendix
+
+```{r, tab.cap.pre="Table A"}
+str.flextab <- readRDS("str.flextab.rds")
+str.flextab
+```
+
+```{r}
+syn.flextab <- readRDS("syn.flextab.rds")
+syn.flextab
+```

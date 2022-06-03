@@ -1,0 +1,101 @@
+---
+# fontsize: 11pt
+# mainfont: arial
+output:
+  # pdf_document:
+  #   fig_caption: true
+  #   latex_engine: lualatex
+  #   includes:
+  #     in_header: "~/HeadRs/Stathead.sty"
+  #   keep_tex: true
+  bookdown::word_document2:
+    number_sections: false
+    global_numbering: true
+    reference_docx: "~/HeadRs/rmd_templates/style-guide-arial-11.docx"
+bibliography: "`r path.expand('~/Box Sync/papers/EnvEpi.bib')`"
+csl: "`r path.expand('~/HeadRs/csl/ama.csl')`"
+---
+
+\fancyhead[R]{}
+\fancyhead[L]{}
+\renewcommand{\headrulewidth}{0pt}
+\singlespacing
+
+\thispagestyle{empty}
+
+\setlength{\columnseprule}{0pt}
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo=F, results = 'asis')
+library(bibtex)
+biblio <- bibtex::read.bib('~/Box Sync/papers/EnvEpi.bib')
+```
+
+**Type of manuscript:** Original Research Article
+
+**Manuscript title:** Evaluating hypothetical limits on metalworking fluid exposure for reducing non-Hodgkin lymphoma incidence: An application of the hazard-extended iterative conditional expectation parametric g-formula
+
+**Authors:** Kevin T. Chen,^a,b^, Sally Picciotto^b^, Ellen A. Eisen^b^
+
+^a^ University of California, Berkeley School of Public Health, Division of Epidemiology \& Biostatistics
+
+^b^ University of California, Berkeley School of Public Health, Division of Environmental Health Sciences
+
+
+**Corresponding author:**\
+Kevin T. Chen\
+2121 Berkeley Way\
+Room 5302, Desk 5305-1\
+Berkeley, CA 94720-7360\
+kevchen@berkeley.edu\
+(510) 387-3327
+
+
+**Running head suggestion:** Limits on metalworking fluid for preventing NHL
+
+**Conflicts of interests:** Authors declare no conflicts of interest
+
+**Sources of financial support:** Supported by Training Grant T42OH008429, funded by the National Institute for Occupational Safety and Health (NIOSH) / Centers for Disease Control and Prevention (CDC)
+
+**Data and computing code:**
+
+\newpage
+
+# Abstract (250 words)
+
+**Background:** The second half of the 20th century saw a fourfold rise in non-Hodgkin lymphoma (NHL) incidence. Over the same period, concerns about the carcinogenicity of oil-based metalworking fluids (MWF) in automobile manufacturing fueled a transition to water-based soluble MWF. Soluble MWF, a complex mixture of diverse chemical additives, has become the most widely used class of MWF in the industry. We estimated the effect of limiting annual exposure to soluble MWF on NHL incidence in the United Auto Workers-General Motors (UAW-GM) Cohort Study (n = 33,138). We based our hypothetical interventions on the NIOSH recommended exposure limit (REL) of 0.5 mg/m3 for total MWF particulate mass.
+
+**Methods:** We estimated counterfactual cumulative incidence of NHL from 1985 to 2004 in the UAW-GM cohort of hourly autoworkers ever employed at 3 Michigan plants for at least 3 years. Using the hazard-extended iterative conditional expectation g-computation, we adjusted for time-varying confounding and censoring affected by prior exposure. We contrasted counterfactual cumulative incidence under no intervention on exposure to when annual soluble exposure was capped at the REL, half the REL, and a tenth of the REL. Confidence intervals were computed using the nonparametric bootstrap.
+
+Results: There were 211 NHL cases during the follow-up period. Lower annual soluble exposure resulted in lower cumulative incidence of NHL. The risk ratio when capping soluble exposure at the REL compared to no intervention was 0.90 (95% CI: 0.78, 1.03). The corresponding difference in cumulative incidence was -28 cases (95%CI: -63, 8 cases). Capping soluble exposure at a tenth of the REL resulted in a risk ratio of 0.84 (95% CI: 0.68, 1.00) and a difference in cumulative incidence of -45 cases (95%CI: -88, 1 case).
+Conclusion: The current REL was based on evidence linking MWF exposure to respiratory and skin diseases, rather than cancer, and may not be adequate to prevent NHL in exposed autoworkers.
+
+
+# What this study adds (100 words)
+
+\newpage
+
+
+```{r child = '01-introduction.rmd'}
+```
+
+
+
+```{r child = '02-methods.rmd'}
+```
+
+
+
+```{r child = '03-results.rmd'}
+```
+
+
+
+```{r child = '04-discussion.rmd'}
+```
+
+\newpage
+
+# Citations
+
+<div id="refs"></div>

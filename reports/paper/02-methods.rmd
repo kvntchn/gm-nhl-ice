@@ -1,0 +1,43 @@
+---
+output:
+  word_document:
+    reference_docx: "~/HeadRs/rmd_templates/style-guide-arial-11.docx"
+bibliography: "`r path.expand('~/Box Sync/papers/EnvEpi.bib')`"
+csl: "`r path.expand('~/HeadRs/csl/asa.csl')`"
+---
+
+```{r, include=FALSE, eval=F}
+knitr::opts_chunk$set(echo=F, results = 'asis')
+library(bibtex)
+biblio <- bibtex::read.bib('~/Box Sync/papers/EnvEpi.bib')
+```
+
+# Methods
+
+## Study population
+
+The UAW-GM Cohort includes hourly workers at three automobile manufacturing plants in Michigan who had worked at least 3 years by 1985. Past papers provide detailed descriptions of the cohort [@Eisen_1992;@Eisen_2001]. The present study population (N = 34,738) was restricted to the autoworkers who were at work in 1941 or not yet hired, alive at the start of follow-up, and missing no more than half of their employment history. Autoworkers in the study population were followed for NHL incidence from January 1, 1995 until NHL diagnosis, death, December 31, 2004, or upon reaching the oldest observed age at death, whichever came earlier.
+
+## Outcome and covariates
+
+We identified incident cancers in the UAW-GM Cohort that occurred between 1985 and 2004 by linkage to the Michigan Cancer Registry (MCR). Workers at Plants 1 and 2, located in the greater Detroit metropolitan area, were also linked to the Detroit Regional Registry of the Surveillance, Epidemiology, and End Results (SEER) Program. Cancer types were distinguished using site and histology codes conforming to the International classification of Diseases for Oncology, 3^rd^ edition (ICD-O-3). Non-Hodgkin lymphoma was defined by cancers with any of the following ICD-O-3 Histology codes: 9590-9597, 9670-9671, 9673, 9675, 9678-9680, 9684, 9687-9691, 9695, 9698-9702, 9705, 9708-9709, 9712, 9714-9719, 9724-9729, 9735, 9737-9738, 9811-9818, 9823, 9827, 9837. Details regarding cancer incidence follow-up are described elsewhere [@Colbeth_2022]. Vital status was ascertained by company records and by linkage to Social Security Administration, National Death Index, death certificate, and state mortality files.
+
+Covariates including year of hire, sex, race, and plant location were obtained from company records. Race data were missing for about 16% of the workers. In analyses, missing race was considered a distinct category of race.
+
+## Exposure
+
+For each combination of job type, department, and plant industrial hygienists collected several hundred personal and area samples for particulate matter (mg/m^3^) over the course of three decades to derive quantitative 8-hour time-weighted average exposure estimates to soluble, straight, and synthetic MWFs. Workers' time-weighted average annual exposure to each MWF type was determined according to employment records, which recorded time-varying job type, department, and plant. For employment records that were no less than half complete, gaps in the record were interpolated by carrying forward the last known job type. In each year, cumulative exposures to soluble, straight, and synthetic MWFs (mg/m^3^-years) were calculated by taking cumulative sums of average annual exposures. In analyses, MWF exposure was lagged 10 years. Exposure assessment is described in detail elsewhere [@Hallock_1994;@Woskie_1994;@Woskie_2003]. 
+
+## Statistical methods
+
+We applied the hazard-extended ICE parametric g-formula with pooling over treatment history [@Wen_2020] to estimate 20-year counterfactual risk of non-Hodgkin lymphoma under five hypothetical stochastic interventions on exposure to soluble MWFs with the elimination of censoring/competing risks. The first three interventions were static interventions that limited average annual exposure to soluble MWF to 0.5, 0.25, and 0.05 mg/m^3^. The remaining two were dynamic interventions that reduced average annual exposure to soluble MWF so that exposure to all MWF types was capped at 0.5 and 0.25 mg/m^3^, if possible. If those limits on total average annual exposure were not possible by intervention on soluble MWF alone, average annual exposure to soluble MWF was reduced to 0. Interventions were applied at hire, before the start of follow-up, through the end of follow-up. Person-years in which average annual exposure was below the hypothetical limits were not intervened upon. These hypothetical exposure limits reflect the Recommended Exposure Limit (REL) of the National Institute for Occupational Safety and Health (NIOSH) for total particulate mass from MWFs (0.5 mg/m^3^), half the REL (0.25 mg/m^3^), and a tenth of the REL (0.05 mg/m^3^) [@niosh_1998].
+
+The hazard-extended ICE parametric g-formula estimator is an ICE expression of the parametric g-formula estimator, further extended to incorporate the predicted hazard of past outcomes. This differs from the classical ICE estimator, which incorporates past outcome data as indicators [@Wen_2020]. Under the assumptions of conditional exchangeability at all time points, positivity, counterfactual consistency, and correct model specification, the hazard-extended parametric g-formula yields unbiased estimates of counterfactual risk with greater statistical efficiency than both propensity-score based estimators and the classical ICE g-formula.
+
+Our implementation of the hazard-extended ICE parametric g-formula involved a series of model-based standardization steps using logistic regression. Post-intervention estimates of the discrete hazard of NHL given all exposures and covariates were combined iteratively from the end of follow-up to the start. In each iteration, predicted discrete hazards were standardized over post-intervention exposure and covariate histories before combining with discrete hazards from the previous iteration. The result of this iterative process was sequentially-standardized estimates of the NHL risk over the entire follow-up period. Averaging over the baseline distribution of covariates yielded the counterfactual risk estimate of NHL when the intervention of interest was enforced for the entire study population.
+
+We split the 20-year follow-up period into eight periods; the first two periods spanned four years each, and the remaining six periods spanned two years each. Post-intervention exposure and exposure history were summarized as cumulative exposure. We modeled discrete hazards by fitting a pooled logistic regression for NHL over at-risk person-periods given cumulative exposure to straight, soluble, and synthetic MWFs, employment status, cumulative time off, year of hire, sex (male/female), race (Black/white/unknown), and plant (Plant 1/Plant 2/Plant 3). Cumulative exposure to MWFs, employment status, and cumulative time off were lagged 10 years. All continuous variables were represented as categorical variables with cut points determined by the tertiles of nonzero values among NHL cases. During the iterative combination of discrete hazards, we performed model-based standardization over baseline covariates and the complete set time-varying covariate histories.
+
+We estimated risk under the observed distribution of soluble MWF exposure (natural course) and under the five interventions. We contrasted the risk under intervention to that under the natural course by computing relative risks. Confidence intervals were computed using the nonparametric bootstrap with 1000 samples and centering on the estimate computed from observed data. In secondary analyses (Appendix), we repeated the analysis to evaluate interventions on exposure to straight and synthetic MWFs.
+
+<!-- GITHUB? -->

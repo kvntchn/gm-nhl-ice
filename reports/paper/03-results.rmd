@@ -1,0 +1,396 @@
+---
+output:
+  bookdown::word_document2:
+    number_sections: false
+    global_numbering: true
+    reference_docx: "~/HeadRs/rmd_templates/style-guide-arial-11.docx"
+bibliography: "`r path.expand('~/Box Sync/papers/EnvEpi.bib')`"
+csl: "`r path.expand('~/HeadRs/csl/asa.csl')`"
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = F, results = 'asis',
+											tab.cap.tnd = 1)
+if (!'tidyr' %in% loadedNamespaces()) {library(tidyverse)}
+library(flextable)
+library(data.table)
+```
+
+# Results
+
+```{r}
+source(here::here("../gm-wrangling/wrangling/table1.R"))
+clean.tab1 <- function(tab1) {
+	# hspace.which <- grepl("\\\\hspace\\{.*\\}", rownames(tab1))
+	rownames(tab1) <- gsub("\\\\hspace\\{.*\\}|\\\\hline |\\$.*\\$| among deceased", "", rownames(tab1))
+	
+	tab1[!grepl("median", tab1[,4]) & !is.na(tab1[,1]), 2]  <-  paste0(
+		"(",
+		tab1[!grepl("median", tab1[,4]) & !is.na(tab1[,1]), 2],
+		")"
+	)
+	
+	
+	tab1[grepl("median", tab1[,4]) & !is.na(tab1[,1]), 2] <- paste0(
+		"(", tab1[grepl("median", tab1[,4]) & !is.na(tab1[,1]), 2], ", ",
+		tab1[grepl("median", tab1[,4]) & !is.na(tab1[,1]), 3],
+		")"
+	)
+	
+	return(tab1[,1:2])
+}
+full.tab1 <- readRDS(here::here("resources", "tab1.rds"))
+nhl.tab1 <- readRDS(here::here("resources", "nhl.tab1.rds"))
+
+tab1.clean <- clean.tab1(full.tab1)
+nhl.tab1.clean <- clean.tab1(nhl.tab1)
+
+tab1 <- cbind(hspace.logical = grepl("\\\\hspace\\{.*\\}", rownames(full.tab1)),
+							variable = rownames(tab1.clean), tab1.clean, NA, nhl.tab1.clean)
+
+tab1 <- tab1[!grepl("Years of follow-up", rownames(tab1)),]
+tab1$variable[1] <- "N (person-years)"
+```
+
+Table 1 presents summary statistics of exposure and covariates for the full study population and for those diagnosed with NHL between 1985 and 2004. The cohort is predominantly white (66%) and male (87%). Plant 2 employed the largest number of workers while Plant 1 employed the fewest. The median year of hire among those diagnosed with NHL was 1959 whereas the median year of hire in the full study population was 1967. Age at hire was approximately the same among those with NHL and the full study population. Median lagged cumulative exposure to all three MWF types was higher among NHL cases. Soluble MWFs were the most widely used MWF type, with approximately 90% of workers ever exposed. Median cumulative exposure among exposed was 6.5 times higher for soluble than for straight MWFs. Figure 1 shows median average annual exposure to the three MWF types among exposed workers over calendar time. Exposure to MWF generally followed a downward trend over time. Figure 2 shows the post-intervention distribution of the logarithm of cumulative exposure to soluble MWF at end of follow-up if hypothetical limits on average annual exposure were enforced for all workers starting at hire. The interventions shifted the distribution of cumulative exposure rather than deterministically assigning exposure to a particular value.
+
+```{r}
+# tab1 <- tab1[tab1.which,]
+tab1[,-grep("hspace.logical", colnames(tab1))] %>% 
+	data.frame %>% flextable() %>%
+	delete_part(part = "header") %>%
+	add_header_row(values = c("", "Study population", "", "NHL cases"),
+								 colwidths = c(1, 2, 1, 2)) %>%
+	hline_top(part = "header") %>%
+	hline_top() %>% hline_bottom() %>%
+	hline(which((grepl("[0-9]\\)", tab1$spread))[-1])[1]) %>% width(4, 0.1) %>%
+	width(1, 2.2) %>% width(c(3, 6), 1.1) %>% width(c(2, 5), 0.65) %>%
+	flextable::compose(
+		i = grep("Cumulative exposure", rownames(tab1)), j = 1,
+		value = as_paragraph("Cumulative exposure to MWFs (mg/m",
+												 as_sup("3"), "-years)")) %>%
+	flextable::align(j = 2:6, align = "center", part = "all") %>%
+	footnote(i = grep("Plant$", rownames(tab1)), j = 1, value = as_paragraph(
+		" Plant of longest employment duration among those who worked at multiple plants"),
+		ref_symbols = "a", inline = T) %>%
+	footnote(i = grep("Ever exposed|time off", rownames(tab1)), j = 1, value = as_paragraph(
+		" Lagged 10 years"),
+		ref_symbols = "b", inline = T) %>%
+	footnote(i = grep("work", rownames(tab1)), j = 1, value = as_paragraph(
+		" Among those who left work by December 31, 1994"),
+		ref_symbols = "c", inline = T) %>%
+	# footnote(i = grep("death", rownames(tab1)), j = 1, value = as_paragraph(
+	# 	" Among deceased"),
+	# 	ref_symbols = "d", inline = T) %>%
+	footnote(i = grep("Cumulative exposure", rownames(tab1)), j = 1, value = as_paragraph(
+		" Among ever-exposed individuals, lagged 10 years."),
+		ref_symbols = "d", inline = T) %>%
+	add_footer_row(values = "NHL: non-Hodgkin lymphoma.", colwidths = 6) %>%
+	padding(padding = 1.5, part = "all") %>%
+	padding(
+		i = which(tab1$hspace.logical),
+		j = 1,
+		padding.left = 20
+	) %>%
+	merge_at(i = grep("Cumulative exposure", rownames(tab1))) %>%
+	hline_bottom(part = "footer") %>% font(fontname = 'arial') %>%
+	set_caption(caption = "Summary of population characteristics. Statistics shown above the horizontal line are count (%). Those shown below are median (quartile 1, quartile 3).")
+```
+\
+
+![Figure 1. Median average annual exposure to straight, soluble, and synthetic metalworking fluids among exposed workers over time.](`r here::here("resources/images", "exposure.png")`){width=6.5in}
+
+\
+
+![Figure 2. Post-intervention distribution of cumulative exposure to soluble metalworking fluids at end of follow-up under hypothetical limits on average annual exposure (mg/m^3^). The rugplot shows maximum cumulative exposure accrued by non-Hodgkin lymphoma cases.](`r here::here("resources/images", "shift-soluble.png")`){width=4in}
+
+```{r}
+intervened_py <- readRDS(here::here("resources", "percent-py-intervened.rds"))
+# paste(paste0("\"", intervened_py$dt.name, "\""), collapse = ",\n") %>% clipr::write_clip()
+dat.names <- data.table(
+	dt.name = c(
+		"dat.sol.reduced", "dat.sol.reduced2", "dat.sol.reduced10",
+		"dat.sol_total.reduced", "dat.sol_total.reduced2",
+		"dat.str.reduced", "dat.str.reduced2", "dat.str.reduced10",
+		"dat.str_total.reduced", "dat.str_total.reduced2",
+		"dat.syn.reduced", "dat.syn.reduced2", "dat.syn.reduced10",
+		"dat.syn_total.reduced", "dat.syn_total.reduced2"),
+	variable.dat = c(
+		"soluble", "soluble2", "soluble10",
+		"total by soluble", "total by soluble2",
+		"straight", "straight2", "straight10",
+		"total by straight", "total by straight2",
+		"synthetic", "synthetic2", "synthetic10",
+		"total by synthetic", "total by synthetic2"
+	)
+)
+intervened_py <- as.data.table(merge(
+	intervened_py, dat.names,
+	by = "dt.name"))
+intervened_py <- rbindlist(list(
+	data.table(dt.name = NA,
+						 mwf = NA, percent_py_intervened = 0,
+						 variable.dat = "natural"),
+	intervened_py
+))
+```
+
+```{r}
+load(here::here("resources", paste0("h.estimates.rdata")))
+estimates.bs <- readRDS(here::here("resources", paste0("estimates.bs.rds")))
+```
+
+```{r}
+do.call(cbind, lapply(estimates.bs[,-(1:2)], function(x) {
+	x/estimates.bs[,2]
+})) %>% melt(measure.vars = names(.)) -> rr.bs
+
+estimates.bs[,-1] %>% melt(measure.vars = names(.)) -> risk.bs
+
+# Collect point estimates
+point_estimates <- data.table(
+	variable = c(
+		"straight", "total by straight", "straight2", "total by straight2",
+		"straight10",
+		"soluble", "total by soluble", "soluble2", "total by soluble2",
+		"soluble10",
+		"synthetic", "total by synthetic", "synthetic2", "total by synthetic2",
+		"synthetic10",
+		"scale all", "scale all2", "natural"),
+	estimate = c(
+		h.reduction.str, h.reduction.str_total, h.reduction.str2, h.reduction.str_total2,
+		h.reduction.str10,
+		h.reduction.sol, h.reduction.sol_total, h.reduction.sol2, h.reduction.sol_total2,
+		h.reduction.sol10,
+		h.reduction.syn, h.reduction.syn_total, h.reduction.syn2, h.reduction.syn_total2,
+		h.reduction.syn10,
+		h.reduction.total, h.reduction.total, h.baseline)
+)
+
+# Calculate risk ratios for each bootstrap sample
+rr <- merge(
+	rr.bs,
+	point_estimates[,.(
+		variable = paste0(variable, ".natural"),
+		estimate = estimate/estimate[variable == "natural"]
+	)],
+	all = T,
+	by = "variable")
+
+# Get lower and upper 2.5th %tiles
+rr <- rr[,.(estimate = estimate[1],
+			lower = {
+				x <- value
+				x[!is.na(x)] <- quantile(x[!is.na(x)], 0.025) - mean(x[!is.na(x)]) + estimate[1]},
+			upper = {
+				x <- value
+				x[!is.na(x)] <- quantile(x[!is.na(x)], 1 - 0.025) - mean(x[!is.na(x)]) + estimate[1]}
+			# wald.lower = exp(log(estimate[1]) + qnorm(0.025) * sd(log(value))),
+			# wald.upper = exp(log(estimate[1]) - qnorm(0.025) * sd(log(value)))
+			),
+	 variable]
+
+# Colleect risks
+risks <- merge(
+	risk.bs,
+	point_estimates,
+	all = T,
+	by = "variable")
+
+# Get lower and upper 2.5th %tiles
+risks <- risks[,.(estimate = estimate[1],
+			lower = {
+				x <- value
+				x[!is.na(x)] <- quantile(x[!is.na(x)], 0.025) - mean(x[!is.na(x)]) + estimate[1]},
+			upper = {
+				x <- value
+				x[!is.na(x)] <- quantile(x[!is.na(x)], 1 - 0.025) - mean(x[!is.na(x)]) + estimate[1]}
+			# wald.lower = exp(log(estimate[1]) + qnorm(0.025) * sd(log(value))),
+			# wald.upper = exp(log(estimate[1]) - qnorm(0.025) * sd(log(value)))
+			),
+	 .(variable.risks = variable)]
+```
+
+```{r}
+intervention.labels <- data.table(
+	variable = c(
+		"natural", "straight", "soluble", "synthetic",
+		"straight2", "soluble2", "synthetic2",
+		"straight10", "soluble10", "synthetic10",
+		"total by straight", "total by soluble", "total by synthetic",
+		"total by straight2", "total by soluble2", "total by synthetic2",
+		"scale all", "scale all2"
+	),
+	label = c(
+		"None", rep("0.5", 3), rep("0.25", 3), rep("0.05", 3),
+		"max(0, 0.5 - sol - syn)", "max(0, 0.5 - str - syn)", "max(0, 0.5 - str - sol)",
+		"max(0, 0.25 - sol - syn)", "max(0, 0.25 - str - syn)", "max(0, 0.25 - str - sol)",
+		"scale all to 0.5", "scale all to 0.25"
+	)
+)
+# Add intervention labels
+rr <- merge(
+	rr, intervention.labels[,.(variable = paste0(variable, ".natural"), label)],
+	all.x = T,
+	by = "variable"
+)
+```
+
+```{r}
+clean_percent_py <- function(variable, digits = 1, scale = 100) {
+	sprintf(paste0("%.", digits, "f"), round(
+		intervened_py[match(
+	 		sapply(variable, gsub, pattern = ".natural", replacement = ""),
+	 		variable.dat
+	), percent_py_intervened] * scale,
+	digits))
+}
+
+clean_risk <- function(variable, digits = 2, scale = 1000) {
+	sprintf(paste0("%.", digits, "f"), round(risks[match(
+	 		sapply(variable, gsub, pattern = ".natural", replacement = ""),
+	 		variable.risks
+	), estimate] * scale, digits))
+}
+
+clean_risk.ci <- function(variable, digits = 2, scale = 1000) {
+	 		x <- risks[match(
+	 		sapply(variable, gsub, pattern = ".natural", replacement = ""),
+	 		variable.risks
+	 		),.(lower, upper)]
+	 		ifelse(!is.na(x$lower), paste0(
+	 			"(",
+	 			sprintf(paste0("%.", digits, "f"), round(x$lower * scale, 2)),
+	 			", ", 
+	 			sprintf(paste0("%.", digits, "f"), round(x$upper * scale, 2)),
+	 			")"), NA)
+}
+
+clean_rr.ci <- function(estimate, lower, upper, digits = 2) {
+	ifelse(!is.na(lower), paste0(
+		"(",
+		sprintf(paste0("%.", digits, "f"), round(lower, digits)),
+		", ",
+		sprintf(paste0("%.", digits, "f"), round(upper, digits)),
+		")"), NA)
+}
+
+mwf.flextable <- function(x) {
+	flextable::compose(x, j = c(4, 6), value = as_paragraph(rep("(95% CI)", 2)),
+		part = "header"
+	) %>%
+	border_remove() %>%
+	hline_top(part = "header") %>%
+	hline_top() %>% hline_bottom() %>%
+	flextable::align(j = 2:6, align = "center", part = "all") %>%
+	width(width = c(1.7, 1.1, 0.7, 1, 0.5, 1)) %>%
+	padding(padding = 1.5, part = "all")
+}
+```
+
+The observed risk of NHL over the 20-year follow-up period was 6.65 per 1000. Table 2 presents the hazard-extended ICE parametric g-formula estimates of the risk and risk ratios contrasting hypothetical limits on exposure to soluble MWF to no limit, with elimination of competing risks throughout. The estimated risk under no limit on MWF exposure was 9.56 (8.15, 10.89) per 1000. Stronger limits on average annual exposure to soluble MWFs resulted in monotonically stronger reductions in the risk of NHL. Capping average annual exposure to soluble MWFs at the NIOSH REL of 0.5 mg/m^3^ and a tenth of the REL resulted in a risk of 8.30 (6.52, 10.19) and 7.52 (5.73, 9.51) per 1000, respectively. The risk ratios contrasting these hypothetical limits to no limit were 0.87 (0.72, 1.02) and 0.79 (0.62, 0.97). Dynamic reductions in soluble exposure with the aim of limiting total MWF exposure to the REL and half the REL also yielded protective risk ratios: 0.84 (0.69, 0.99) and 0.80 (0.64, 0.98). These dynamic interventions attain risk reductions of similar magnitude as the static interventions enforcing exposure limits at 0.25 and 0.05 mg/m^3^, but do so while intervening on a smaller proportion of person-years.
+
+Results for interventions on straight and synthetic MWF are presented in Tables S1 and S2 in the Appendix. The relative risks contrasting interventions on straight and synthetic MWF exposure to the natural course were much smaller in magnitude than those for soluble; none were statistically significant. Since exposure to soluble MWF was greatest in prevalence and magnitude, limits on soluble MWF would result in interventions on a greater percentage of person-years than limits on straight or synthetic MWF. The intervention capping average annual exposure to soluble MWF at the REL affected 23.8% of the person-years in the follow-up period. Limiting straight and synthetic MWF exposure to the REL affected 3.2% and 1.1% of the person-years under follow-up, respectively.
+
+```{r, eval=F}
+tikzDevice::tikz(here::here("reports/ACIC (2022)/poster/resources/rr.tex"),
+								 width = 4, height = 1.75,
+								 standAlone = T)
+rr[grepl("sol|natural\\.natural", variable) & !grepl(
+	"[a-z]", label),] %>% ggplot(
+	aes(x = factor(label,
+								 rev(c("0.5", "0.25", "0.05"))), y = estimate,
+			ymin = lower, ymax = upper)
+) +
+	geom_errorbar(size = 0.5, width = 0.15, color = '#102451') +
+	geom_point(size = 0.9, color = '#102451') + 
+	geom_hline(yintercept = 1, lty = 2, color = '#102451', alpha = 0.7) + mytheme + labs(
+	y = "Risk ratio",
+	x = "Hypothetical limit (mg/m$^3$)"
+) +
+	coord_flip(ylim = c(0.5, 1.2)) +
+	theme(panel.grid = element_blank())
+dev.off()
+
+lualatex(directory = here::here("reports/ACIC (2022)/poster/resources"))
+```
+
+```{r}
+rr[grepl("sol|natural\\.natural", variable),.(
+	 	label,
+	 	`Person-years intervened (%)` = clean_percent_py(variable),
+	 	`Risk per 1000` = clean_risk(variable, scale = 1000), # 34737),
+	 	`(risk 95% CI)` = clean_risk.ci(variable, scale = 1000), # 34737),
+	 	RR              = sprintf("%.2f", round(estimate, 2)),
+	 	`(RR 95% CI)`   = clean_rr.ci(estimate, lower, upper)
+	 )][c(1, 2, 4, 3, 5, 6),] -> sol.tab
+
+sol.tab %>% flextable %>%
+	flextable::compose(j = 1, value = as_paragraph(
+				"Exposure limit on soluble MWF (mg/m", as_sup("3"), ")"),
+		part = "header"
+	) %>% mwf.flextable %>%
+	width(width = c(1.7, 1.1, 0.65, 1.1, 0.65, 0.9)) %>%
+	add_footer_row(values = paste(
+		"MWF: metalworking fluid;",
+		"str: exposure to straight metalworking fluids;",
+		"syn: exposure to synthetic metalworking fluids.",
+		sep = "\n"), colwidths = 6) %>%
+	hline_bottom(part = "footer") %>%
+	set_caption(caption = "Counterfactual risks (per 1000)  and risk ratios contrasting interventions on soluble MWF to the observed course.")
+	
+```
+\
+
+
+```{r}
+rr[grepl("str|natural\\.natural", variable),.(
+	 	label,
+	 	`Person-years intervened (%)` = clean_percent_py(variable),
+	 	`Risk per 1000` = clean_risk(variable),
+	 	`(risk 95% CI)` = clean_risk.ci(variable),
+	 	RR              = sprintf("%.2f", round(estimate, 2)),
+	 	`(RR 95% CI)`   = clean_rr.ci(estimate, lower, upper)
+	 )][c(1, 2, 4, 3, 5, 6),] -> str.tab
+
+str.tab %>% flextable %>%
+	flextable::compose(j = 1, value = as_paragraph(
+				"Exposure limit on straight MWF (mg/m", as_sup("3"), ")"),
+		part = "header"
+	) %>% mwf.flextable %>%
+	add_footer_row(values = paste(
+		"MWF: metalworking fluid;",
+		"sol: exposure to soluble metalworking fluids;",
+		"syn: exposure to synthetic metalworking fluids.",
+		sep = "\n"), colwidths = 6) %>%
+	hline_bottom(part = "footer") %>%
+	set_caption(caption = "Counterfactual risks (per 1000)  and risk ratios contrasting interventions on straight MWF to the observed course.") -> str.flextab
+saveRDS(str.flextab, "str.flextab.rds")
+```
+\
+
+
+```{r}
+rr[grepl("syn|natural\\.natural", variable),.(
+	 	label,
+	 	`Person-years intervened (%)` = clean_percent_py(variable),
+	 	`Risk per 1000` = clean_risk(variable),
+	 	`(risk 95% CI)` = clean_risk.ci(variable),
+	 	RR              = sprintf("%.2f", round(estimate, 2)),
+	 	`(RR 95% CI)`   = clean_rr.ci(estimate, lower, upper)
+	 )][c(1, 2, 4, 3, 5, 6),] -> syn.tab
+
+syn.tab %>% flextable %>%
+	flextable::compose(j = 1, value = as_paragraph(
+				"Exposure limit on synthetic MWF (mg/m", as_sup("3"), ")"),
+		part = "header"
+	) %>% mwf.flextable %>%
+	add_footer_row(values = paste(
+		"MWF: metalworking fluid;",
+		"str: exposure to straight metalworking fluids;",
+		"sol: exposure to soluble metalworking fluids.",
+		sep = "\n"), colwidths = 6) %>%
+	hline_bottom(part = "footer") %>%
+	set_caption(caption = "Counterfactual risks (per 1000)  and risk ratios contrasting interventions on synthetic MWF to the observed course.") -> syn.flextab
+saveRDS(syn.flextab, "syn.flextab.rds")
+```
