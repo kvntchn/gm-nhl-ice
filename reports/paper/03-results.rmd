@@ -52,7 +52,8 @@ tab1 <- tab1[!grepl("Years of follow-up", rownames(tab1)),]
 tab1$variable[1] <- "N (person-years)"
 ```
 
-Table 1 presents summary statistics of exposure and covariates for the full study population and for those diagnosed with NHL between 1985 and 2004. The cohort is predominantly white (66%) and male (87%). Plant 2 employed the largest number of workers while Plant 1 employed the fewest. The median year of hire among those diagnosed with NHL was 1959 whereas the median year of hire in the full study population was 1967. Age at hire was approximately the same among those with NHL and the full study population. Median lagged cumulative exposure to all three MWF types was higher among NHL cases. Soluble MWFs were the most widely used MWF type, with approximately 90% of workers ever exposed. Median cumulative exposure among exposed was 6.5 times higher for soluble than for straight MWFs. Figure 1 shows median average annual exposure to the three MWF types among exposed workers over calendar time. Exposure to MWF generally followed a downward trend over time. Figure 2 shows the post-intervention distribution of the logarithm of cumulative exposure to soluble MWF at end of follow-up if hypothetical limits on average annual exposure were enforced for all workers starting at hire. The interventions shifted the distribution of cumulative exposure rather than deterministically assigning exposure to a particular value.
+Table 1 presents summary statistics of exposure and covariates for the full study population and for those diagnosed with NHL between 1985 and 2004. The cohort is predominantly white (66%) and male (87%). The median year of hire among those diagnosed with NHL was 1959 whereas the median year of hire in the full study population was almost a decade later. Age at hire was approximately the same among those with NHL and the full study population. Median lagged cumulative exposure to all three MWF types was higher among NHL cases. Soluble MWFs were the most widely used MWF type, with approximately 90% of workers ever exposed. Median cumulative exposure among the exposed was 6.5 times higher for soluble than for straight MWFs. Figure 2 shows median average annual exposure to the three MWF types among exposed workers over calendar time. Exposure to MWF generally followed a downward trend over time.
+<!-- Figure 2 shows the post-intervention distribution of the logarithm of cumulative exposure to soluble MWF at end of follow-up if hypothetical limits on average annual exposure were enforced for all workers starting at hire. The interventions shifted the distribution of cumulative exposure rather than deterministically assigning exposure to a particular value. -->
 
 ```{r}
 # tab1 <- tab1[tab1.which,]
@@ -98,11 +99,7 @@ tab1[,-grep("hspace.logical", colnames(tab1))] %>%
 ```
 \
 
-![Figure 1. Median average annual exposure to straight, soluble, and synthetic metalworking fluids among exposed workers over time.](`r here::here("resources/images", "exposure.png")`){width=6.5in}
-
-\
-
-![Figure 2. Post-intervention distribution of cumulative exposure to soluble metalworking fluids at end of follow-up under hypothetical limits on average annual exposure (mg/m^3^). The rugplot shows maximum cumulative exposure accrued by non-Hodgkin lymphoma cases.](`r here::here("resources/images", "shift-soluble.png")`){width=4in}
+![Figure 2. Median average annual exposure to soluble, straight, and synthetic metalworking fluids among exposed workers over time.](`r here::here("resources/images", "exposure.png")`){width=6.5in}
 
 ```{r}
 intervened_py <- readRDS(here::here("resources", "percent-py-intervened.rds"))
@@ -111,17 +108,23 @@ dat.names <- data.table(
 	dt.name = c(
 		"dat.sol.reduced", "dat.sol.reduced2", "dat.sol.reduced10",
 		"dat.sol_total.reduced", "dat.sol_total.reduced2",
+		"dat.sol_total.reduced10",
 		"dat.str.reduced", "dat.str.reduced2", "dat.str.reduced10",
 		"dat.str_total.reduced", "dat.str_total.reduced2",
+		"dat.str_total.reduced10",
 		"dat.syn.reduced", "dat.syn.reduced2", "dat.syn.reduced10",
-		"dat.syn_total.reduced", "dat.syn_total.reduced2"),
+		"dat.syn_total.reduced", "dat.syn_total.reduced2",
+		 "dat.syn_total.reduced10"),
 	variable.dat = c(
 		"soluble", "soluble2", "soluble10",
 		"total by soluble", "total by soluble2",
+		 "total by soluble10",
 		"straight", "straight2", "straight10",
 		"total by straight", "total by straight2",
+		 "total by straight10",
 		"synthetic", "synthetic2", "synthetic10",
-		"total by synthetic", "total by synthetic2"
+		"total by synthetic", "total by synthetic2",
+		 "total by synthetic10"
 	)
 )
 intervened_py <- as.data.table(merge(
@@ -151,20 +154,20 @@ estimates.bs[,-1] %>% melt(measure.vars = names(.)) -> risk.bs
 point_estimates <- data.table(
 	variable = c(
 		"straight", "total by straight", "straight2", "total by straight2",
-		"straight10",
+		"straight10", "total by straight10",
 		"soluble", "total by soluble", "soluble2", "total by soluble2",
-		"soluble10",
+		"soluble10", "total by soluble10",
 		"synthetic", "total by synthetic", "synthetic2", "total by synthetic2",
-		"synthetic10",
-		"scale all", "scale all2", "natural"),
+		"synthetic10", "total by synthetic10",
+		"natural"),
 	estimate = c(
 		h.reduction.str, h.reduction.str_total, h.reduction.str2, h.reduction.str_total2,
-		h.reduction.str10,
+		h.reduction.str10, h.reduction.str_total10,
 		h.reduction.sol, h.reduction.sol_total, h.reduction.sol2, h.reduction.sol_total2,
-		h.reduction.sol10,
+		h.reduction.sol10, h.reduction.sol_total10,
 		h.reduction.syn, h.reduction.syn_total, h.reduction.syn2, h.reduction.syn_total2,
-		h.reduction.syn10,
-		h.reduction.total, h.reduction.total, h.baseline)
+		h.reduction.syn10,h.reduction.syn_total10,
+		h.baseline)
 )
 
 # Calculate risk ratios for each bootstrap sample
@@ -219,13 +222,13 @@ intervention.labels <- data.table(
 		"straight10", "soluble10", "synthetic10",
 		"total by straight", "total by soluble", "total by synthetic",
 		"total by straight2", "total by soluble2", "total by synthetic2",
-		"scale all", "scale all2"
+		"total by straight10", "total by soluble10", "total by synthetic10"
 	),
 	label = c(
 		"None", rep("0.5", 3), rep("0.25", 3), rep("0.05", 3),
-		"max(0, 0.5 - sol - syn)", "max(0, 0.5 - str - syn)", "max(0, 0.5 - str - sol)",
-		"max(0, 0.25 - sol - syn)", "max(0, 0.25 - str - syn)", "max(0, 0.25 - str - sol)",
-		"scale all to 0.5", "scale all to 0.25"
+		"max(0, 0.5 – sol – syn)", "max(0, 0.5 – str – syn)", "max(0, 0.5 – str – sol)",
+		"max(0, 0.25 – sol – syn)", "max(0, 0.25 – str – syn)", "max(0, 0.25 – str – sol)",
+		"max(0, 0.05 – sol – syn)", "max(0, 0.05 – str – syn)", "max(0, 0.05 – str – sol)"
 	)
 )
 # Add intervention labels
@@ -288,9 +291,9 @@ mwf.flextable <- function(x) {
 }
 ```
 
-The observed risk of NHL over the 20-year follow-up period was 6.65 per 1000. Table 2 presents the hazard-extended ICE parametric g-formula estimates of the risk and risk ratios contrasting hypothetical limits on exposure to soluble MWF to no limit, with elimination of competing risks throughout. The estimated risk under no limit on MWF exposure was 9.56 (8.15, 10.89) per 1000. Stronger limits on average annual exposure to soluble MWFs resulted in monotonically stronger reductions in the risk of NHL. Capping average annual exposure to soluble MWFs at the NIOSH REL of 0.5 mg/m^3^ and a tenth of the REL resulted in a risk of 8.30 (6.52, 10.19) and 7.52 (5.73, 9.51) per 1000, respectively. The risk ratios contrasting these hypothetical limits to no limit were 0.87 (0.72, 1.02) and 0.79 (0.62, 0.97). Dynamic reductions in soluble exposure with the aim of limiting total MWF exposure to the REL and half the REL also yielded protective risk ratios: 0.84 (0.69, 0.99) and 0.80 (0.64, 0.98). These dynamic interventions attain risk reductions of similar magnitude as the static interventions enforcing exposure limits at 0.25 and 0.05 mg/m^3^, but do so while intervening on a smaller proportion of person-years.
+The observed risk of NHL over the 20-year follow-up period was 6.65 per 1000. Table 2 presents the hazard-extended ICE parametric g-formula estimates of the risk and risk ratios contrasting hypothetical limits on exposure to soluble MWF to no limit, after elimination of competing risks. The estimated risk under no limit on MWF exposure was 9.56 (8.15, 10.89) per 1000. Stronger limits on average annual exposure to soluble MWFs resulted in monotonically stronger reductions in the risk of NHL. Capping average annual exposure to soluble MWFs at 0.5 mg/m^3^, 0.25 mg/m^3^, and 0.05 mg/m^3^ resulted in a risk of 8.30 (6.52, 10.19), 8.06 (6.15, 10.15), and 7.52 (5.73, 9.51) per 1000, respectively. The risk ratios contrasting these hypothetical limits to no limit were 0.87 (0.72, 1.02), 0.84 (0.68, 1.01), and 0.79 (0.62, 0.97). Dynamic reductions in soluble exposure with the aim of capping total MWF exposure also yielded monotonically protective risk ratios: 0.84 (0.69, 0.99), 0.80 (0.64, 0.98), and 0.72 (0.48, 1.01). The dynamic interventions seeking to cap total MWF exposure at 0.5 mg/m^3^ and 0.25 mg/m^3^ attained risk reductions of similar magnitude as the static interventions enforcing (stronger) exposure limits at 0.25 and 0.05 mg/m^3^, respectively, but do so while intervening on a smaller proportion of person-years.
 
-Results for interventions on straight and synthetic MWF are presented in Tables S1 and S2 in the Appendix. The relative risks contrasting interventions on straight and synthetic MWF exposure to the natural course were much smaller in magnitude than those for soluble; none were statistically significant. Since exposure to soluble MWF was greatest in prevalence and magnitude, limits on soluble MWF would result in interventions on a greater percentage of person-years than limits on straight or synthetic MWF. The intervention capping average annual exposure to soluble MWF at the REL affected 23.8% of the person-years in the follow-up period. Limiting straight and synthetic MWF exposure to the REL affected 3.2% and 1.1% of the person-years under follow-up, respectively.
+<!-- Results for interventions on straight and synthetic MWF are presented in Tables S1 and S2 in the Appendix. The relative risks contrasting interventions on straight and synthetic MWF exposure to the natural course were much smaller in magnitude than those for soluble; none were statistically significant. Since exposure to soluble MWF was greatest in prevalence and magnitude, limits on soluble MWF would result in interventions on a greater percentage of person-years than limits on straight or synthetic MWF. The intervention capping average annual exposure to soluble MWF at the REL affected 23.8% of the person-years in the follow-up period. Limiting straight and synthetic MWF exposure to the REL affected 3.2% and 1.1% of the person-years under follow-up, respectively. -->
 
 ```{r, eval=F}
 tikzDevice::tikz(here::here("reports/ACIC (2022)/poster/resources/rr.tex"),
@@ -323,7 +326,9 @@ rr[grepl("sol|natural\\.natural", variable),.(
 	 	`(risk 95% CI)` = clean_risk.ci(variable, scale = 1000), # 34737),
 	 	RR              = sprintf("%.2f", round(estimate, 2)),
 	 	`(RR 95% CI)`   = clean_rr.ci(estimate, lower, upper)
-	 )][c(1, 2, 4, 3, 5, 6),] -> sol.tab
+	 )][c(1, 2, 4, 3, 5, 7, 6),] -> sol.tab
+
+# saveRDS(sol.tab, here::here('resources', 'sol.tab.rds'))
 
 sol.tab %>% flextable %>%
 	flextable::compose(j = 1, value = as_paragraph(
@@ -340,7 +345,7 @@ sol.tab %>% flextable %>%
 	set_caption(caption = "Counterfactual risks (per 1000)  and risk ratios contrasting interventions on soluble MWF to the observed course.")
 	
 ```
-\
+
 
 
 ```{r}
@@ -351,7 +356,7 @@ rr[grepl("str|natural\\.natural", variable),.(
 	 	`(risk 95% CI)` = clean_risk.ci(variable),
 	 	RR              = sprintf("%.2f", round(estimate, 2)),
 	 	`(RR 95% CI)`   = clean_rr.ci(estimate, lower, upper)
-	 )][c(1, 2, 4, 3, 5, 6),] -> str.tab
+	 )][c(1, 2, 4, 3, 5, 7, 6),] -> str.tab
 
 str.tab %>% flextable %>%
 	flextable::compose(j = 1, value = as_paragraph(
@@ -367,7 +372,7 @@ str.tab %>% flextable %>%
 	set_caption(caption = "Counterfactual risks (per 1000)  and risk ratios contrasting interventions on straight MWF to the observed course.") -> str.flextab
 saveRDS(str.flextab, "str.flextab.rds")
 ```
-\
+
 
 
 ```{r}
@@ -378,7 +383,7 @@ rr[grepl("syn|natural\\.natural", variable),.(
 	 	`(risk 95% CI)` = clean_risk.ci(variable),
 	 	RR              = sprintf("%.2f", round(estimate, 2)),
 	 	`(RR 95% CI)`   = clean_rr.ci(estimate, lower, upper)
-	 )][c(1, 2, 4, 3, 5, 6),] -> syn.tab
+	 )][c(1, 2, 4, 3, 5, 7, 6),] -> syn.tab
 
 syn.tab %>% flextable %>%
 	flextable::compose(j = 1, value = as_paragraph(

@@ -552,7 +552,7 @@ get.limit_total_intervention <- function(
 			return(x)
 		})]
 
-	df[straight + soluble + synthetic < limit, .(straight, studyno, year)]
+	df[straight + soluble + synthetic <= limit, .(straight, studyno, year)]
 
 	df[, (paste0("cum_", mwf)) := cumsum(get(mwf)), by = .(studyno)]
 	df[,(c(str_to_title(mwf), paste0("Cumulative ", mwf))) := list(
@@ -577,6 +577,7 @@ dat.str10 <- get.limit_intervention(mwf = 'str', limit = 0.5/10)
 
 dat.str_total  <- get.limit_total_intervention(mwf = "str", limit = 0.5)
 dat.str_total2 <- get.limit_total_intervention(mwf = "str", limit = 0.5/2)
+dat.str_total10 <- get.limit_total_intervention(mwf = "str", limit = 0.5/10)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Soluble to REL							                   ####
@@ -592,6 +593,7 @@ dat.sol10 <- get.limit_intervention(mwf = 'sol', limit = 0.5/10)
 
 dat.sol_total  <- get.limit_total_intervention(mwf = "sol", limit = 0.5)
 dat.sol_total2 <- get.limit_total_intervention(mwf = "sol", limit = 0.5/2)
+dat.sol_total10 <- get.limit_total_intervention(mwf = "sol", limit = 0.5/10)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Synthetic to REL							                 ####
@@ -607,6 +609,7 @@ dat.syn10 <- get.limit_intervention(mwf = 'syn', limit = 0.5/10)
 
 dat.syn_total  <- get.limit_total_intervention(mwf = "syn", limit = 0.5)
 dat.syn_total2 <- get.limit_total_intervention(mwf = "syn", limit = 0.5/2)
+dat.syn_total10 <- get.limit_total_intervention(mwf = "syn", limit = 0.5/10)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Compare exposure before/after intervention     ####
@@ -742,6 +745,7 @@ dat.str.reduced10 <- reduce.data(dat.str10, times)
 
 dat.str_total.reduced  <- reduce.data(dat.str_total, times)
 dat.str_total.reduced2 <- reduce.data(dat.str_total2, times)
+dat.str_total.reduced10 <- reduce.data(dat.str_total10, times)
 
 # Intervene on soluble
 dat.sol.reduced   <- reduce.data(dat.sol, times)
@@ -750,6 +754,7 @@ dat.sol.reduced10 <- reduce.data(dat.sol10, times)
 
 dat.sol_total.reduced  <- reduce.data(dat.sol_total, times)
 dat.sol_total.reduced2 <- reduce.data(dat.sol_total2, times)
+dat.sol_total.reduced10 <- reduce.data(dat.sol_total10, times)
 
 # Intervene on synthetic
 dat.syn.reduced   <- reduce.data(dat.syn, times)
@@ -758,6 +763,7 @@ dat.syn.reduced10 <- reduce.data(dat.syn10, times)
 
 dat.syn_total.reduced  <- reduce.data(dat.syn_total, times)
 dat.syn_total.reduced2 <- reduce.data(dat.syn_total2, times)
+dat.syn_total.reduced10 <- reduce.data(dat.syn_total10, times)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Save to Box                                    ####
@@ -786,9 +792,7 @@ for (j in paste0(dat.intervention.names, "2")) {
 						dir_id = 125518026124)
 }
 
-for (j in paste0(dat.intervention.names[
-	- grep("total",
-				 dat.intervention.names)], "10")) {
+for (j in paste0(dat.intervention.names, "10")) {
 	box_write(get(j),
 						file_name = paste0(j, ".rds"),
 						dir_id = 125518026124)
@@ -826,6 +830,13 @@ for (j in paste0(dat.intervention.names[
 # file id       : 930687554963
 # name          : dat.syn.reduced10.rds
 # file id       : 942772072287
+
+# name          : dat.str_total.reduced10.rds
+# file id       : 978943764524
+# name          : dat.sol_total.reduced10.rds
+# file id       : 978944866752
+# name          : dat.syn_total.reduced10.rds
+# file id       : 978947609426
 
 
 box_write(dat.total.reduced,

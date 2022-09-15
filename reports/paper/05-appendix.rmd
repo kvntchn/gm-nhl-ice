@@ -25,8 +25,8 @@ csl: "`r path.expand('~/HeadRs/csl/asa.csl')`"
 ---
 
 ```{=tex}
-\renewcommand{\thetable}{S\arabic{table}}
-\renewcommand{\thefigure}{S\arabic{figure}}
+\renewcommand{\thetable}{A\arabic{table}}
+\renewcommand{\thefigure}{A\arabic{figure}}
 \renewcommand{\arraystretch}{1}
 ```
 
@@ -43,12 +43,16 @@ library(flextable)
 
 # Appendix
 
-```{r, tab.cap.pre="Table A"}
+![Oberved and post-intervention distributions of average annual exposure (mg/m^3^). The rugplot shows maximum cumulative exposure accrued by non-Hodgkin lymphoma cases.](`r here::here("resources/images", "shift-avg-soluble.png")`){width=6in}
+
+![Oberved and post-intervention distributions of cumulative exposure to soluble metalworking fluids (mg/m$^3\cdot$years) at end of follow-up. The rugplot shows maximum cumulative exposure accrued by non-Hodgkin lymphoma cases.](`r here::here("resources/images", "shift-cum-soluble.png")`){width=6in}
+
+```{r, tab.cap.pre="Table A", include=F}
 str.flextab <- readRDS("str.flextab.rds")
 str.flextab
 ```
 
-```{r}
+```{r, include=F}
 syn.flextab <- readRDS("syn.flextab.rds")
 syn.flextab
 ```
