@@ -74,7 +74,7 @@ if (!('cohort_analytic' %in% ls())) {
 		straight = zoo::na.locf(straight),
 		soluble = zoo::na.locf(soluble),
 		synthetic = zoo::na.locf(synthetic)
-		), by = .(studyno)]
+	), by = .(studyno)]
 
 	cohort_analytic[,`:=`(
 		off = {

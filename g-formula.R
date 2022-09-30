@@ -14,7 +14,6 @@ source("~/headRs/00-my-theme.R")
 library(data.table)
 # # paste(ls(), collapse = ",\n") %>% clipr::write_clip()
 source(here::here("../gm-cancer-inc/breaks.R"))
-source("blip.r")
 
 # Relevant covariates ####
 covariates.which <- c(
@@ -37,14 +36,14 @@ covariates.which <- c(
 # Hazard-extended ICE implementation of g-formula ####
 # Wen et al. (2020)
 ice_gcomp <- function(
-	a = 0,
-	dta = copy(dat.reduced[,covariates.which, with = F]),
-	dta.a1 = NULL,
-	# dta.a1 = copy(dat.a),
-	times = sort(unique(dat.reduced[status == 1]$I), decreasing = T),
-	mwf.name = "soluble",
-	quiet = F,
-	total_effect = F
+		a = 0,
+		dta = copy(dat.reduced[,covariates.which, with = F]),
+		dta.a1 = NULL,
+		# dta.a1 = copy(dat.a),
+		times = sort(unique(dat.reduced[status == 1]$I), decreasing = T),
+		mwf.name = "soluble",
+		quiet = F,
+		total_effect = F
 ) {
 
 	if (total_effect) {
@@ -149,42 +148,42 @@ ice_gcomp <- function(
 
 	# Check positivity
 	if (a != 0) {
-			dta.g <- merge(
-				dta.a1[immortal == 0 & I %in% (J - 1):J, c("studyno",
-								paste0("Cumulative ", mwf.name)
-							),
-							with = F],
-				dta[immortal == 0 & I %in% (J - 1):J & Censored == 0]
-			)
+		dta.g <- merge(
+			dta.a1[immortal == 0 & I %in% (J - 1):J, c("studyno",
+																								 paste0("Cumulative ", mwf.name)
+			),
+			with = F],
+			dta[immortal == 0 & I %in% (J - 1):J & Censored == 0]
+		)
 
-			dta.g.tab <- dta.g[get(
+		dta.g.tab <- dta.g[get(
+			paste0("Cumulative ", mwf.name, ".x")
+		) == get(
+			paste0("Cumulative ", mwf.name, ".y")
+		), .(
+			n = n_distinct(studyno),
+			overlap = sum(get(
 				paste0("Cumulative ", mwf.name, ".x")
 			) == get(
 				paste0("Cumulative ", mwf.name, ".y")
-			), .(
-				n = n_distinct(studyno),
-				overlap = sum(get(
-					paste0("Cumulative ", mwf.name, ".x")
-				) == get(
-					paste0("Cumulative ", mwf.name, ".y")
-				))
+			))
+		),
+		by = c(names(dta.g)[!grepl(
+			paste0("studyno",
+						 "|",
+						 "h.pred",
+						 "|",
+						 paste0("\\.[xy]$")
 			),
-			by = c(names(dta.g)[!grepl(
-				paste0("studyno",
-							 "|",
-							 "h.pred",
-							 "|",
-							 paste0("\\.[xy]$")
-				),
-				names(dta.g)
-			)])
-			]
+			names(dta.g)
+		)])
+		]
 
-			# No overlap for
-			message('\t No overlap for ',
-							signif(mean(dta.g.tab[,overlap == 0]), 3) * 100,
-							"% of covariate histories")
-			}
+		# No overlap for
+		message('\t No overlap for ',
+						signif(mean(dta.g.tab[,overlap == 0]), 3) * 100,
+						"% of covariate histories")
+	}
 
 	# 2. Get predicted values ####
 	# get discrete hazard (including those who died of other causes)
@@ -311,8 +310,8 @@ ice_gcomp <- function(
 		# Check positivity
 		if (a != 0 & k > 0) {
 			if (!quiet) {
-			cat(paste0("\t Checking positivity over (", k, ", ", J, "]\n"))
-		}
+				cat(paste0("\t Checking positivity over (", k, ", ", J, "]\n"))
+			}
 			dta.g <- merge(
 				dta.a[get(paste0("Censored_", k)) == 0 &
 								get(paste0("status_", k)) == 0,
@@ -367,8 +366,8 @@ ice_gcomp <- function(
 
 		if (a != 0 & k == 0) {
 			if (!quiet) {
-			cat(paste0("\t Checking positivity over (", k, ", ", J, "]\n"))
-		}
+				cat(paste0("\t Checking positivity over (", k, ", ", J, "]\n"))
+			}
 			dta.g <- merge(
 				dta.a[,
 							c("studyno",
@@ -529,50 +528,4 @@ get.bs <- function(dat = copy(dat.reduced),
 
 	cat(paste0("\n", round(since_start, 2), " ", time.unit, " since get.bs() was called.\n"))
 	return(rbindlist(bs))
-}
-
-
-get.loo <- function(dat = copy(dat.reduced),
-										dat.a1,
-										a1.names = NULL,
-										leave_out = unique(dat.reduced$studyno),
-										mwf.name = list("straight"),
-										run_intervention = T
-) {
-	require(lubridate, quietly = T)
-	require(foreach, quietly = T)
-	require(doParallel, quietly = T)
-	registerDoParallel(detectCores() - 1)
-	# start time
-	start <- Sys.time()
-	message("Leave-one-out started at ", start, "\n")
-	# # Progress bar
-	# pb <- txtProgressBar(min = 0, max = B, style = 3)
-	jk <- foreach (b = leave_out) %dopar% {
-
-		out <- cbind(
-			b = b,
-			natural = mean(ice_gcomp(dta = dat[studyno != b], dta.a1 = NULL, quiet = T)$h.pred),
-			do.call(cbind, lapply(1:length(dat.a1), function(i) {
-				return(mean(ice_gcomp(a = 1, dta = dat[studyno != b], dta.a1 = dat.a1[[i]][studyno != b], mwf.name = mwf.name[[i]], quiet = T)$h.pred))
-			}))
-		)
-
-		colnames(out)[-(1:2)] <- a1.names
-
-		return(as.data.table(out))
-
-		# # Set progressbar
-		# setTxtProgressBar(pb, b)
-	}
-	# jk
-	time.unit <- "minutes"
-	since_start <- lubridate::time_length(difftime(Sys.time(), start), time.unit)
-	if (since_start > 90) {
-		since_start <- since_start/60
-		time.unit <- "hours"
-	}
-
-	cat(paste0("\n", round(since_start, 2), " ", time.unit, " since get.loo() was called.\n"))
-	return(rbindlist(jk))
 }

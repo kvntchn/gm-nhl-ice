@@ -52,9 +52,9 @@ kevchen@berkeley.edu\
 (510) 387-3327
 
 
-**Running head suggestion:** Limits on metalworking fluid for preventing NHL
+**Running head suggestion:** Limits on metalworking fluid for preventing NHL.
 
-**Conflicts of interests:** Authors declare no conflicts of interest
+**Conflicts of interests:** Authors declare no conflicts of interest.
 
 **Sources of financial support:** This work was supported by Training Grant T42OH008429 and Research Project Grant R01OH011092, both funded by the National Institute for Occupational Safety and Health (NIOSH) / Centers for Disease Control and Prevention (CDC).
 
@@ -68,13 +68,13 @@ kevchen@berkeley.edu\
 
 (Limit: 250 words)
 
-**Background:** Non-Hodgkin lymphoma (NHL) incidence has increased significantly since 1960 and was recently linked with workplace exposure in the United Auto Workers-General Motors (UAW-GM) Cohort Study. Here, we investigate hypothetical interventions on workplace exposure to soluble metalworking fluids (MWF) in relation to NHL risk. Interventions on entire classes of occupational exposures rather than particular agents may result in stronger lasting protections for worker health while preventing regrettable replacements.
+**Background:** Non-Hodgkin lymphoma (NHL) incidence has increased significantly since 1960 and was recently linked with workplace exposure in the United Auto Workers-General Motors (UAW-GM) Cohort Study. Here, we investigate hypothetical interventions on workplace exposure to oil- and water-based soluble metalworking fluids (MWF) in relation to NHL risk. Interventions on entire classes of occupational exposures rather than particular agents may result in stronger lasting protections for worker health.
 
-**Methods:** We estimated counterfactual risk of NHL from 1985 to 2004 in the UAW-GM cohort of hourly autoworkers exposed to straight, soluble, and synthetic MWF at 3 Michigan plants under hypothetical interventions. We contrasted counterfactual risk under stochastic interventions on average annual exposure to soluble MWF to that under no intervention on exposure. These stochastic interventions included (1) static interventions on soluble MWF that ignore exposure to other types and (2) dynamic interventions that seek to cap total exposure to any type of MWF by intervening on exposure to soluble MWF only. Static interventions may be more feasible as real-world policy, but dynamic interventions may result in stronger protections.
+**Methods:** We estimated counterfactual risk of NHL between 1985 and 2004 in the UAW-GM cohort of autoworkers exposed to straight, soluble, and synthetic MWF at three Michigan plants under hypothetical interventions. We estimated the effect of static and dynamic stochastic interventions on average annual exposure to soluble MWF. Unlike the static interventions, dynamic interventions take into account exposures to the other two classes of metalworking fluids, reflecting the fact that currently recommended limits apply to the total of all three exposures.
 
-**Results:** During follow-up, 231 NHL cases occurred. Stronger hypothetical limits on average annual exposure to soluble MWF resulted in monotonically stronger reductions in NHL risk. Capping exposure to soluble MWF at 0.05 mg/m^3^ resulted in a risk ratio of 0.79 (95% CI: 0.62, 0.97).  Capping total MWF exposure at 0.05 mg/m3 by intervening only on exposure to soluble MWF resulted in a risk ratio of 0.72 (95% CI: 0.48, 1.01).
+**Results:** During follow-up, 231 NHL cases occurred. Stronger hypothetical limits on average annual exposure to soluble MWF resulted in monotonically stronger reductions in NHL risk. Capping exposure to soluble MWF at 0.05 mg/m^3^ resulted in a risk ratio of 0.79 (95% CI: 0.61, 0.96). Capping total MWF exposure at 0.05 mg/m^3^ by intervening only on exposure to soluble MWF resulted in a risk ratio of 0.72 (95% CI: 0.44, 0.97).
 
-**Conclusion:** We considered realistic interventions more compatible with a population health framework than deterministic interventions and showed that stronger limits on average annual exposure to soluble MWF may confer stronger protection against NHL risk.
+**Conclusion:** We considered interventions on soluble MWF that address total MWF exposure levels and showed that stronger limits on average annual exposure to soluble MWF may confer stronger protection against NHL risk.
 
 
 # What this study adds

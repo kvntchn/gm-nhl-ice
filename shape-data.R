@@ -14,7 +14,6 @@ source("~/headRs/00-my-theme.R")
 library(data.table)
 # # paste(ls(), collapse = ",\n") %>% clipr::write_clip()
 source(here::here("../gm-cancer-inc/breaks.R"))
-source("blip.r")
 
 # Get data ####
 source(here::here("get-data.R"))
@@ -126,7 +125,7 @@ exposure.ggplot <- dat[, .(
 	ggplot(aes(x = year, y = value)) +
 	geom_line()
 tikzDevice::tikz(here::here("resources", "exposure.tex"), height = 2.5, width = 6, standAlone = T)
- exposure.ggplot +
+exposure.ggplot +
 	facet_wrap(. ~ mwf) +
 	labs(x = "Calendar year",
 			 y = "Median exposure (mg/m$^3$) among exposed") +
@@ -136,7 +135,7 @@ dev.off()
 lualatex("^exposure\\.tex", here::here("resources"))
 
 tikzDevice::tikz(here::here("resources", "exposure_long.tex"), height = 5.5, width = 3, standAlone = T)
- exposure.ggplot +
+exposure.ggplot +
 	facet_wrap(. ~ mwf, nrow = 3) +
 	labs(x = "Calendar year",
 			 y = "Median exposure (mg/m$^3$) among exposed") +
@@ -147,13 +146,13 @@ lualatex("^exposure_long\\.tex", here::here("resources"))
 
 # Population characteristics ####
 get.tab1 <- function(
-	df = dat[year >= 1985 & year <= 1994 + exposure.lag],
-	table.engine = "pander",
-	use_finrace = T,
-	incidence = F,
-	py = "py",
-	mathmode = F,
-	nrow_as_fu = T) {
+		df = dat[year >= 1985 & year <= 1994 + exposure.lag],
+		table.engine = "pander",
+		use_finrace = T,
+		incidence = F,
+		py = "py",
+		mathmode = F,
+		nrow_as_fu = T) {
 
 	setorder(df, studyno, year)
 	# Individual-level summary
@@ -201,7 +200,7 @@ get.tab1 <- function(
 		# Years since follow-up
 		"\\hline Years of follow-up" = if (nrow_as_fu) {.N} else {
 			as.numeric(difftime(min(yod[1], yoc[1], as.Date(paste0(max(year), "-12-31")), na.rm = T),
-				as.Date(paste0(min(year[immortal == 0]), "-01-01")), units = "days"))/365
+													as.Date(paste0(min(year[immortal == 0]), "-01-01")), units = "days"))/365
 		},
 		'Year of birth' = yob.gm[1],
 		'Year of hire' = yin.gm[1],
@@ -233,7 +232,7 @@ get.tab1 <- function(
 
 		'Cumulative time off (years)' = {
 			max(cum_off)
-			},
+		},
 
 		"Cumulative exposure$^3$ to MWFs (mg/m$^3\\cdot$y)" = NA,
 
@@ -337,10 +336,10 @@ get.tab1 <- function(
 	tab1 <- matrix(
 		sapply(1:length(tab1), function(i) {
 			if (is.na(as.vector(tab1)[i])) {NA} else {
-			formatC(as.vector(tab1)[i], as.vector(tab1.digits)[i], format = "f",
-							big.mark = if (!i %in% which(as.vector(tab1.which_year))) {
-								if (mathmode) {"\\\\,"} else {","}} else {""})
-		}}),
+				formatC(as.vector(tab1)[i], as.vector(tab1.digits)[i], format = "f",
+								big.mark = if (!i %in% which(as.vector(tab1.which_year))) {
+									if (mathmode) {"\\\\,"} else {","}} else {""})
+			}}),
 		ncol = ncol(tab1),
 		nrow = nrow(tab1),
 		dimnames = dimnames(tab1)
@@ -357,15 +356,15 @@ get.tab1 <- function(
 
 	# Math mode
 	if (mathmode) {
-	tab1 <- matrix(
-		sapply(1:length(tab1), function(i) {
-			if (!is.na(as.vector(tab1)[i])) {
-				paste0('$', as.vector(tab1)[i], '$')
-			} else {NA}
-		}),
-		ncol = ncol(tab1),
-		nrow = nrow(tab1),
-		dimnames = dimnames(tab1))
+		tab1 <- matrix(
+			sapply(1:length(tab1), function(i) {
+				if (!is.na(as.vector(tab1)[i])) {
+					paste0('$', as.vector(tab1)[i], '$')
+				} else {NA}
+			}),
+			ncol = ncol(tab1),
+			nrow = nrow(tab1),
+			dimnames = dimnames(tab1))
 	}
 
 	tab1 <- rbind(
@@ -400,8 +399,8 @@ get.tab1 <- function(
 	tab1 <- as.data.frame(tab1, make.names = F)
 
 	print(matrix(as.vector(sapply(tab1[,1:3], function(x) gsub("\\$|\\\\", "", x))),
-				 ncol = 3,
-				 dimnames = list(rownames(tab1), colnames(tab1)[1:3])))
+							 ncol = 3,
+							 dimnames = list(rownames(tab1), colnames(tab1)[1:3])))
 
 	return(tab1)
 }
@@ -409,7 +408,7 @@ tab1 <- get.tab1(dat[year >= 1985 & year <= 1994 + exposure.lag], mathmode = F, 
 saveRDS(tab1, here::here("resources", "tab1.rds"))
 nhl.tab1 <- get.tab1(dat[
 	studyno %in% dat[status == 1 & year <= 1994 + exposure.lag, studyno] &
-	year >= 1985 & year <= 1994 + exposure.lag],
+		year >= 1985 & year <= 1994 + exposure.lag],
 	mathmode = F, nrow_as_fu = T)
 saveRDS(nhl.tab1, here::here("resources", "nhl.tab1.rds"))
 
@@ -430,14 +429,14 @@ nhl.tab1 <- readRDS(here::here("resources", "nhl.tab1.rds"))
 
 clipr::write_clip(
 	kable(cbind(clean.tab1(tab1), NA, clean.tab1(nhl.tab1)))
-	)
+)
 clipr::write_clip(
 	print(xtable(cbind(
 		rownames(clean.tab1(tab1)),
 		mutate(clean.tab1(tab1), spread = sanitize(spread)), NA,
 		mutate(clean.tab1(nhl.tab1), spread = sanitize(spread))
 	)))
-	)
+)
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Unknown race as separate category              ####
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -466,22 +465,22 @@ dat.total[soluble + straight + synthetic > 0.5, `:=`(
 	straight = straight * 0.5 / (soluble + straight + synthetic),
 	soluble = soluble * 0.5 / (soluble + straight + synthetic),
 	synthetic = synthetic * 0.5 / (soluble + straight + synthetic)
-	)]
+)]
 
 dat.total[, `:=`(
 	cum_straight = cumsum(straight),
 	cum_soluble = cumsum(soluble),
 	cum_synthetic = cumsum(synthetic)
-	), by = .(studyno)]
+), by = .(studyno)]
 
 dat.total[,`:=`(
-			Straight = get.cut(straight, mwf.breaks, "straight", dig.lab = 3),
-			`Cumulative straight` = get.cut(cum_straight, mwf.breaks, "cum_straight", dig.lab = 3),
-			Soluble = get.cut(soluble, mwf.breaks, "soluble", dig.lab = 3),
-			`Cumulative soluble` = get.cut(cum_soluble, mwf.breaks, "cum_soluble", dig.lab = 3),
-			Synthetic = get.cut(soluble, mwf.breaks, "soluble", dig.lab = 3),
-			`Cumulative synthetic` = get.cut(cum_synthetic, mwf.breaks, "cum_synthetic", dig.lab = 3)
-				)]
+	Straight = get.cut(straight, mwf.breaks, "straight", dig.lab = 3),
+	`Cumulative straight` = get.cut(cum_straight, mwf.breaks, "cum_straight", dig.lab = 3),
+	Soluble = get.cut(soluble, mwf.breaks, "soluble", dig.lab = 3),
+	`Cumulative soluble` = get.cut(cum_soluble, mwf.breaks, "cum_soluble", dig.lab = 3),
+	Synthetic = get.cut(soluble, mwf.breaks, "soluble", dig.lab = 3),
+	`Cumulative synthetic` = get.cut(cum_synthetic, mwf.breaks, "cum_synthetic", dig.lab = 3)
+)]
 
 
 dat.total2 <- dat[,.(studyno, immortal, I, year, straight, soluble, synthetic, status, yoi, yoc,  yod)]
@@ -490,30 +489,30 @@ dat.total2[soluble + straight + synthetic > 0.5/2, `:=`(
 	straight = straight * 0.5/2 / (soluble + straight + synthetic),
 	soluble = soluble * 0.5/2 / (soluble + straight + synthetic),
 	synthetic = synthetic * 0.5/2 / (soluble + straight + synthetic)
-	)]
+)]
 
 dat.total2[, `:=`(
 	cum_straight = cumsum(straight),
 	cum_soluble = cumsum(soluble),
 	cum_synthetic = cumsum(synthetic)
-	), by = .(studyno)]
+), by = .(studyno)]
 
 dat.total2[,`:=`(
-			Straight = get.cut(straight, mwf.breaks, "straight", dig.lab = 3),
-			`Cumulative straight` = get.cut(cum_straight, mwf.breaks, "cum_straight", dig.lab = 3),
-			Soluble = get.cut(soluble, mwf.breaks, "soluble", dig.lab = 3),
-			`Cumulative soluble` = get.cut(cum_soluble, mwf.breaks, "cum_soluble", dig.lab = 3),
-			Synthetic = get.cut(soluble, mwf.breaks, "soluble", dig.lab = 3),
-			`Cumulative synthetic` = get.cut(cum_synthetic, mwf.breaks, "cum_synthetic", dig.lab = 3)
-				)]
+	Straight = get.cut(straight, mwf.breaks, "straight", dig.lab = 3),
+	`Cumulative straight` = get.cut(cum_straight, mwf.breaks, "cum_straight", dig.lab = 3),
+	Soluble = get.cut(soluble, mwf.breaks, "soluble", dig.lab = 3),
+	`Cumulative soluble` = get.cut(cum_soluble, mwf.breaks, "cum_soluble", dig.lab = 3),
+	Synthetic = get.cut(soluble, mwf.breaks, "soluble", dig.lab = 3),
+	`Cumulative synthetic` = get.cut(cum_synthetic, mwf.breaks, "cum_synthetic", dig.lab = 3)
+)]
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Get post-intervention data (exposure limit)   ####
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 get.limit_intervention <- function(
-	df = data.table::copy(dat),
-	mwf = 'straight',
-	limit = 0.5
+		df = data.table::copy(dat),
+		mwf = 'straight',
+		limit = 0.5
 ) {
 	mwf <- grep(mwf, c("straight", "soluble", "synthetic"), value = T)
 
@@ -525,15 +524,15 @@ get.limit_intervention <- function(
 	df[,(c(str_to_title(mwf), paste0("Cumulative ", mwf))) := list(
 		get.cut(get(mwf), mwf.breaks, mwf, dig.lab = 3),
 		get.cut(get(paste0('cum_', mwf)), mwf.breaks, paste0('cum_', mwf), dig.lab = 3)
-				)]
+	)]
 
 	return(df)
 }
 
 get.limit_total_intervention <- function(
-	df = data.table::copy(dat),
-	mwf = 'straight',
-	limit = 0.5
+		df = data.table::copy(dat),
+		mwf = 'straight',
+		limit = 0.5
 ) {
 	mwf <- grep(mwf, c("straight", "soluble", "synthetic"), value = T)
 
@@ -632,7 +631,7 @@ for (mwf in c("Straight", "Soluble", "Synthetic" )) {
 		paste0(mwf, " to REL"),
 		paste0(mwf, " so total under REL"),
 		"Scale all")[Intervention]
-		)]
+	)]
 
 	exposure.comparison[, year.max := max(year), studyno]
 
@@ -688,7 +687,7 @@ data.frame(
 			na.rm = T)]}))
 
 reduce.data <- function(
-	df = data.table::copy(dat), times, observed.dat = data.table::copy(dat.reduced), merge_obs = T) {
+		df = data.table::copy(dat), times, observed.dat = data.table::copy(dat.reduced), merge_obs = T) {
 	df <- rbindlist(lapply(length(times):2, function(i = length(times)) {
 		# Any rows in this interval? If so, pick the last row
 		d <- df[immortal == 0 & I > times[i - 1] & I <= times[i],]
@@ -776,9 +775,9 @@ box_write(dat.reduced,
 # file id     : 928445783979
 
 dat.intervention.names <- paste0("dat.",
-			 paste0(rep(c("str", "sol", "syn"), each = 2),
-			 			 rep(c("", "_total"), 3)),
-			 ".reduced")
+																 paste0(rep(c("str", "sol", "syn"), each = 2),
+																 			 rep(c("", "_total"), 3)),
+																 ".reduced")
 
 for (j in dat.intervention.names) {
 	box_write(get(j),
@@ -840,15 +839,15 @@ for (j in paste0(dat.intervention.names, "10")) {
 
 
 box_write(dat.total.reduced,
-						file_name = paste0("dat.total.reduced", ".rds"),
-						dir_id = 125518026124)
+					file_name = paste0("dat.total.reduced", ".rds"),
+					dir_id = 125518026124)
 # name        : dat.total.reduced.rds
 # file id     : 928452001570
 
 
 box_write(dat.total.reduced2,
-						file_name = paste0("dat.total.reduced2", ".rds"),
-						dir_id = 125518026124)
+					file_name = paste0("dat.total.reduced2", ".rds"),
+					dir_id = 125518026124)
 # name        : dat.total.reduced2.rds
 # file id     : 929952423129
 
@@ -896,7 +895,7 @@ box_write(dat.total.reduced2,
 #
 # # Make data wide
 # get.wide_data <- function(
-# 	dat.long = copy(dat.reduced),
+		# 	dat.long = copy(dat.reduced),
 # 	covariates.names,
 # 	timevar.names) {
 #
