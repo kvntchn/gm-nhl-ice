@@ -36,7 +36,7 @@ biblio <- bibtex::read.bib('~/Box Sync/papers/EnvEpi.bib')
 
 **Manuscript title:** Evaluating hypothetical limits on metalworking fluid exposure for reducing non-Hodgkin lymphoma incidence: An application of the hazard-extended parametric g-formula
 
-**Authors:** Kevin T. Chen^a,b^, Sally Picciotto^b^, Ellen A. Eisen^b^
+**Authors:** Kevin T. Chen^a,b^, Ellen A. Eisen^b^, Sally Picciotto^b^
 
 ^a^ University of California, Berkeley School of Public Health, Division of Epidemiology \& Biostatistics
 
@@ -56,7 +56,7 @@ kevchen@berkeley.edu\
 
 **Conflicts of interests:** Authors declare no conflicts of interest
 
-**Sources of financial support:** Supported by Training Grant T42OH008429, funded by the National Institute for Occupational Safety and Health (NIOSH) / Centers for Disease Control and Prevention (CDC)
+**Sources of financial support:** This work was supported by Training Grant T42OH008429 and Research Project Grant R01OH011092, both funded by the National Institute for Occupational Safety and Health (NIOSH) / Centers for Disease Control and Prevention (CDC).
 
 **Data and computing code:** Code for reproducing analyses and reports are available on [Github](https://github.com/kvntchn/gm-nhl-ice). Data are available upon reasonable request.
 
@@ -70,7 +70,7 @@ kevchen@berkeley.edu\
 
 **Background:** Non-Hodgkin lymphoma (NHL) incidence has increased significantly since 1960 and was recently linked with workplace exposure in the United Auto Workers-General Motors (UAW-GM) Cohort Study. Here, we investigate hypothetical interventions on workplace exposure to soluble metalworking fluids (MWF) in relation to NHL risk. Interventions on entire classes of occupational exposures rather than particular agents may result in stronger lasting protections for worker health while preventing regrettable replacements.
 
-**Methods:** We estimated counterfactual risk of NHL from 1985 to 2004 in the UAW-GM cohort of hourly autoworkers exposed to straight, soluble, and synthetic MWF at 3 Michigan plants under hypothetical interventions. We contrasted counterfactual risk under stochastic interventions on average annual exposure to soluble MWF to that under no intervention on exposure. These stochastic interventions included (1) static interventions on soluble MWF that ignore exposure to other types and (2) dynamic interventions that seek to cap total exposure to any type of MWF by intervening on exposure to soluble MWF only.
+**Methods:** We estimated counterfactual risk of NHL from 1985 to 2004 in the UAW-GM cohort of hourly autoworkers exposed to straight, soluble, and synthetic MWF at 3 Michigan plants under hypothetical interventions. We contrasted counterfactual risk under stochastic interventions on average annual exposure to soluble MWF to that under no intervention on exposure. These stochastic interventions included (1) static interventions on soluble MWF that ignore exposure to other types and (2) dynamic interventions that seek to cap total exposure to any type of MWF by intervening on exposure to soluble MWF only. Static interventions may be more feasible as real-world policy, but dynamic interventions may result in stronger protections.
 
 **Results:** During follow-up, 231 NHL cases occurred. Stronger hypothetical limits on average annual exposure to soluble MWF resulted in monotonically stronger reductions in NHL risk. Capping exposure to soluble MWF at 0.05 mg/m^3^ resulted in a risk ratio of 0.79 (95% CI: 0.62, 0.97).  Capping total MWF exposure at 0.05 mg/m3 by intervening only on exposure to soluble MWF resulted in a risk ratio of 0.72 (95% CI: 0.48, 1.01).
 

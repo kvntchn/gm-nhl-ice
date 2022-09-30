@@ -184,10 +184,10 @@ rr <- merge(
 rr <- rr[,.(estimate = estimate[1],
 			lower = {
 				x <- value
-				x[!is.na(x)] <- quantile(x[!is.na(x)], 0.025) - mean(x[!is.na(x)]) + estimate[1]},
+				x[!is.na(x)] <- 2 * mean(x[!is.na(x)]) - quantile(x[!is.na(x)], 1 - 0.025)},
 			upper = {
 				x <- value
-				x[!is.na(x)] <- quantile(x[!is.na(x)], 1 - 0.025) - mean(x[!is.na(x)]) + estimate[1]}
+				x[!is.na(x)] <- 2 * mean(x[!is.na(x)]) - quantile(x[!is.na(x)], 0.025)}
 			# wald.lower = exp(log(estimate[1]) + qnorm(0.025) * sd(log(value))),
 			# wald.upper = exp(log(estimate[1]) - qnorm(0.025) * sd(log(value)))
 			),
@@ -204,10 +204,10 @@ risks <- merge(
 risks <- risks[,.(estimate = estimate[1],
 			lower = {
 				x <- value
-				x[!is.na(x)] <- quantile(x[!is.na(x)], 0.025) - mean(x[!is.na(x)]) + estimate[1]},
+				x[!is.na(x)] <- 2 * mean(x[!is.na(x)]) - quantile(x[!is.na(x)], 1 - 0.025)},
 			upper = {
 				x <- value
-				x[!is.na(x)] <- quantile(x[!is.na(x)], 1 - 0.025) - mean(x[!is.na(x)]) + estimate[1]}
+				x[!is.na(x)] <- 2 * mean(x[!is.na(x)]) - quantile(x[!is.na(x)], 0.025)}
 			# wald.lower = exp(log(estimate[1]) + qnorm(0.025) * sd(log(value))),
 			# wald.upper = exp(log(estimate[1]) - qnorm(0.025) * sd(log(value)))
 			),
