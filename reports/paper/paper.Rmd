@@ -34,14 +34,15 @@ biblio <- bibtex::read.bib('~/Box Sync/papers/EnvEpi.bib')
 
 **Type of manuscript:** Original Research Article
 
-**Manuscript title:** Evaluating hypothetical limits on metalworking fluid exposure for reducing non-Hodgkin lymphoma incidence: An application of the hazard-extended parametric g-formula
+**Manuscript title:** Hypothetical limits on workplace exposure for reducing non-Hodgkin lymphoma: An application of the hazard-extended iterative conditional expectation parametric g-formula
 
-**Authors:** Kevin T. Chen^a,b^, Ellen A. Eisen^b^, Sally Picciotto^b^
+**Authors:** Kevin T. Chen^a,b,c^, Ellen A. Eisen^b^, Sally Picciotto^b^
 
 ^a^ University of California, Berkeley School of Public Health, Division of Epidemiology \& Biostatistics
 
 ^b^ University of California, Berkeley School of Public Health, Division of Environmental Health Sciences
 
+^c^ University of California, Berkeley Department of Statistics
 
 **Corresponding author:**\
 Kevin T. Chen\
@@ -60,7 +61,7 @@ kevchen@berkeley.edu\
 
 **Data and computing code:** Code for reproducing analyses and reports are available on [Github](https://github.com/kvntchn/gm-nhl-ice). Data are available upon reasonable request.
 
-**Acknowledgements:**
+**Keywords:** Metalworking fluid, occupational exposure, non-Hodgkin lymphoma, cancer, causal inference, g-formula, healthy-worker effect, United States
 
 \newpage
 
@@ -68,20 +69,13 @@ kevchen@berkeley.edu\
 
 (Limit: 250 words)
 
-**Background:** Non-Hodgkin lymphoma (NHL) incidence has increased significantly since 1960 and was recently linked with workplace exposure in the United Auto Workers-General Motors (UAW-GM) Cohort Study. Here, we investigate hypothetical interventions on workplace exposure to oil- and water-based soluble metalworking fluids (MWF) in relation to NHL risk. Interventions on entire classes of occupational exposures rather than particular agents may result in stronger lasting protections for worker health.
+**Background:** Non-Hodgkin lymphoma (NHL) incidence has increased significantly since 1960 and was recently linked to workplace exposure to soluble metalworking fluids (MWF) in a standard survival analysis of the United Auto Workers-General Motors (UAW-GM) cohort. Here, we investigate the causal effects of hypothetical limits on soluble MWF exposure in relation to NHL risk using an iterative conditional expectation (ICE) parametric g-formula estimator.
 
-**Methods:** We estimated counterfactual risk of NHL between 1985 and 2004 in the UAW-GM cohort of autoworkers exposed to straight, soluble, and synthetic MWF at three Michigan plants under hypothetical interventions. We estimated the effect of static and dynamic stochastic interventions on average annual exposure to soluble MWF. Unlike the static interventions, dynamic interventions take into account exposures to the other two classes of metalworking fluids, reflecting the fact that currently recommended limits apply to the total of all three exposures.
+**Methods:** We estimated counterfactual risk of NHL between 1985 and 2005 in the UAW-GM cohort of autoworkers at three Michigan plants (n = 34,734) under hypothetical limits on average annual exposure to soluble MWF. We applied the hazard-extended ICE parametric g-formula, an estimator capable of adjusting for time-varying confounding affected by past exposure.
 
-**Results:** During follow-up, 231 NHL cases occurred. Stronger hypothetical limits on average annual exposure to soluble MWF resulted in monotonically stronger reductions in NHL risk. Capping exposure to soluble MWF at 0.05 mg/m^3^ resulted in a risk ratio of 0.79 (95% CI: 0.61, 0.96). Capping total MWF exposure at 0.05 mg/m^3^ by intervening only on exposure to soluble MWF resulted in a risk ratio of 0.72 (95% CI: 0.44, 0.97).
+**Results:** During follow-up, 231 NHL cases occurred. Stronger hypothetical limits on soluble MWF exposure resulted in monotonic reductions in NHL risk estimates. Capping average annual exposure at 0.5 mg/m^3^, the NIOSH recommended exposure limit, would have prevented 44 (95% CI: -6, 91) cases. Capping at 0.25 mg/m^3^ would have prevented 52 (95% CI: -5, 106) cases. Finally, capping at 0.05 mg/m^3^ would have prevented 71 (95% CI: 12, 129) cases.
 
-**Conclusion:** We considered interventions on soluble MWF that address total MWF exposure levels and showed that stronger limits on average annual exposure to soluble MWF may confer stronger protection against NHL risk.
-
-
-# What this study adds
-
-(Limit: 100 words)
-
-Little is known about possible links between occupational exposures and non-Hodgkin lymphoma. Existing studies are generally single time-point case-control studies with limited exposure assessment. We leveraged the large study population size and quantitative exposure assessment of the United Auto Workers-General Motors Cohort Study to estimate counterfactual risk of non-Hodgkin lymphoma under realistic interventions using a novel causal estimator capable of adjusting for time-varying confounding affected by past exposure.
+**Conclusion:** Stronger limits on soluble MWF exposure would have prevented more cases of NHL in the UAW-GM cohort. Our application demonstrates the utility of an ICE g-formula estimator for estimating the effect of realistic exposure interventions on a survival outcome. Greater availability of worked examples and software would facilitate wider application of ICE g-formula estimators.
 
 \newpage
 

@@ -66,6 +66,23 @@ get.coxph(
 	employment_status.lag = exposure.lag)
 dat <- copy(nhl.dat)
 
+# Getting histology codes from cancer data
+cancer <- box_read('512727972584')
+setDT(cancer)
+
+nhl_morphology <- merge(dat[status == 1, .(studyno, yoi)],
+			unique(cancer[morph %in% c(
+				9590:9597, 9670:9671, 9673, 9675, 9678:9680, 9684, 9687:9691, 9695, 9698:9702, 9705, 9708:9709, 9712, 9714:9719, 9724:9729, 9735, 9737:9738, 9811:9818, 9823, 9827, 9837,
+				9590:9597, 9670:9671, 9673, 9675, 9678:9680, 9684, 9687, 9688, 9689:9691, 9695, 9698:9702, 9705, 9708:9709, 9712, 9714:9719, 9724:9729, 9735, 9737, 9738,
+				9811:9818, 9823, 9827, 9837
+			),.(studyno, yoi = ddiag, morph)]),
+			by = c("studyno", "yoi"))
+
+dat <- merge(
+	dat, nhl_morphology[,.(studyno, morph = as.integer(morph))],
+	by = "studyno",
+	all.x = T)
+
 # TV covariates: calendar year, duration of employment, time spent off, cumulative MWF exposure up to ___ year, employment status, censoring/death
 # Baseline covariates: year of hire, age at hire, sex, race, plant
 # Outcome: NHL
@@ -437,10 +454,10 @@ clipr::write_clip(
 		mutate(clean.tab1(nhl.tab1), spread = sanitize(spread))
 	)))
 )
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Unknown race as separate category              ####
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 dat[finrace == 9, Race := "Unknown"]
 
 setorder(dat, studyno, year)
@@ -459,7 +476,7 @@ mwf.breaks[,cum_soluble := cum_soluble5]
 # Scale down all three MWF so total under REL    ####
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-dat.total <- dat[,.(studyno, immortal, I, year, straight, soluble, synthetic, status, yoi, yoc,  yod)]
+dat.total <- dat[,.(studyno, immortal, I, year, straight, soluble, synthetic, status, morph, yoi, yoc,  yod)]
 # Shift down if total above REL = 0.5 mg/m3
 dat.total[soluble + straight + synthetic > 0.5, `:=`(
 	straight = straight * 0.5 / (soluble + straight + synthetic),
@@ -483,7 +500,7 @@ dat.total[,`:=`(
 )]
 
 
-dat.total2 <- dat[,.(studyno, immortal, I, year, straight, soluble, synthetic, status, yoi, yoc,  yod)]
+dat.total2 <- dat[,.(studyno, immortal, I, year, straight, soluble, synthetic, status, morph, yoi, yoc,  yod)]
 # Shift down if total above REL = 0.5 mg/m3
 dat.total2[soluble + straight + synthetic > 0.5/2, `:=`(
 	straight = straight * 0.5/2 / (soluble + straight + synthetic),
@@ -518,7 +535,7 @@ get.limit_intervention <- function(
 
 	df <- df[,c("studyno", "immortal", "I", "year",
 							"straight", "soluble", "synthetic",
-							"status", "yoi", "yoc", "yod"), with = F]
+							"status", "morph", "yoi", "yoc", "yod"), with = F]
 	df[get(mwf) > limit, (mwf) := list(limit)]
 	df[, (paste0("cum_", mwf)) := cumsum(get(mwf)), by = .(studyno)]
 	df[,(c(str_to_title(mwf), paste0("Cumulative ", mwf))) := list(
@@ -538,7 +555,7 @@ get.limit_total_intervention <- function(
 
 	df <- df[,.(studyno, immortal, I, year,
 							straight, soluble, synthetic,
-							status, yoi, yoc,  yod)]
+							status, morph, yoi, yoc,  yod)]
 
 	other_mwf <- c('straight', 'soluble', 'synthetic')
 	other_mwf <- other_mwf[other_mwf != mwf]
@@ -573,7 +590,6 @@ dat.str10 <- get.limit_intervention(mwf = 'str', limit = 0.5/10)
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Straight so that total under REL	             ####
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 dat.str_total  <- get.limit_total_intervention(mwf = "str", limit = 0.5)
 dat.str_total2 <- get.limit_total_intervention(mwf = "str", limit = 0.5/2)
 dat.str_total10 <- get.limit_total_intervention(mwf = "str", limit = 0.5/10)
@@ -581,7 +597,6 @@ dat.str_total10 <- get.limit_total_intervention(mwf = "str", limit = 0.5/10)
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Soluble to REL							                   ####
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 dat.sol   <- get.limit_intervention(mwf = 'sol', limit = 0.5)
 dat.sol2  <- get.limit_intervention(mwf = 'sol', limit = 0.5/2)
 dat.sol10 <- get.limit_intervention(mwf = 'sol', limit = 0.5/10)
@@ -589,7 +604,6 @@ dat.sol10 <- get.limit_intervention(mwf = 'sol', limit = 0.5/10)
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Soluble so that total under REL	               ####
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 dat.sol_total  <- get.limit_total_intervention(mwf = "sol", limit = 0.5)
 dat.sol_total2 <- get.limit_total_intervention(mwf = "sol", limit = 0.5/2)
 dat.sol_total10 <- get.limit_total_intervention(mwf = "sol", limit = 0.5/10)
@@ -597,7 +611,6 @@ dat.sol_total10 <- get.limit_total_intervention(mwf = "sol", limit = 0.5/10)
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Synthetic to REL							                 ####
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 dat.syn   <- get.limit_intervention(mwf = 'syn', limit = 0.5)
 dat.syn2  <- get.limit_intervention(mwf = 'syn', limit = 0.5/2)
 dat.syn10 <- get.limit_intervention(mwf = 'syn', limit = 0.5/10)
@@ -605,7 +618,6 @@ dat.syn10 <- get.limit_intervention(mwf = 'syn', limit = 0.5/10)
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Synthetic so that total under REL	             ####
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 dat.syn_total  <- get.limit_total_intervention(mwf = "syn", limit = 0.5)
 dat.syn_total2 <- get.limit_total_intervention(mwf = "syn", limit = 0.5/2)
 dat.syn_total10 <- get.limit_total_intervention(mwf = "syn", limit = 0.5/10)
@@ -613,9 +625,8 @@ dat.syn_total10 <- get.limit_total_intervention(mwf = "syn", limit = 0.5/10)
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Compare exposure before/after intervention     ####
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 for (mwf in c("Straight", "Soluble", "Synthetic" )) {
-	var.names <- c("studyno", "year", "status",
+	var.names <- c("studyno", "year", "status", "morph",
 								 mwf, tolower(mwf), paste0("Cumulative ", tolower(mwf)),
 								 paste0("cum_", tolower(mwf))
 	)
@@ -862,7 +873,7 @@ box_write(dat.total.reduced2,
 # # Relevant covariates
 # covariates.names <- c(
 # 	"studyno", "I", "year", "immortal",
-# 	"status", "Observed",
+# 	"status", "morph", "Observed",
 # 	"age.year2", "year2",
 # 	"Year", "Age",
 # 	 "cum_soluble", "soluble",

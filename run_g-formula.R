@@ -10,52 +10,12 @@ source(here("g-formula.R"))
 
 dat.reduced <- box_read(928445783979)
 
-# name          : dat.str.reduced.rds
-dat.str.reduced <- box_read(928446426341)
-# name          : dat.str_total.reduced.rds
-dat.str_total.reduced <- box_read(928447106294)
-
 # name          : dat.sol.reduced.rds
 dat.sol.reduced <- box_read(928445303042)
-# name          : dat.sol_total.reduced.rds
-dat.sol_total.reduced <- box_read(928447942153)
-
-# name          : dat.syn.reduced.rds
-dat.syn.reduced <- box_read(928451552327)
-# name          : dat.syn_total.reduced.rds
-dat.syn_total.reduced <- box_read(928447597463)
-
-# name          : dat.total.reduced2.rds
-dat.total.reduced2 <- box_read(929952423129)
-
-# name          : dat.str.reduced2.rds
-dat.str.reduced2 <- box_read(929952765078)
 # name          : dat.sol.reduced2.rds
 dat.sol.reduced2 <- box_read(929953044799)
-# name          : dat.syn.reduced2.rds
-dat.syn.reduced2 <- box_read(929951401906)
-
-# name          : dat.str_total.reduced2.rds
-dat.str_total.reduced2 <- box_read(929957702377)
-# name          : dat.sol_total.reduced2.rds
-dat.sol_total.reduced2 <- box_read(929954713019)
-# name          : dat.syn_total.reduced2.rds
-dat.syn_total.reduced2 <- box_read(929954585841)
-
-# name          : dat.str.reduced10.rds
-dat.str.reduced10 <- box_read(942770799114)
 # name          : dat.sol.reduced10.rds
 dat.sol.reduced10 <- box_read(930687554963)
-# name          : dat.syn.reduced10.rds
-dat.syn.reduced10 <- box_read(942772072287)
-
-# name          : dat.str_total.reduced10.rds
-dat.str_total.reduced10 <- box_read(978943764524)
-# name          : dat.sol_total.reduced10.rds
-dat.sol_total.reduced10 <- box_read(978944866752)
-# name          : dat.syn_total.reduced10.rds
-dat.syn_total.reduced10 <- box_read(978947609426)
-
 
 #####################################################
 # Post-intervention distribution of exposure     ####
@@ -63,15 +23,7 @@ dat.syn_total.reduced10 <- box_read(978947609426)
 # # Proportion of person-years intervened upon
 # interventions <- data.frame(
 # 	dt.name = c(
-# 		"dat.sol.reduced", "dat.sol.reduced2", "dat.sol.reduced10",
-# 		"dat.sol_total.reduced", "dat.sol_total.reduced2",
-# 		"dat.sol_total.reduced10",
-# 		"dat.str.reduced", "dat.str.reduced2", "dat.str.reduced10",
-# 		"dat.str_total.reduced", "dat.str_total.reduced2",
-# 		"dat.str_total.reduced10",
-# 		"dat.syn.reduced", "dat.syn.reduced2", "dat.syn.reduced10",
-# 		"dat.syn_total.reduced", "dat.syn_total.reduced2",
-# 		"dat.syn_total.reduced10"
+# 		"dat.sol.reduced", "dat.sol.reduced2", "dat.sol.reduced10"
 # 	)
 # )
 # interventions$mwf <- sapply(
@@ -95,14 +47,13 @@ dat.syn_total.reduced10 <- box_read(978947609426)
 exposure.comparison <- rbindlist(c(
 	list(dat.reduced[, .(
 		studyno, I, status, year, py, `Cumulative soluble`, cum_soluble, soluble)]),
-	lapply(list(dat.sol.reduced, dat.sol.reduced2, dat.sol.reduced10,
-							dat.sol_total.reduced, dat.sol_total.reduced2,
-							 dat.sol_total.reduced10), function(x) {
+	lapply(list(dat.sol.reduced, dat.sol.reduced2, dat.sol.reduced10
+	), function(x) {
 		x[,.(
-		studyno, I, status, year, py, `Cumulative soluble`, cum_soluble, soluble)]
+			studyno, I, status, year, py, `Cumulative soluble`, cum_soluble, soluble)]
 	})),
 	idcol = "Intervention"
-	)
+)
 
 exposure.comparison[Intervention == 1,
 										Type := "None"]
@@ -115,7 +66,7 @@ exposure.comparison <- rbindlist(list(
 	exposure.comparison[Type == "None",.(
 		Intervention, studyno, I, status, year, py,
 		`Cumulative soluble`, cum_soluble, soluble, Type = "Static"
-		)],
+	)],
 	exposure.comparison
 ))
 
@@ -125,9 +76,9 @@ exposure.comparison[,Type := factor(Type, c("Static", "Dynamic"), c("A) Static i
 
 exposure.comparison[,`:=`(Intervention = factor(
 	Intervention, labels = c(
-	"No limit",
-	rep(c("0.5", "0.25", "0.05"), 2)))
-	)]
+		"No limit",
+		rep(c("0.5", "0.25", "0.05"), 1)))
+)]
 
 exposure.comparison[,`:=`(year.max = max(year), I.max = max(I)), studyno]
 
@@ -139,11 +90,11 @@ table(exposure.comparison[status == 1,.(`Cumulative soluble`, Intervention)])
 tikzDevice::tikz(here::here("resources", "shift-cum-soluble.tex"), height = 2.75, width = 6, standAlone = T)
 exposure.comparison[I == I.max] %>% ggplot(
 	aes(x = cum_soluble)
-	# color = '#102451'
+	#, color = '#102451'
 ) +
 	geom_density(aes(lty = Intervention)
 							 # , color = '#102451'
-							 ) +
+	) +
 	# geom_histogram(aes(fill = Intervention), bins = 40, alpha = 0.4, position = 'identity') +
 	# facet_wrap(. ~ Intervention, ncol = 1) +
 	scale_linetype_manual(values = c("solid", "longdash", "dotted", "dotdash", "longdash", "dotted", "dotdash")) +
@@ -155,8 +106,8 @@ exposure.comparison[I == I.max] %>% ggplot(
 	geom_rug(data = exposure.comparison[status == 1, .(cum_soluble)],
 					 alpha = 0.5, size = 0.05, length = grid::unit(3.5, "pt")
 					 # color = '#102451'
-					 ) +
-	facet_wrap(. ~ Type) +
+	) +
+	# facet_wrap(. ~ Type) +
 	labs(
 		y = "Density",
 		x = "Cumulative exposure (mg/m$^3\\cdot\\,$years)",
@@ -181,7 +132,7 @@ exposure.comparison %>% ggplot(
 ) +
 	geom_density(aes(lty = Intervention),
 							 bw = 0.02
-							 ) +
+	) +
 	# geom_histogram(aes(fill = Intervention), bins = 40, alpha = 0.4, position = 'identity') +
 	# facet_wrap(. ~ Intervention, ncol = 1) +
 	scale_linetype_manual(values = c("solid", "longdash", "dotted", "dotdash", "longdash", "dotted", "dotdash")) +
@@ -203,7 +154,7 @@ exposure.comparison %>% ggplot(
 			legend.key.size = unit(10, "pt")
 		) +
 	theme(panel.grid = element_blank(),
-			strip.text = element_text(hjust = 0)) +
+				strip.text = element_text(hjust = 0)) +
 	coord_cartesian(ylim = c(0, 3.5), xlim = c(-0.1, 3.5))
 dev.off()
 lualatex("shift-avg-soluble\\.tex", here::here('resources'))
@@ -216,121 +167,37 @@ lualatex("shift-avg-soluble\\.tex", here::here('resources'))
 baseline <- ice_gcomp()
 
 # Intervention
-reduction.str <- ice_gcomp(a = 1, dta.a1 = copy(dat.str.reduced), mwf.name = "straight")
-reduction.str_total <- ice_gcomp(a = 1, dta.a1 = copy(dat.str_total.reduced), mwf.name = "straight")
-
-reduction.str2 <- ice_gcomp(a = 1, dta.a1 = copy(dat.str.reduced2), mwf.name = "straight")
-reduction.str_total2 <- ice_gcomp(a = 1, dta.a1 = copy(dat.str_total.reduced2), mwf.name = "straight")
-
-reduction.str10 <- ice_gcomp(a = 1, dta.a1 = copy(dat.str.reduced10), mwf.name = "straight")
-reduction.str_total10 <- ice_gcomp(a = 1, dta.a1 = copy(dat.str_total.reduced10), mwf.name = "straight")
-
 reduction.sol <- ice_gcomp(a = 1, dta.a1 = copy(dat.sol.reduced), mwf.name = "soluble")
-reduction.sol_total <- ice_gcomp(a = 1, dta.a1 = copy(dat.sol_total.reduced), mwf.name = "soluble")
-
 reduction.sol2 <- ice_gcomp(a = 1, dta.a1 = copy(dat.sol.reduced2), mwf.name = "soluble")
-reduction.sol_total2 <- ice_gcomp(a = 1, dta.a1 = copy(dat.sol_total.reduced2), mwf.name = "soluble")
-
 reduction.sol10 <- ice_gcomp(a = 1, dta.a1 = copy(dat.sol.reduced10), mwf.name = "soluble")
-reduction.sol_total10 <- ice_gcomp(a = 1, dta.a1 = copy(dat.sol_total.reduced10), mwf.name = "soluble")
-
-reduction.syn <- ice_gcomp(a = 1, dta.a1 = copy(dat.syn.reduced), mwf.name = "synthetic")
-reduction.syn_total <- ice_gcomp(a = 1, dta.a1 = copy(dat.syn_total.reduced), mwf.name = "synthetic")
-
-reduction.syn2 <- ice_gcomp(a = 1, dta.a1 = copy(dat.syn.reduced2), mwf.name = "synthetic")
-reduction.syn_total2 <- ice_gcomp(a = 1, dta.a1 = copy(dat.syn_total.reduced2), mwf.name = "synthetic")
-
-reduction.syn10 <- ice_gcomp(a = 1, dta.a1 = copy(dat.syn.reduced10), mwf.name = "synthetic")
-reduction.syn_total10 <- ice_gcomp(a = 1, dta.a1 = copy(dat.syn_total.reduced10), mwf.name = "synthetic")
-
 observed <- sum(dat.reduced$status)/n_distinct(dat.reduced$studyno)
 
 # Save results
 estimates <- list(
 	baseline = baseline,
-	reduction.str = reduction.str,
-	reduction.str2 = reduction.str2,
-	reduction.str_total = reduction.str_total,
-	reduction.str_total2 = reduction.str_total2,
-	reduction.str10 = reduction.str10,
-	reduction.str_total10 = reduction.str_total10,
 	reduction.sol = reduction.sol,
-	reduction.sol_total = reduction.sol_total,
 	reduction.sol2 = reduction.sol2,
-	reduction.sol_total2 = reduction.sol_total2,
 	reduction.sol10 = reduction.sol10,
-	reduction.sol_total10 = reduction.sol_total10,
-	reduction.syn = reduction.syn,
-	reduction.syn_total = reduction.syn_total,
-	reduction.syn2 = reduction.syn2,
-	reduction.syn_total2 = reduction.syn_total2,
-	reduction.syn10 = reduction.syn10,
-	reduction.syn_total10 = reduction.syn_total10,
 	observed = sum(dat.reduced$status)/n_distinct(dat.reduced$studyno)
 )
 
 save(
 	baseline,
-	reduction.str,
-	reduction.str_total,
-	reduction.str2,
-	reduction.str_total2,
-	reduction.str10,
-	reduction.str_total10,
 	reduction.sol,
-	reduction.sol_total,
 	reduction.sol2,
-	reduction.sol_total2,
 	reduction.sol10,
-	reduction.sol_total10,
-	reduction.syn,
-	reduction.syn_total,
-	reduction.syn2,
-	reduction.syn_total2,
-	reduction.syn10,
-	reduction.syn_total10,
 	observed, file = here::here("resources", paste0("estimates.rdata")))
 
 h.baseline <- mean(baseline$h.pred)
-h.reduction.str <- mean(reduction.str$h.pred)
-h.reduction.str_total <- mean(reduction.str_total$h.pred)
 h.reduction.sol <- mean(reduction.sol$h.pred)
-h.reduction.sol_total <- mean(reduction.sol_total$h.pred)
-h.reduction.syn <- mean(reduction.syn$h.pred)
-h.reduction.syn_total <- mean(reduction.syn_total$h.pred)
-h.reduction.str2 <- mean(reduction.str2$h.pred)
-h.reduction.str_total2 <- mean(reduction.str_total2$h.pred)
 h.reduction.sol2 <- mean(reduction.sol2$h.pred)
-h.reduction.sol_total2 <- mean(reduction.sol_total2$h.pred)
-h.reduction.syn2 <- mean(reduction.syn2$h.pred)
-h.reduction.syn_total2 <- mean(reduction.syn_total2$h.pred)
-h.reduction.str10 <- mean(reduction.str10$h.pred)
 h.reduction.sol10 <- mean(reduction.sol10$h.pred)
-h.reduction.syn10 <- mean(reduction.syn10$h.pred)
-h.reduction.str_total10 <- mean(reduction.str_total10$h.pred)
-h.reduction.sol_total10 <- mean(reduction.sol_total10$h.pred)
-h.reduction.syn_total10 <- mean(reduction.syn_total10$h.pred)
 
 save(
 	h.baseline,
-	h.reduction.str,
-	h.reduction.str_total,
-	h.reduction.str2,
-	h.reduction.str_total2,
-	h.reduction.str10,
-	h.reduction.str_total10,
 	h.reduction.sol,
-	h.reduction.sol_total,
 	h.reduction.sol2,
-	h.reduction.sol_total2,
 	h.reduction.sol10,
-	h.reduction.sol_total10,
-	h.reduction.syn,
-	h.reduction.syn_total,
-	h.reduction.syn2,
-	h.reduction.syn_total2,
-	h.reduction.syn10,
-	h.reduction.syn_total10,
 	file = here::here("resources", paste0("h.estimates.rdata")))
 
 load(here::here("resources", paste0("estimates.rdata")))
@@ -412,21 +279,11 @@ do.call(cbind, lapply(estimates.bs[,-(1:2)], function(x) {
 
 rr.point_estimates <- data.frame(
 	variable = paste0(c(
-		"straight", "total by straight", "straight2", "total by straight2",
-		"straight10", "total by straight10",
-		"soluble", "total by soluble", "soluble2", "total by soluble2",
-		"soluble10",  "total by soluble10",
-		"synthetic", "total by synthetic", "synthetic2", "total by synthetic2",
-		"synthetic10",  "total by synthetic10"
-		), ".natural"),
+		"soluble", "soluble2", "soluble10"
+	), ".natural"),
 	estimate = c(
-		h.reduction.str, h.reduction.str_total, h.reduction.str2, h.reduction.str_total2,
-		h.reduction.str10, h.reduction.str_total10,
-		h.reduction.sol, h.reduction.sol_total, h.reduction.sol2, h.reduction.sol_total2,
-		h.reduction.sol10, h.reduction.sol_total10,
-		h.reduction.syn, h.reduction.syn_total, h.reduction.syn2, h.reduction.syn_total2,
-		h.reduction.syn10, h.reduction.syn_total10
-		)/h.baseline
+		h.reduction.sol, h.reduction.sol2, h.reduction.sol10
+	)/h.baseline
 )
 
 rr <- merge(rr.bs,
@@ -438,8 +295,8 @@ rr[,.(estimate = estimate[1],
 			upper = quantile(value, 1 - 0.025) - mean(value) + estimate[1]
 			# wald.lower = exp(log(estimate[1]) + qnorm(0.025) * sd(log(value))),
 			# wald.upper = exp(log(estimate[1]) - qnorm(0.025) * sd(log(value)))
-			),
-	 variable]
+),
+variable]
 
 do.call(cbind, lapply(estimates.bs[,-(1:2)], function(x) {
 	x - estimates.bs[,2]
@@ -447,21 +304,9 @@ do.call(cbind, lapply(estimates.bs[,-(1:2)], function(x) {
 
 rd.point_estimates <- data.frame(
 	variable = paste0(c(
-		"straight", "total by straight", "straight2", "total by straight2",
-		"straight10", "total by straight10",
-		"soluble", "total by soluble", "soluble2", "total by soluble2",
-		"soluble10", "total by soluble10",
-		"synthetic", "total by synthetic", "synthetic2", "total by synthetic2",
-		"synthetic10", "total by synthetic10",
-		"scale all", "scale all2"), ".natural"),
+		"soluble", "soluble2", "soluble10"), ".natural"),
 	estimate = c(
-		h.reduction.str, h.reduction.str_total, h.reduction.str2, h.reduction.str_total2,
-		h.reduction.str10, h.reduction.str_total10,
-		h.reduction.sol, h.reduction.sol_total, h.reduction.sol2, h.reduction.sol_total2,
-		h.reduction.sol10, h.reduction.sol_total10,
-		h.reduction.syn, h.reduction.syn_total, h.reduction.syn2, h.reduction.syn_total2,
-		h.reduction.syn10, h.reduction.syn_total10,
-		h.reduction.total, h.reduction.total) - h.baseline
+		h.reduction.sol, h.reduction.sol2, h.reduction.sol10) - h.baseline
 )
 
 rd <- merge(rd.bs,
@@ -471,8 +316,8 @@ rd <- merge(rd.bs,
 rd[,.(estimate = estimate[1] * 34738,
 			lower = (quantile(value, 0.025) - mean(value) + estimate[1]) * 34738,
 			upper = (quantile(value, 1 - 0.025) - mean(value) + estimate[1]) * 34738
-			),
-	 variable]
+),
+variable]
 
 # Plot sampling distributions ####
 rr.bs %>% ggplot(

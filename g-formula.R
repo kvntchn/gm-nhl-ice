@@ -50,7 +50,7 @@ ice_gcomp <- function(
 		dta[,`Other event` := max(`Other event`), studyno]
 	}
 
-	if ("immortal" %in% names(dta.a1)){
+	if ("immortal" %in% names(dta.a1)) {
 		dta.a1 <- dta.a1[,-c("immortal", "I", "I.which"), with = F]
 	}
 
@@ -109,40 +109,21 @@ ice_gcomp <- function(
 	discrete.formula <- as.formula(paste(
 		"status",
 		"~",
-		# "pspline(age.year2, df = 3) +",
-		# "pspline(year2, df = 2) +",
 		"Age +",
-		# "age.year2 +",
-		# "year +",
 		"`Cumulative straight` +",
-		# "cum_straight + ",
 		"`Cumulative soluble` +",
-		# "cum_soluble + ",
 		"`Cumulative synthetic` +",
-		# "cum_synthetic + ",
-		# "`Duration of employment` +",
-		# "employment.years +",
 		"`Employment status` +",
 		"`Year of hire` +",
-		# "yin.gm +",
 		"`Cumulative time off` +",
-		# "cum_off +",
 		"Sex +",
 		"Race + Plant",
-		# "+",
-		# paste(sapply(
-		# 	c(#timevar_covariates.which, baseline_covariates.which
-		# 		"Sex", "Race"), function(x) {
-		# 		if (!grepl(mwf.name, x)) {
-		# 			x <- paste0("`", x, "`")
-		# 			return(paste0("`Cumulative ", mwf.name, "` * ",
-		# 										x))
-		# 		} else {""}}), collapse = " + ")
 		NULL
 	))
-	h <- fastglm(model.matrix(discrete.formula, data = dta[immortal == 0 & Censored == 0]),
-							 dta[immortal == 0 & Censored == 0]$status,
-							 family = "binomial"
+	h <- fastglm(
+		model.matrix(discrete.formula, data = dta[immortal == 0 & Censored == 0]),
+		dta[immortal == 0 & Censored == 0]$status,
+		family = "binomial"
 	)
 	# summary(h)
 
@@ -197,48 +178,20 @@ ice_gcomp <- function(
 
 	dta[immortal == 0,`:=`(h.pred = shift(h.discrete, -1, NA)), by = .(studyno)]
 
-	# dta[studyno == 100001, .(
-	# 		studyno, I, year, h.pred, h.discrete, Censored
-	# 	)]
-
-	# dta[studyno == 100022, .(
-	# 	studyno, I, year, h.pred, h.discrete, Censored
-	# )]
-	# dta.a1[studyno == 100022, .(
-	# 		studyno, I, year,
-	# 		# h.pred, h.discrete,
-	# 		status, Censored
-	# 	)]
-
-	# dta[studyno == 121609, .(
-	# 		studyno, I, year, h.pred, h.discrete, Censored, status
-	# 	)]
-	# dta.a1[studyno == 121609, .(
-	# 		studyno, I, year,
-	# 		# h.pred, h.discrete,
-	# 		status, Censored
-	# 	)]
-
-	# dta.a1[studyno == 100853, .(
-	# 		studyno, I, year,
-	# 		# h.pred, h.discrete,
-	# 		status, Censored
-	# 	)]
-
 	# set iterator q
-	q <- 2
+	q <- 1
 
 	# Subset
-	dta <- dta[I <= J - 1]
+	dta <- dta[I <= J - q]
 
 	# Loop over times
-	while (q <= J & !no_support) {
+	while (q < J & !no_support) {
 		# q <- q - 1
 		k <- J - q
 
 		if (!quiet) {
-			cat(paste0("Iteration ", q - 1, " of ", J - 1, "...\n"))
-			cat(paste0("\t Getting cumulative hazard over (", k, ", ", J, "]\n"))
+			cat(paste0("Iteration ", q, " of ", J - 1, "...\n"))
+			cat(paste0("\t Getting cumulative hazard over [", k, ", ", J, "]\n"))
 		}
 
 		# # Make new covariates, if necessary
@@ -255,35 +208,33 @@ ice_gcomp <- function(
 		# )]
 
 		support <- sapply(c(timevar_covariates.which, baseline_covariates.which), function(x) {
-			length(table(dta[status == 1 & I == k + 1, x, with = F]))
+			length(table(dta[status == 1 & I == k, x, with = F]))
 		})
 
 		if (sum(support <= 1)) {
 			no_support <- T
-			cat(paste0("Inadequate support at q = ", q))
+			cat(paste0("Inadequate support at k = ", k))
 		}
 
 		# 3. Regress hazard from previous step ####
+		# Cast time varying-covariates
 		dta.wide <- dcast(
-			dta[studyno %in% dta[immortal == 0 & I == k + 1 & status == 0 & Censored == 0, studyno]],
+			dta[studyno %in% dta[immortal == 0 & I == k & status == 0 & Censored == 0, studyno]],
 			studyno ~ I,
 			value.var = timevar_covariates.which)
 
+		# Merge baseline covariates
 		dta.wide <- merge(
-			dta[I == k + 1, .(h.pred, `Year of hire`, Sex, Race, Plant), studyno],
+			dta[I == k, .(h.pred, `Year of hire`, Sex, Race, Plant), studyno],
 			dta.wide,
 			by = "studyno",
 			all.x = F, all.y = T)
 
 		h <- fastglm(
-			model.matrix(
-				h.pred ~ . - studyno,
-				data = dta.wide),
+			model.matrix(h.pred ~ . - studyno, data = dta.wide),
 			dta.wide$h.pred,
-			family = "quasibinomial"
-		)
+			family = "quasibinomial")
 
-		# summary(h)
 		na_coef <- is.na(coef(h))
 		if (!quiet) {
 			if (sum(na_coef) > 0) {
@@ -293,108 +244,76 @@ ice_gcomp <- function(
 
 		# 4. Use predicted hazard to obtain that to be regressed next ####
 		# Get post-intervention data
-		dta.a <- dta.a1[studyno %in% dta[immortal == 0 & I == k + 1, studyno]]
+		dta.a <- dta.a1[studyno %in% dta[immortal == 0 & I == k, studyno]]
 		dta.a <- merge(
-			dta[,.(
-				`Year of hire` = `Year of hire`[1],
-				Sex = Sex[1], Race = Race[1], Plant = Plant[1]), studyno],
-			dcast(dta.a, studyno ~ I, value.var = c(
-				timevar_covariates.which, "Censored", "status")),
+			dta[,.(`Year of hire` = `Year of hire`[1], Sex = Sex[1],
+						 Race = Race[1], Plant = Plant[1]), studyno],
+			dcast(dta.a, studyno ~ I,
+						value.var = c(timevar_covariates.which, "Censored", "status")),
 			by = "studyno",
 			all.x = F, all.y = T)
 
-		# dta.a[!studyno %in% dta.wide$studyno,.(studyno)]
-		# nrow(dta.wide)
-		# nrow(dta.a)
-
-		# Check positivity
-		if (a != 0 & k > 0) {
+		# Check positivity ####
+		if (a != 0 & k > 1) {
 			if (!quiet) {
 				cat(paste0("\t Checking positivity over (", k, ", ", J, "]\n"))
 			}
 			dta.g <- merge(
-				dta.a[get(paste0("Censored_", k)) == 0 &
-								get(paste0("status_", k)) == 0,
-							c("studyno",
-								paste0("Cumulative ", mwf.name, "_", c(k, k + 1))
-							),
+				dta.a[get(paste0("Censored_", k - 1)) == 0 & get(paste0("status_", k - 1)) == 0,
+							c("studyno", paste0("Cumulative ", mwf.name, "_", c(k - 1, k))),
 							with = F],
 				dta.wide
 			)
 
-			dta.g.tab <- dta.g[get(
-				paste0("Cumulative ", mwf.name, "_", k, ".x")
-			) == get(
-				paste0("Cumulative ", mwf.name, "_", k, ".y")
-			), .(
-				n = n_distinct(studyno),
-				overlap = sum(get(
-					paste0("Cumulative ", mwf.name, "_", k + 1, ".x")
-				) == get(
-					paste0("Cumulative ", mwf.name, "_", k + 1, ".y")
-				))
-			),
-			by = c(names(dta.g)[!grepl(
-				paste0("studyno",
-							 "|",
-							 "h.pred",
-							 "|",
-							 paste0("_", k + 1, "$"),
-							 "|",
-							 paste0("_", k + 1, "\\.[xy]$"),
-							 "|",
-							 paste0("_", k + 0, "\\.[xy]$")
+			dta.g.tab <- dta.g[
+				get(paste0("Cumulative ", mwf.name, "_", k - 1, ".x")) == get(
+					paste0("Cumulative ", mwf.name, "_", k - 1, ".y")),
+				.(n = n_distinct(studyno),
+					overlap = sum(
+						get(paste0("Cumulative ", mwf.name, "_", k, ".x")) == get(
+							paste0("Cumulative ", mwf.name, "_", k, ".y")))
 				),
-				names(dta.g)
-			)])
+				by = c(names(dta.g)[
+					!grepl(paste0(
+						"studyno", "h.pred",
+						paste0("_", k, "$"), paste0("_", k, "\\.[xy]$"), paste0("_", k - 1, "\\.[xy]$"),
+						sep = "|"),
+						names(dta.g)
+					)])
 			]
-
-			# View(dta.g.tab[overlap == 0])
-			# table(dta.g.tab[,.(n, overlap)])
-			# n_distinct(dta[studyno %in%
-			# 			merge(dta.g.tab[overlap == 0],
-			# 						dta.wide)$studyno, studyno])
 
 			# No overlap for
 			message('\t No overlap for ',
 							signif(mean(dta.g.tab[,overlap == 0]), 3) * 100,
 							"% of covariate histories")
 			message('\t No overlap for ',
-							sum(dta.g.tab[overlap == 0,n]),
+							sum(dta.g.tab[overlap == 0, n]),
 							" people")
 		}
 
-		if (a != 0 & k == 0) {
+		if (a != 0 & k == 1) {
 			if (!quiet) {
-				cat(paste0("\t Checking positivity over (", k, ", ", J, "]\n"))
+				cat(paste0("\t Checking positivity over (", k - 1, ", ", J, "]\n"))
 			}
 			dta.g <- merge(
-				dta.a[,
-							c("studyno",
-								paste0("Cumulative ", mwf.name, "_", k + 1)
-							),
-							with = F],
+				dta.a[,c("studyno", paste0("Cumulative ", mwf.name, "_", k)), with = F],
 				dta.wide
 			)
 
 			dta.g.tab <- dta.g[, .(
 				n = n_distinct(studyno),
-				overlap = sum(get(
-					paste0("Cumulative ", mwf.name, "_", k + 1, ".x")
-				) == get(
-					paste0("Cumulative ", mwf.name, "_", k + 1, ".y")
-				))
+				overlap = sum(
+					get(paste0("Cumulative ", mwf.name, "_", k, ".x")) == get(
+						paste0("Cumulative ", mwf.name, "_", k, ".y")))
 			),
 			by = c(names(dta.g)[!grepl(
 				paste0("studyno",
 							 "|",
 							 "h.pred",
 							 "|",
-							 paste0("_", k + 1, "$"),
+							 paste0("_", k, "$"),
 							 "|",
-							 paste0("_", k + 1, "\\.[xy]$"),
-							 "|",
-							 paste0("_", k + 0, "\\.[xy]$")
+							 paste0("_", k, "\\.[xy]$")
 				),
 				names(dta.g)
 			)])
@@ -415,36 +334,26 @@ ice_gcomp <- function(
 		}
 
 		h.predict <- predict(
-			h, model.matrix(
+			h,
+			model.matrix(
 				~ . - studyno,
-				data = dta.a[, names(dta.wide)[names(dta.wide) != "h.pred"], with = F]
-			),
+				data = dta.a[, names(dta.wide)[names(dta.wide) != "h.pred"], with = F]),
 			"response")
 
 		# Get iterated expectation
 		if ("h.predict" %in% names(dta)) {
 			dta <- dta[,-c("h.predict"), with = F]
 		}
-		dta <- merge(dta,
-								 dta.a[,.(studyno, h.predict = h.predict)],
-								 by = "studyno", all.x = T)
-		# dta[Censored == 1 & I == k,.(studyno, I, Censored, h.pred, h.predict)]
-		dta[immortal == 0 & I == max(k, 1),`:=`(
-			h.pred = h.predict * (1 - h.discrete) + h.discrete)]
+		dta <- merge(
+			dta,
+			dta.a[,.(studyno, h.predict = h.predict)],
+			by = "studyno", all.x = T)
 
-		# dta[studyno == 100853, .(
-		# 	studyno, I, year, h.pred, h.discrete, h.predict, status, Censored
-		# )]
-
-		# dta[studyno == 100103, .(
-		# 	studyno, I, year, h.pred, h.discrete, h.predict, status, Censored
-		# )]
+		dta[immortal == 0 & I == max(k - 1, 1),
+				`:=`(h.pred = h.predict * (1 - h.discrete) + h.discrete)]
 
 		# Subset
-		dta <- dta[I <= max(k, 1)]
-
-		# dta[studyno %in% dta[immortal == 0 & I == k + 1 & status == 0 & Censored == 0, studyno]
-		# ][,.(studyno, year, Censored, `Other event`, h.pred, status)][status != 0]
+		dta <- dta[I <= max(k - 1, 1)]
 
 		# Update iterator
 		q <- q + 1
@@ -452,7 +361,6 @@ ice_gcomp <- function(
 	} # End loop over times
 
 	if (!no_support) {return(dta[,.(studyno, h.pred)])
-		# dta[,.(I, studyno, h.pred)]
 	} else {return(data.table(studyno = NA, h.pred = NA))}
 }
 
@@ -506,7 +414,11 @@ get.bs <- function(dat = copy(dat.reduced),
 			b = b,
 			if (run_natural) {mean(ice_gcomp(dta = data.mcmc, dta.a1 = NULL, quiet = T)$h.pred)},
 			do.call(cbind, lapply(1:length(dat.a1), function(i) {
-				return(mean(ice_gcomp(a = 1, dta = data.mcmc, dta.a1 = dat.a1[[i]], mwf.name = mwf.name[[i]], quiet = T)$h.pred))
+				return(mean(ice_gcomp(
+					a = 1,
+					dta = data.mcmc,
+					dta.a1 = dat.a1[[i]],
+					mwf.name = mwf.name[[i]], quiet = T)$h.pred))
 			}))
 		)
 
