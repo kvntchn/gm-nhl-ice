@@ -2,7 +2,7 @@
 # fontsize: 11pt
 # mainfont: arial
 format:
- html: default
+ # html: default
  docx:
     number-sections: false
     global-numbering: true
@@ -76,38 +76,46 @@ kevchen@berkeley.edu\
 
 **Methods:** We estimated counterfactual risk of NHL between 1985 and 2005 in the UAW-GM cohort of autoworkers at three Michigan plants (n = 34,734) under hypothetical limits on annual average daily exposure to soluble MWF. We applied the hazard-extended ICE parametric g-formula, an estimator capable of adjusting for time-varying confounding affected by past exposure.
 
-**Results:** During follow-up, 231 NHL cases occurred. Stronger hypothetical limits on soluble MWF exposure resulted in monotonic reductions in NHL risk estimates. Capping annual average daily exposure at 0.5 mg/m^3^, the NIOSH recommended exposure limit, would have prevented 44 (95% CI: -6, 91) cases. Capping at 0.25 mg/m^3^ would have prevented 52 (95% CI: -5, 106) cases. Finally, capping at 0.05 mg/m^3^ would have prevented 71 (95% CI: 12, 129) cases.
+**Results:** 231 NHL cases occurred over the 20-year follow-up period. Stronger hypothetical limits on soluble MWF exposure resulted in monotonic reductions in NHL risk. Capping annual average daily exposure at 0.5 mg/m^3^, the NIOSH recommended exposure limit, would have prevented 44 (95% CI: -6, 91) cases. Capping at 0.25 mg/m^3^ would have prevented 52 (95% CI: -5, 106) cases. Finally, capping at 0.05 mg/m^3^ would have prevented 71 (95% CI: 12, 129) cases.
 
-**Conclusion:** Stronger limits on soluble MWF exposure would have prevented cases of NHL in the UAW-GM cohort. Our application demonstrates the utility of an ICE g-formula estimator for estimating the effect of realistic exposure interventions on a survival outcome. Greater availability of worked examples and software would facilitate wider application of ICE g-formula estimators.
+**Conclusion:** Limits on soluble MWF exposure would have prevented cases of NHL in the UAW-GM cohort. Although MWF use is expected to decline as the automotive industry turns to electric vehicles, a boom in electric vehicle manufacturing could nonetheless lead to global increases in worker exposure to MWF. Strong limits on exposure to MWF may be important for preventing NHL incidence during a period of automotive industry expansion.
 
 \newpage
 
 # Introduction
 
-The parametric g-formula has become increasingly popular among epidemiologists in the last decade. This analytic approach is attractive in part because it allows investigators to estimate the population-level effect of realistic interventions on exposures that may depend on individuals' covariate history as well as their natural value of exposure. In addition to yielding estimates with a population-level interpretation, the parametric g-formula is also capable of adjusting for time-varying confounding possibly affected by past exposure in longitudinal settings, which is not possible with standard regression methods. In their seminal 2009 paper, Taubman et alia describe the parametric g-formula and illustrate its application in the estimation of the counterfactual risks under several interventions in the Nurses' Health Study [@Taubman_2009]. They introduced a non-iterative conditional expectation parametric g-formula that requires parametric specification of the full joint distribution of confounders, exposures, and outcomes over time.
+<!-- The parametric g-formula has become increasingly popular among epidemiologists in the last decade, and there are several exemplary tutorial papers and illustrative examples [@Taubman_2009;@Breskin_2020]. This analytic approach is attractive in part because it allows investigators to estimate the population-level effect of realistic interventions on exposures that may depend on individuals' covariate history as well as their natural value of exposure. In addition to yielding estimates with a population-level interpretation, the parametric g-formula is also capable of adjusting for time-varying confounding possibly affected by past exposure in longitudinal settings, which is not possible with standard regression methods. In their seminal 2009 paper, Taubman et alia describe the parametric g-formula and illustrate its application in the estimation of the counterfactual risks under several interventions in the Nurses' Health Study [@Taubman_2009]. They introduced a non-iterative conditional expectation parametric g-formula that requires parametric specification of the full joint distribution of confounders, exposures, and outcomes over time. -->
 
-Full parameterization is an attractive choice for investigators seeking to embed real causal knowledge into the estimation problem. For those who are not completely comfortable with the full set of parametric assumptions, the iterative conditional expectation (ICE) parametric g-formula may be a good alternative. The ICE g-formula was introduced as early as 2004 [@Robins_2004], but its parametric implementations remain far less common in practice than its non-ICE counterpart. Like the non-ICE parametric g-formula, the ICE expression enables adjustment for time-varying confounding possibly affected by past exposure. However, the ICE parametric g-formula requires the parametric specification of models for the outcome only, and not the confounders or exposure. Hence, it requires fewer parametric assumptions than the non-ICE parametric g-formula. Furthermore, the elegance of the ICE parametric g-formula allows analysts to implement the method using standard statistical software, which offers the prospect of greater interpretability and transparency than using "black box" implementations.
+<!-- Full parameterization is an attractive choice for investigators seeking to embed real causal knowledge into the estimation problem. For those who are not completely comfortable with the full set of parametric assumptions, the iterative conditional expectation (ICE) parametric g-formula may be a good alternative. The ICE g-formula was introduced as early as 2004 [@Robins_2004], but its parametric implementations remain far less common in practice than its non-ICE counterpart. Like the non-ICE parametric g-formula, the ICE expression enables adjustment for time-varying confounding possibly affected by past exposure. However, the ICE parametric g-formula requires the parametric specification of models for the outcome only, and not the confounders or exposure. Hence, it requires fewer parametric assumptions than the non-ICE parametric g-formula. Furthermore, the elegance of the ICE parametric g-formula allows analysts to implement the method using standard statistical software, which offers the prospect of greater interpretability and transparency than using "black box" implementations. -->
 
-Here, we describe the hazard-extended ICE parametric g-formula, an extension of the ICE parametric g-formula for causal survival analyses, and apply it to estimate counterfactual cumulative incidences of non-Hodgkin lymphoma under hypothetical interventions on annual average daily exposure to soluble metalworking fluids (MWF) in the UAW-GM autoworkers cohort between 1984 and 2005. The interventions we evaluate are modified longitudinal treatment policies which depend on the natural value of exposure [@Taubman_2009;@Richardson_2013;@Haneuse_2013;@Young_2014;@Diaz_2021].
+<!-- Here, we describe the hazard-extended ICE parametric g-formula, an extension of the ICE parametric g-formula for causal survival analyses, and apply it to estimate counterfactual cumulative incidences of non-Hodgkin lymphoma under hypothetical interventions on annual average daily exposure to soluble metalworking fluids (MWF) in the UAW-GM autoworkers cohort between 1984 and 2005. The interventions we evaluate are modified longitudinal treatment policies which depend on the natural value of exposure [@Taubman_2009;@Richardson_2013;@Haneuse_2013;@Young_2014;@Diaz_2021]. -->
 
-<!-- Non-Hodgkin Lymphoma (NHL) is the seventh most common cancer type in the United States and has garnered substantial research attention because its incidence in the United States doubled between 1973 and 1994, before plateauing at around 19 per 100,000 persons per year [@seer_1994;@Ekstrom-Smedby_2006]. The strongest known risk factor of NHL is immunosuppression, both congenital and acquired [@Filipovich_1992;@Chiu_2015]. Modulation of immune function contributes to the pathogenesis of NHL directly by perturbing lymphocyte function or indirectly by reducing immunosurveillance against neoplasms. Immunodeficiency may also interact with infection with Epstein-Barr Virus, resulting in uncontrolled B-cell proliferation [@Oertel_2002]. Acquired immunodeficiency through infection with human immunodeficiency virus (HIV) can lead to genetic lesions and dysregulation while increasing vulnerability to infection by other oncogenic agents [@Grulich_1999;@Alexander_2007]. However, since immunodeficiency and infection with HIV are rare, they cannot fully explain the historic rise or present burden of NHL [@Shiels_2013]. Since the rise in NHL incidence coincided with a period of rapid and extensive chemicalization in industry, agriculture and warfare, there has been stronger interest in the environmental and occupational epidemiology of NHL [@Nelson_2005;@Romero_2021]. -->
+In recent years, there has been a surge in optimism for growth in American manufacturing [@Carr_2022;@Armbrust_2021]. While it may be easy to imagine a factory floor crowded with workers and heavy machinery, an essential part of the industrial production of physical goods is easy to overlook: lubricants and coolants. In industries that require metalworking, from cutting wafers for semiconductor production to stamping metals for electric vehicle battery casings, metalworking fluids (MWF) are essential. During use in drawing, stamping, cutting, and grinding operations, MWF are sprayed and poured onto tools and parts to provide lubrication and cooling. Parts may even be submerged in MWF in precision manufacturing applications [@Arrabiyeh_2020].
 
-<!-- Pesticide exposure in agricultural occupational settings was a common target of NHL research in recent decades. A meta-analysis of 44 articles published between 1980 and 2014 found statistically significant associations between NHL and exposure to several classes of pesticides including carbamate, organophosporus, triazine, and organochlorine [@Schinasi_2014]. Occupations associated with NHL are not limited to the agricultural sector, however. Metal processors, health workers, salespeople, machinists, and electricians have all been identified as occupational groups with higher risk of NHL [@Fritschi_2005a; @Mester_2006; @Ekstrom-Smedby_2006]. -->
+Non-Hodgkin Lymphoma (NHL) is the seventh most common cancer type in the United States and has garnered substantial research attention because its incidence in the United States doubled between 1973 and 1994, before plateauing at around 19 per 100,000 persons per year [@seer_1994;@Ekstrom-Smedby_2006]. The strongest known risk factor of NHL is immunosuppression, both congenital and acquired [@Filipovich_1992;@Chiu_2015]. Modulation of immune function contributes to the pathogenesis of NHL directly by perturbing lymphocyte function or indirectly by reducing immunosurveillance against neoplasms. Immunodeficiency may also interact with infection with Epstein-Barr Virus, resulting in uncontrolled B-cell proliferation [@Oertel_2002]. Acquired immunodeficiency through infection with human immunodeficiency virus (HIV) can lead to genetic lesions and dysregulation while increasing vulnerability to infection by other oncogenic agents [@Grulich_1999;@Alexander_2007]. However, since immunodeficiency and infection with HIV are rare, they cannot fully explain the historic rise or present burden of NHL [@Shiels_2013]. Since the rise in NHL incidence coincided with a period of rapid and extensive chemicalization in industry, agriculture and warfare, there has been stronger interest in the environmental and occupational epidemiology of NHL [@Nelson_2005;@Romero_2021].
 
-<!-- Metalworking fluids (MWF), an important class of occupational exposures, are complex mixtures of oils and chemicals used to lubricate and cool metal tools and parts during metal cutting and grinding operations in manufacturing processes. During use, MWFs aerosolize and present a potential health hazard to exposed workers. There are three general types of MWF: straight, soluble, and synthetic. The type of MWF applied has changed over the decades and depends in part on the particular metalworking operation. Straight MWF, the oldest class of MWF, is comprised mostly of mineral oils, which were classified as carcinogenic by the International Agency for Research on Cancer (IARC) in 1973, citing studies of occupational exposures among workers in oil, textile, and metal industries [@IARC_1973]. The combination of health concerns, the high cost of oil in the 1970s, and the introduction of performance-enhancing water-soluble chemical additives led to the gradual replacement of straight MWF with water-based soluble and synthetic MWFs for many, but not all operations [@Childers_2005]. Although water-based MWF contain little to no mineral oil, they contain a richer cocktail of additives including chromates, cycloalkanes, phenols, organochlorines, nitrites, sulfonates, and triazines: classes of chemicals with known or plausible carcinogenicity [@IARC_1987;@IARC_2014;@IARC_2017]. -->
+Pesticide exposure in agricultural occupational settings was a common target of NHL research in recent decades. A meta-analysis of 44 articles published between 1980 and 2014 found statistically significant associations between NHL and exposure to several classes of pesticides including carbamate, organophosporus, triazine, and organochlorine [@Schinasi_2014]. Occupations associated with NHL are not limited to the agricultural sector, however. Metal processors, health workers, salespeople, machinists, and electricians have all been identified as occupational groups with higher risk of NHL [@Fritschi_2005a; @Mester_2006; @Ekstrom-Smedby_2006].
 
-<!-- In occupational studies, measures of time-varying exposure are essential to statistical adjustment for forms of time-varying confounding affected by past exposure such as the healthy worker survivor effect (HWSE). The HWSE is the dynamic selection process by which healthier individuals remain at work, where they accumulate more occupational exposure, and less healthy individuals leave work [@Arrighi_1994]. Standard analyses of occupational cohorts affected by the HWSE result in a downward bias on the exposure-outcome associations of interest, as less healthy workers typically accrue less exposure than healthier workers. -->
+Metalworking fluids (MWF), an important class of occupational exposures, are complex mixtures of oils and chemicals used to lubricate and cool metal tools and parts during metal cutting and grinding operations in manufacturing processes. During use, MWFs aerosolize and present a potential health hazard to exposed workers. There are three general types of MWF: straight, soluble, and synthetic. The type of MWF applied has changed over the decades and depends in part on the particular metalworking operation. Straight MWF, the oldest class of MWF, is comprised mostly of mineral oils, which were classified as carcinogenic by the International Agency for Research on Cancer (IARC) in 1973, citing studies of occupational exposures among workers in oil, textile, and metal industries [@IARC_1973]. The combination of health concerns, the high cost of oil in the 1970s, and the introduction of performance-enhancing water-soluble chemical additives led to the gradual replacement of straight MWF with water-based soluble and synthetic MWFs for many, but not all operations [@Childers_2005]. Although water-based MWF contain little to no mineral oil, they contain a richer cocktail of additives including chromates, cycloalkanes, phenols, organochlorines, nitrites, sulfonates, and triazines: classes of chemicals with known or plausible carcinogenicity [@IARC_1987;@IARC_2014;@IARC_2017].
 
-<!-- Here, we assess the effect of hypothetical MWF exposure limits on cumulative incidence of NHL from 1985 to 2005 in the United Auto Workers-General Motors (UAW-GM) occupational cohort study. -->
-<!-- A recent study of cancer incidence in this cohort linked NHL with exposure to soluble MWF using a standard survival analysis using Cox proportional hazard regression [@Colbeth_2023]. Standard regression methods are vulnerable to bias due to the HWSE. We therefore further explore this association using an estimator capable of adjusting for time-varying confounding and censoring affected by past exposure: the hazard-extended iterative conditional expectation (ICE) parametric g-formula. Like other causal estimators in statistics, the hazard-extended ICE g-formula yields marginal effect estimates of hypothetical interventions, which may be more interpretable under a population health framework than conditional measures. -->
+In occupational studies, measures of time-varying exposure are essential to statistical adjustment for forms of time-varying confounding affected by past exposure such as the healthy worker survivor effect (HWSE). The HWSE is the dynamic selection process by which healthier individuals remain at work, where they accumulate more occupational exposure, and less healthy individuals leave work [@Arrighi_1994]. Standard analyses of occupational cohorts affected by the HWSE result in a downward bias on the exposure-outcome associations of interest, as less healthy workers typically accrue less exposure than healthier workers.
+
+Here, we assess the effect of hypothetical MWF exposure limits on cumulative incidence of NHL from 1985 to 2005 in the United Auto Workers-General Motors (UAW-GM) occupational cohort study.
+A recent study of cancer incidence in this cohort linked NHL with exposure to soluble MWF using a standard survival analysis using Cox proportional hazard regression [@Colbeth_2023]. Standard regression methods are vulnerable to bias due to the HWSE. We therefore further explore this association using an estimator capable of adjusting for time-varying confounding and censoring affected by past exposure: the hazard-extended iterative conditional expectation (ICE) parametric g-formula. Like other causal estimators in statistics, the hazard-extended ICE g-formula yields marginal effect estimates of hypothetical interventions, which may be more interpretable under a population health framework than conditional measures.
 
 # Methods
 
-We estimated NHL cumulative incidence from 1985 to 2005 under hypothetical limits on annual average daily exposure to soluble MWF by applying the hazard-extended iterative conditional expectation (ICE) parametric g-formula estimator [@Wen_2020]. We leveraged time-varying quantitative MWF exposure data in tandem with employment records to adjust for the HWSE. First, we estimated the expected number of NHL cases that we would observe if there were no censoring by competing risks. Then, we contrasted this counterfactual cumulative incidence to that under three the hypothetical exposure limits: (1) the National Institute for Occupational Safety and Health (NIOSH) Recommended Exposure Limit (REL) for total particulate mass (PM) composed of MWFs (0.5 mg/m^3^), (2) half the REL (0.25 mg/m^3^), and (3) a tenth of the REL (0.05 mg/m^3^) were enforced for soluble MWF over workers' entire working lifetimes [@niosh_1998]. Under these hypothetical interventions, exposure was set at the hypothetical limit if observed exposure was greater than that limit. Otherwise, exposure was not intervened upon.
+We estimated NHL cumulative incidence from 1985 to 2005 under hypothetical limits on annual average daily exposure to soluble MWF by applying the hazard-extended ICE parametric g-formula estimator [@Wen_2020]. First, we estimated the expected number of NHL cases that we would observe if there were no censoring by competing risks. Then, we contrasted this counterfactual cumulative incidence to that under three hypothetical exposure limits:
+
+(1) 0.5 mg/m^3^: the National Institute for Occupational Safety and Health (NIOSH) Recommended Exposure Limit (REL) for total particulate mass (PM) composed of MWFs [@niosh_1998]
+(2) 0.25 mg/m^3^: Half the REL
+(3) 0.05 mg/m^3^: One tenth of the REL.
+
+Exposure limits were enforced for soluble MWF over workers' entire working lifetimes, thereby inducing a post-intervention exposure distribution from which exposures are drawn.
 
 ## Study population
 
-The UAW-GM cohort includes all hourly workers at three automobile manufacturing plants in Michigan who had worked at least three years by 1985. Past papers provide detailed descriptions of the cohort [@Eisen_1992;@Eisen_2001]. The large size of the study population and rich time-varying, quantitative MWF exposure data provide an opportunity to study a relatively rare cancer and evaluate realistic interventions on MWF exposure in a longitudinal cohort setting. The present study population (N = 34,738) was restricted to the autoworkers who were at work in 1941 or not yet hired, missing no more than half of their employment history, and still alive at the start of follow-up. Autoworkers in the study population were followed for NHL incidence from January 1, 1985 until NHL diagnosis, death, January 1, 2005 (10 years after the end of employment record availability), or age 108 years (the oldest observed age at death), whichever came earlier.
+We used data from the UAW-GM cohort, which includes all hourly workers at three automobile manufacturing plants in Michigan who had worked at least three years by 1985. Past papers provide detailed descriptions of the cohort [@Eisen_1992;@Eisen_2001]. The large size of the study population and rich time-varying, quantitative MWF exposure data provide an opportunity to study a relatively rare cancer and evaluate realistic interventions on MWF exposure in a longitudinal cohort setting. The present study population (N = 34,738) was restricted to the autoworkers who were at work in 1941 or not yet hired, missing no more than half of their employment history, and still alive at the start of follow-up. Autoworkers in the study population were followed for NHL incidence from January 1, 1985 until NHL diagnosis, death, January 1, 2005 (10 years after the end of employment record availability), or age 108 years (the oldest observed age at death), whichever came earlier.
 
 ## Outcome and covariates
 
@@ -119,7 +127,7 @@ Covariates including year of hire, sex, race, and plant location were obtained f
 
 Quantitative measurement of time-varying MWF exposure is a distinguishing strength of the UAW-GM cohort study relative to other occupational cohort studies. Exposure assessment was based on direct air sampling as well as company records. Company industrial hygienists collected several hundred personal and area samples for total particulate matter (mg/m^3^) composed of MWF over many decades. Research industrial hygienists collected additional air sampling data when the cohort study was launched in the mid 1980s. These additional data were combined with the historical data and company records to construct a job-exposure matrix of quantitative 8-hour time-weighted average daily exposure estimates to soluble, straight, and synthetic MWFs for each combination of job, department, and plant over time. Workers' time-weighted annual average daily exposure to each MWF type was determined by combining this job-exposure matrix with employment records, which recorded time-varying job type, department, and plant for each employee from hire to termination or 1994, whichever came sooner. For employment records that were at least half complete, gaps in the record were interpolated by carrying forward the last known job type. The exposure assessment is described in detail elsewhere [@Hallock_1994;@Woskie_1994;@Woskie_2003]. Previous analyses of NHL applied exposure lags of 1 to 20 years to account for disease latency; we lagged cumulative MWF exposures by 10 years and therefore ended follow-up on January 1, 2005 [@Smith_2007;@Karipidis_2007;@Zhang_2019]. In analyses, MWF exposure history was summarized as the cumulative sum of annual exposure intensities and coded as categorical variables with cut-points determined according the quantiles of cumulative exposure among cases. In analyses, we estimated the effects of interventions on soluble MWF while treating exposure to straight and synthetic MWFs as potential confounders.
 
-## Statistical methods
+## Hazard-extended ICE parametric g-formula
 
 The hazard-extended ICE parametric g-formula may be thought of as a series of model-based standardization steps, which we implemented using logistic regression. We split the 20-year follow-up period into eight time periods; the first two periods spanned four years each, and the remaining six periods spanned two years each. The first two periods are longer in length to account for the smaller number of cases in those years. Post-intervention estimates of the discrete hazard of NHL given all exposures and covariates were combined iteratively from the end of follow-up to the start. In each iteration, predicted discrete hazards were standardized over post-intervention exposure and covariate histories before combining with discrete hazards from the previous iteration. This iterative process results in sequentially standardized estimates of NHL cumulative incidence over the entire follow-up period. Averaging over the baseline distribution of covariates yields the counterfactual cumulative incidence estimate of NHL if the intervention of interest were enforced for the entire study population.
 
@@ -242,27 +250,8 @@ tab1[c(1:13, 15, 14, 16:27, 29, 28, 30),-grep("hspace.logical", colnames(tab1))]
 ![Figure 1. Median annual average daily exposure to soluble, straight, and synthetic metalworking fluids among exposed workers over time.](../../resources/images/exposure.png){width=6.5in}
 
 ```{r}
-intervened_py <- readRDS(here::here("resources", "percent-py-intervened.rds"))
-# paste(paste0("\"", intervened_py$dt.name, "\""), collapse = ",\n") |> clipr::write_clip()
-dat.names <- data.table(
-	dt.name = c(
-		"dat.sol.reduced", "dat.sol.reduced2", "dat.sol.reduced10"),
-	variable.dat = c(
-		"soluble", "soluble2", "soluble10")
-)
-intervened_py <- as.data.table(merge(
-	intervened_py, dat.names,
-	by = "dt.name"))
-intervened_py <- rbindlist(list(
-	data.table(dt.name = NA,
-						 mwf = NA, percent_py_intervened = 0,
-						 variable.dat = "natural"),
-	intervened_py
-))
-```
-
-```{r}
-load(here::here("resources", paste0("h.estimates.rdata")))
+load(here::here("resources", paste0("estimates.rdata")))
+sapply(estimates, mean) 
 estimates.bs <- readRDS(here::here("resources", paste0("estimates.bs.rds")))
 ```
 
@@ -282,10 +271,9 @@ estimates.bs[,-1] %>% melt(measure.vars = names(.)) -> risk.bs
 # Collect point estimates
 point_estimates <- data.table(
 	variable = c(
-		"soluble", "soluble2", "soluble10", "natural"),
-	estimate = c(
-		h.reduction.sol, h.reduction.sol2, h.reduction.sol10,
-		h.baseline)
+		"200", "100", "50", "25", "05", "Any"),
+	estimate =  c(sapply(estimates[2:6], mean),
+								mean(estimates[[1]]))
 )
 ```
 ```{r}
@@ -293,8 +281,8 @@ point_estimates <- data.table(
 rr <- merge(
 	rr.bs,
 	point_estimates[,.(
-		variable = paste0(variable, ".natural"),
-		estimate = estimate/estimate[variable == "natural"]
+		variable = paste0(variable, ".Any"),
+		estimate = estimate/estimate[variable == "Any"]
 	)],
 	all.x = F,
 	by = "variable")
@@ -302,15 +290,9 @@ rr <- merge(
 # Get lower and upper 2.5th %tiles
 rr <- rr[,.(
 	rr = estimate[1],
-	rr_lower = {
-		x <- value
-		x[!is.na(x)] <- 2 * mean(x[!is.na(x)]) - quantile(x[!is.na(x)], 1 - 0.025)},
-	rr_upper = {
-		x <- value
-		x[!is.na(x)] <- 2 * mean(x[!is.na(x)]) - quantile(x[!is.na(x)], 0.025)}
-	# wald.lower = exp(log(estimate[1]) + qnorm(0.025) * sd(log(value))),
-	# wald.upper = exp(log(estimate[1]) - qnorm(0.025) * sd(log(value)))
-),
+	rr_lower = 2 * estimate[1] - quantile(value, 1 - 0.025),
+	rr_upper = 2 * estimate[1] - quantile(value, 0.025)
+	),
 variable]
 ```
 ```{r}
@@ -318,32 +300,22 @@ variable]
 rd <- merge(
 	rd.bs,
 	point_estimates[,.(
-		variable = paste0(variable, ".natural"),
-		estimate = estimate - estimate[variable == "natural"]
+		variable = paste0(variable, ".Any"),
+		estimate = estimate - estimate[variable == "Any"]
 	)],
 	all.x = F,
 	by = "variable")
 
 # Get lower and upper 2.5th %tiles
+N <- 33134
 rd <- rd[,.(
 	rd = estimate[1],
-	rd_lower = {
-		x <- value
-		x[!is.na(x)] <- 2 * mean(x[!is.na(x)]) - quantile(x[!is.na(x)], 1 - 0.025)},
-	rd_upper = {
-		x <- value
-		x[!is.na(x)] <- 2 * mean(x[!is.na(x)]) - quantile(x[!is.na(x)], 0.025)}
+	rd_lower = (2 * estimate[1] - quantile(value, 1 - 0.025)) * N,
+	rd_upper = (2 * estimate[1] - quantile(value, 0.025)) * N
 	# wald.lower = exp(log(estimate[1]) + qnorm(0.025) * sd(log(value))),
 	# wald.upper = exp(log(estimate[1]) - qnorm(0.025) * sd(log(value)))
 ),
 variable]
-
-rd[,(c('rd', 'rd_lower', 'rd_upper')) := list(
-	- rd * 34734,
-	- rd_upper * 34734,
-	- rd_lower * 34734
-	)]
-
 ```
 
 ```{r}
@@ -361,12 +333,8 @@ risks <- merge(
 
 # Get lower and upper 2.5th %tiles
 risks <- risks[,.(estimate = estimate[1],
-			lower = {
-				x <- value
-				x[!is.na(x)] <- 2 * mean(x[!is.na(x)]) - quantile(x[!is.na(x)], 1 - 0.025)},
-			upper = {
-				x <- value
-				x[!is.na(x)] <- 2 * mean(x[!is.na(x)]) - quantile(x[!is.na(x)], 0.025)}
+			lower = 2 * mean(value) - quantile(value, 1 - 0.025),
+			upper = 2 * mean(value) - quantile(value, 0.025)
 			# wald.lower = exp(log(estimate[1]) + qnorm(0.025) * sd(log(value))),
 			# wald.upper = exp(log(estimate[1]) - qnorm(0.025) * sd(log(value)))
 			),
@@ -376,16 +344,16 @@ risks <- risks[,.(estimate = estimate[1],
 ```{r}
 intervention.labels <- data.table(
 	variable = c(
-		"natural", "soluble", "soluble2", "soluble10"
+		"200", "100", "50", "25", "05", "Any"
 	),
 	label = c(
-		"None", "0.5", "0.25", "0.05"
+		"2.0", "1.0", "0.5", "0.25", "0.05", "None"
 	)
 )
 
 # Add intervention labels
 contrasts.tab <- merge(
-	contrasts.tab, intervention.labels[,.(variable = paste0(variable, ".natural"), label)],
+	contrasts.tab, intervention.labels[,.(variable = paste0(variable, ".Any"), label)],
 	all = T,
 	by = "variable"
 )
@@ -396,7 +364,7 @@ contrasts.tab <- merge(
 clean_percent_py <- function(variable, digits = 1, scale = 100) {
 	sprintf(paste0("%.", digits, "f"), round(
 		intervened_py[match(
-	 		sapply(variable, gsub, pattern = ".natural", replacement = ""),
+	 		sapply(variable, gsub, pattern = ".Any", replacement = ""),
 	 		variable.dat
 	), percent_py_intervened] * scale,
 	digits))
@@ -404,14 +372,14 @@ clean_percent_py <- function(variable, digits = 1, scale = 100) {
 
 clean_risk <- function(variable, digits = 2, scale = 1000) {
 	sprintf(paste0("%.", digits, "f"), round(risks[match(
-	 		sapply(variable, gsub, pattern = ".natural", replacement = ""),
+	 		sapply(variable, gsub, pattern = ".Any", replacement = ""),
 	 		variable.risks
 	), estimate] * scale, digits))
 }
 
 clean_risk.ci <- function(variable, digits = 2, scale = 1000) {
 	 		x <- risks[match(
-	 		sapply(variable, gsub, pattern = ".natural", replacement = ""),
+	 		sapply(variable, gsub, pattern = ".Any", replacement = ""),
 	 		variable.risks
 	 		),.(lower, upper)]
 	 		ifelse(!is.na(x$lower), paste0(
@@ -431,15 +399,14 @@ clean_rr.ci <- function(estimate, lower, upper, digits = 2) {
 		")"), NA)
 }
 
-mwf.flextable <- function(x, n_col = 8) {
-	flextable::compose(x, j = c(4, n_col), value = as_paragraph(rep("(95% CI)", 2)),
+mwf.flextable <- function(x, n_col = 7) {
+	flextable::compose(x, j = c(3, n_col), value = as_paragraph(rep("(95% CI)", 2)),
 		part = "header"
 	) |>
 	border_remove() |>
 	hline_top(part = "header") |>
 	hline_top() |> hline_bottom() |>
 	flextable::align(j = 2:n_col, align = "center", part = "all") |>
-	width(width = c(1.7, 1.1, 0.7, 1, 0.5, 1, 0.5, 1)) |>
 	padding(padding = 1.5, part = "all")
 }
 ```
@@ -450,7 +417,7 @@ The observed number of NHL cases over the 20-year follow-up period was 231 (corr
 tikzDevice::tikz(here::here("reports/ACIC (2022)/poster/resources/rr.tex"),
 								 width = 4, height = 1.75,
 								 standAlone = T)
-contrasts.tab[grepl("sol|natural\\.natural", variable) & !grepl(
+contrasts.tab[grepl("sol|natural\\.Any", variable) & !grepl(
 	"[a-z]", label),] |> ggplot(
 		aes(x = factor(label, rev(c("0.5", "0.25", "0.05"))),
 				y = rd, ymin = rd_lower, ymax = rd_upper)
@@ -470,21 +437,21 @@ lualatex(directory = here::here("reports/ACIC (2022)/poster/resources"))
 ```
 
 ```{r}
-contrasts.tab[grepl("sol|natural\\.natural", variable),.(
+contrasts.tab[,.(
 	 	label,
-	 	`Person-years intervened (%)` = clean_percent_py(variable),
-	 	`Cases`  = clean_risk(variable, 0, 34734),
-	 	`(95% CI)`      = clean_risk.ci(variable, 0, 34734),
-	 	`Cases averted`    = round(rd),
-	 	`(95% CI1)`        = c(NA, paste0(
+	 	# `Person-years intervened (%)` = clean_percent_py(variable),
+	 	`Cases`  = clean_risk(variable, 0, N),
+	 	`(95% CI)`      = clean_risk.ci(variable, 0, N),
+	 	`Cases averted`    = round(rd * N),
+	 	`(95% CI1)`        = paste0(
 	 		"(",
-	 		round(na.exclude(rd_lower)), ", ",
-	 		round(na.exclude(rd_upper)), ")")),
+	 		round(rd_lower), ", ",
+	 		round(rd_upper), ")"),
 	 	CIR              = sprintf("%.2f", round(rr, 2)),
 	 	`(95% CI2)`   = clean_rr.ci(rr, rr_lower, rr_upper)
-	 )][c(1, 2, 4, 3),] -> sol.tab
+	 )][c(6, 3, 2, 5, 4, 1),] -> sol.tab
+sol.tab[label == "None", 4:7] <- NA
 
-sol.tab[sol.tab == "NA"] <- NA
 # saveRDS(sol.tab, here::here('resources', 'sol.tab.rds'))
 
 sol.tab |> flextable() |>
@@ -497,10 +464,10 @@ sol.tab |> flextable() |>
 		`(95% CI1)` = "(95% CI)",
 		`(95% CI2)` = "(95% CI)"
 	) |> mwf.flextable() |>
-	width(width = c(1.1, 1.1, 0.5, 0.9, 0.55, 0.9, 0.5, 0.9)) |>
+	width(width = c(1.1, 0.5, 0.9, 0.55, 0.9, 0.5, 0.9)) |>
 	add_footer_row(values = paste(
 		"CIR: cumulative incidence ratio. MWF: metalworking fluid",
-		sep = "\n"), colwidths = 8) |>
+		sep = "\n"), colwidths = 7) |>
 	hline_bottom(part = "footer") |>
 	set_caption(caption = "Counterfactual number of cases, number of cases averted, and cumulative incidence ratio estimates contrasting hypothetical limits on soluble MWF exposure to no intervention on exposure.")
 	
