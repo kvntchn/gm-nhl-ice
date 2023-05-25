@@ -13,6 +13,7 @@ dat.reduced <- box_read(928445783979)
 N <- length(unique(dat.reduced[!is.na(I)]$studyno))
 message(sum(dat.reduced[!is.na(I)]$status))
 source(here("g-formula.R"))
+dat.reduced[,.(year1 = min(year), year2 = max(year)), I]
 
 followed.names <- c("followed_200", "followed_100", "followed_50",
 										"followed_25",  "followed_05",  "followed_025")

@@ -25,9 +25,10 @@ ice_gcomp <- function(
 		quiet = F
 ) {
 
+	# Indicator for natural course (everone followed)
 	dta$followed_Any <- 1
-	dta$employment.years <- round(dta$employment.years)
 
+	# Index follow-up periods
 	setorder(dta, studyno, year)
 	dta[, I := 1:.N, by = studyno]
 
@@ -38,6 +39,7 @@ ice_gcomp <- function(
 		NULL
 	)
 
+	# Static covariates for discrete hazard and cumulative hazard
 	static_covariates.which <- c(
 		# "Employment status",
 		"Cumulative straight",
@@ -50,23 +52,10 @@ ice_gcomp <- function(
 		NULL
 	)
 
-	discrete.formula <- as.formula(paste(
-		"status",
-		"~",
-		"`Employment status` +",
-		"`Cumulative soluble` +",
-		"`Cumulative straight` +",
-		"`Cumulative synthetic` +",
-		"`Cumulative time off` +",
-		"Age +",
-		"`Duration of employment` +",
-		"Race +",
-		"Plant +",
-		"Sex",
-		NULL
-	))
-
+	# Intervention node name
 	intervene.which <- "Cumulative soluble"
+
+	# History to condition on for intervention
 	dynamic.which <- c(
 		"Employment status",
 		"Cumulative straight",
@@ -84,6 +73,24 @@ ice_gcomp <- function(
 	# Total number of outcomes
 	J <- max(times)
 	require(fastglm, quietly = T)
+
+	# Formula for discrete hazard regression
+	discrete.formula <- as.formula(paste(
+		"status",
+		"~",
+		"`Employment status` +",
+		"`Cumulative soluble` +",
+		"`Cumulative straight` +",
+		"`Cumulative synthetic` +",
+		"`Cumulative time off` +",
+		"Age +",
+		"`Duration of employment` +",
+		"Race +",
+		"Plant +",
+		"Sex",
+		NULL
+	))
+
 	h <- fastglm(
 		model.matrix(discrete.formula, data = dta)[with(dta, immortal == 0 & Censored == 0),],
 		dta[immortal == 0 & Censored == 0]$status,
@@ -100,22 +107,56 @@ ice_gcomp <- function(
 			newdata = model.matrix(discrete.formula, data = dta)[with(dta, immortal == 0),],
 			type = "response"))]
 
+	# dta[dta[,.(always_followed = as.numeric(all(get(paste0("followed_", a)) == 1))),
+	# 		eval(dynamic.which)],
+	# 		on = dynamic.which])
+
 	if (a != "Any") {
 		n_p <- length(levels(unlist(dta[, intervene.which, with = F])))
-		dta.probs <- lapply(1:J, function(k) {
-			dta.probs <- dta[
+		dta.probs <- lapply(1:J, function(k = 1) {
+
+			# Get exposures among followers
+			dta.probs_followed <- dta[
 				get(paste0("followed_", a)) == 1 & I == k, .(
 					Exposure = get(intervene.which)),
 				eval(dynamic.which)]
+
+			# What is the highest level of rule-abiding exposure
+			dta.probs_barely_followed <- dta.probs_followed[,.(
+				Exposure = levels(Exposure)[max(as.numeric(Exposure))]
+			),
+			eval(dynamic.which)]
+
+			# Get non-followers
+			dta.probs_not_followed <- dta[
+				get(paste0("followed_", a)) == 0 & I == k,
+				dynamic.which, with = F]
+
+			# Add rule-abiding exposure if positivity allows
+			dta.probs_not_followed <- dta.probs_not_followed[
+					dta.probs_barely_followed,
+					on = dynamic.which
+				]
+
+			# Combine distribution to get the intervention distribution
+			dta.probs <- rbindlist(list(
+				dta.probs_followed, dta.probs_not_followed
+			))
+
+			# Get counts within exposure levels
 			dta.probs <- lapply(
-				levels(dta.probs$Exposure), function(x) {
-					probs.tmp <- dta.probs[, .(sum(Exposure == x)),
+				levels(dta.probs_followed$Exposure), function(x) {
+					probs.tmp <- dta.probs_followed[, .(sum(Exposure == x)),
 																 eval(dynamic.which)]
 					names(probs.tmp)[length(dynamic.which) + 1] <- x
 					return(probs.tmp)
 				})
+
+			# Reduce
 			dta.probs <- as.data.frame(Reduce(function(...) {
 				merge(..., all = T, by = dynamic.which)}, dta.probs))
+
+			# Compute probabilities
 			dta.probs[,-(1:length(dynamic.which))] <- dta.probs[,-(1:length(dynamic.which))] /
 				matrix(rep(
 					rowSums(dta.probs[,-(1:length(dynamic.which))]),
@@ -247,8 +288,8 @@ ice_gcomp <- function(
 				names(dta.wide)[-1] <- paste0(timevar_covariates.which,  "_", names(dta.wide)[-1])
 			}}
 
-		# Forever followers
-		dta.followed <- dta[I <= k & studyno %in% dta.wide$studyno, .(
+		# Followers
+		dta.followed <- dta[I == k & studyno %in% dta.wide$studyno, .(
 			followed = as.numeric(all(get(paste0("followed_", a)) == 1))),
 			studyno]
 
@@ -292,9 +333,34 @@ ice_gcomp <- function(
 
 		if (a != "Any") {
 			n_p <- length(levels(unlist(dta.wide[, intervene.which.k, with = F])))
-			dta.probs <- dta.wide[
+
+			# Get exposures among followers
+			dta.probs_followed <- dta.wide[
 				followed == 1, .(Exposure = get(intervene.which.k)),
 				eval(dynamic.which)]
+
+			# What is the highest level of rule-abiding exposure
+			dta.probs_barely_followed <- dta.probs_followed[,.(
+				Exposure = levels(Exposure)[max(as.numeric(Exposure))]
+			),
+			eval(dynamic.which)]
+
+			# Get non-followers
+			dta.probs_not_followed <- dta.wide[
+				followed == 0 ,
+				dynamic.which, with = F]
+
+			# Add rule-abiding exposure if positivity allows
+			dta.probs_not_followed <- dta.probs_not_followed[
+					dta.probs_barely_followed,
+					on = dynamic.which
+				]
+
+			# Combine distribution to get the intervention distribution
+			dta.probs <- rbindlist(list(
+				dta.probs_followed, dta.probs_not_followed
+			))
+
 			dta.probs <- lapply(
 				levels(dta.probs$Exposure), function(x) {
 					probs.tmp <- dta.probs[, .(sum(Exposure == x)), eval(dynamic.which)]
