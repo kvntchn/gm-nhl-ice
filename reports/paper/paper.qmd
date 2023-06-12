@@ -14,6 +14,9 @@ execute:
   freeze: auto
 editor_options: 
   chunk_output_type: inline
+editor: 
+  markdown: 
+    wrap: 72
 ---
 
 ```{r, include=FALSE}
@@ -28,34 +31,40 @@ library(ggplot2); library(magrittr)
 
 **Type of manuscript:** Original Research Article
 
-**Manuscript title:** Hypothetical limits on workplace exposure for reducing non-Hodgkin lymphoma: An application of the hazard-extended iterative conditional expectation parametric g-formula
+**Manuscript title:** Hypothetical limits on workplace exposure for
+reducing non-Hodgkin lymphoma: An application of the hazard-extended
+iterative conditional expectation parametric g-formula
 
-**Authors:** Kevin T. Chen^a,b,c^, Sally Picciotto^b^, Ellen A. Eisen^b^
+**Authors:** Kevin T. Chen^a^, Sally Picciotto^b^, Ellen A. Eisen^b^
 
-^a^ University of California, Berkeley School of Public Health, Division of Epidemiology \& Biostatistics
-
-^b^ University of California, Berkeley School of Public Health, Division of Environmental Health Sciences
-
-^c^ University of California, Berkeley Department of Statistics
+^a^ University of California, Berkeley School of Public Health, Division
+of Epidemiology & Biostatistics
 
 **Corresponding author:**\
 Kevin T. Chen\
 2121 Berkeley Way\
 Room 5302, Desk 5305-1\
 Berkeley, CA 94720-7360\
-kevchen@berkeley.edu\
+kevchen\@berkeley.edu\
 (510) 387-3327
 
-
-**Running head suggestion:** Limits on metalworking fluid exposure to prevent NHL.
+**Running head suggestion:** Limits on metalworking fluid exposure to
+prevent NHL.
 
 **Conflicts of interests:** Authors declare no conflicts of interest.
 
-**Sources of financial support:** This work was supported by Training Grant T42OH008429 and Research Project Grant R01OH011092, both funded by the National Institute for Occupational Safety and Health (NIOSH) / Centers for Disease Control and Prevention (CDC).
+**Sources of financial support:** This work was supported by Training
+Grant T42OH008429 and Research Project Grant R01OH011092, both funded by
+the National Institute for Occupational Safety and Health (NIOSH) /
+Centers for Disease Control and Prevention (CDC).
 
-**Data and computing code:** Code for reproducing analyses and reports are available on [Github](https://github.com/kvntchn/gm-nhl-ice). Data are available upon reasonable request.
+**Data and computing code:** Code for reproducing analyses and reports
+are available on [Github](https://github.com/kvntchn/gm-nhl-ice). Data
+are available upon reasonable request.
 
-**Keywords:** Metalworking fluid, occupational exposure, non-Hodgkin lymphoma, cancer, causal inference, g-formula, healthy-worker effect, United States
+**Keywords:** Metalworking fluid, occupational exposure, non-Hodgkin
+lymphoma, cancer, causal inference, g-formula, healthy-worker effect,
+United States
 
 \newpage
 
@@ -63,106 +72,307 @@ kevchen@berkeley.edu\
 
 (Limit: 250 words)
 
-**Background:** Non-Hodgkin lymphoma (NHL) incidence has increased substantially in the US since 1960 and was recently linked to workplace exposure to soluble metalworking fluids (MWF) in a standard survival analysis of the United Auto Workers-General Motors (UAW-GM) cohort. To further explore this association, we estimate the effects of hypothetical limits on soluble MWF exposure in relation to NHL risk in the same cohort of autoworkers.
+**Background:** Non-Hodgkin lymphoma (NHL) incidence has increased
+substantially in the US since 1960 and was recently linked to workplace
+exposure to soluble metalworking fluids (MWF) in a standard survival
+analysis of the United Auto Workers-General Motors (UAW-GM) cohort. To
+further explore this association, we estimate the effects of
+hypothetical limits on soluble MWF exposure in relation to NHL risk in
+the same cohort of autoworkers.
 
-**Methods:** We estimated counterfactual risk of NHL between 1985 and 2015 in the UAW-GM cohort of autoworkers at three Michigan plants (n = 33,134) under hypothetical limits on annual average daily exposure to soluble MWF. We applied the hazard-extended ICE parametric g-formula, an estimator capable of adjusting for time-varying confounding affected by past exposure.
+**Methods:** We estimated counterfactual risk of NHL between 1985 and
+2015 in the UAW-GM cohort of autoworkers at three Michigan plants (n =
+33,134) under hypothetical target exposure limits for soluble MWF. We
+applied the hazard-extended iterative conditional expectation parametric
+g-formula, an estimator capable of adjusting for time-varying
+confounding affected by past exposure.
 
-**Results:** 339 NHL cases occurred over the 30-year follow-up period. Stronger hypothetical limits on soluble MWF exposure resulted in monotonic reductions in NHL risk. Capping annual average daily exposure at 2 mg/m^3^ would have prevented 98 (95% CI: 45, 161) cases of NHL. Capping at 0.5 mg/m^3^, the NIOSH recommended exposure limit, would have prevented 112 (95% CI: 57, 181) cases. Finally, capping at 0.05 mg/m^3^ would have prevented 129 (95% CI: 66, 214) cases.
+**Results:** 339 NHL cases occurred over the 30-year follow-up period.
+Stronger target limits on soluble MWF exposure resulted in monotonic
+reductions in NHL risk. Setting the target exposure limit at 2 mg/m^3^
+would have prevented 98 (95% CI: 45, 161) cases of NHL. A target
+exposure limit of 0.5 mg/m^3^, the NIOSH recommended exposure limit,
+would have prevented 112 (95% CI: 57, 181) cases. Finally, a target
+exposure limit of 0.05 mg/m^3^ would have prevented 129 (95% CI: 66,
+214) cases.
 
-**Conclusion:** Limits on soluble MWF exposure would have prevented cases of NHL in the UAW-GM cohort. Although MWF use is expected to decline as the automotive industry turns to electric vehicles, a boom in electric vehicle manufacturing could nonetheless lead to global increases in worker exposure to MWF. Maintaining limits on exposure to MWF may protect workers against risk of NHL.
+**Conclusion:** Limits on soluble MWF exposure would have prevented
+cases of NHL in the UAW-GM cohort. Although MWF use is expected to
+decline as the automotive industry turns to electric vehicles, a boom in
+domestic vehicle manufacturing could nonetheless lead to global
+increases in worker exposure to MWF in the US. Maintaining or
+strengthening exposure limits for MWF may protect workers from NHL.
 
 \newpage
 
 # Introduction
 
+Non-Hodgkin Lymphoma (NHL) incidence in the United States doubled
+between 1973 and 1994, before plateauing at around 19 per 100,000
+persons per year, making it the seventh most common cancer in the
+country [@seer_1994; @Ekstrom-Smedby_2006]. The strongest known risk
+factor of NHL is immunosuppression, both congenital and acquired
+[@Filipovich_1992; @Chiu_2015]. Modulation of immune function
+contributes to the pathogenesis of NHL directly by perturbing lymphocyte
+function or indirectly by reducing immunosurveillance against neoplasms.
+Immunodeficiency may also interact with infection with Epstein-Barr
+Virus, resulting in uncontrolled B-cell proliferation [@Oertel_2002].
+Acquired immunodeficiency through infection with human immunodeficiency
+virus (HIV) can lead to genetic lesions and dysregulation while
+increasing vulnerability to infection by other oncogenic agents
+[@Grulich_1999; @Alexander_2007]. However, since immunodeficiency and
+infection with HIV are rare, they cannot fully explain the historic rise
+or present burden of NHL [@Shiels_2013]. The rise in NHL incidence
+coincided with a period of rapid and extensive chemicalization in
+industry, agriculture and warfare; environmental and occupational
+exposures may play an important explanatory role in the epidemiology of
+NHL [@Nelson_2005; @Romero_2021].
+
+Pesticide exposure among workers in agricultural settings was a common
+target of NHL research in recent decades. A meta-analysis of 44 articles
+published between 1980 and 2014 found statistically significant
+associations between NHL and exposure to several classes of pesticides
+including carbamate, organophosporus, triazine, and organochlorine
+[@Schinasi_2014]. Occupational exposures associated with NHL are not
+limited to the agricultural sector, however. Occupational groups
+associated with NHL risk also include metal processors, health workers,
+salespeople, machinists, and electricians [@Fritschi_2005a;
+@Mester_2006; @Ekstrom-Smedby_2006]. Workers in these occupational
+groups often come into contact with industrial chemicals such as
+gasoline, solvents, coolants, and lubricants such as metalworking fluids
+(MWF).
+
+Metalworking fluids are complex mixtures of oil, water, and chemical
+additives that optimize metal machining operations. During shaping,
+grinding, and cutting operations, MWFs are misted, poured, or blasted at
+high pressure onto work surfaces to remove debris, cool metal, improve
+efficiency, and prevent deterioration of tools. Although MWFs are
+essential to manufacturing processes, they also present a potential
+health hazard to exposed workers through inhalation or ingestion of MWF
+particulate mass.
+
+There are three general types of MWF: straight, soluble, and synthetic.
+The type of MWF applied has changed over the decades in response to
+engineering, economic, and health considerations. Straight MWF, the
+oldest class of MWF, is comprised mostly of mineral oils, which were
+classified as carcinogenic by the International Agency for Research on
+Cancer (IARC) in 1973, citing studies of occupational exposures among
+workers in oil, textile, and metal industries [@IARC_1973]. In the same
+decade, additional factors including the high cost of oil and the
+introduction of performance-enhancing water-soluble chemical additives
+spurred the gradual replacement of straight MWF with water-based soluble
+and synthetic MWF for many, but not all metalworking operations
+[@Childers_2005]. Although water-based MWFs contain little to no mineral
+oil, they contain a richer cocktail of additives including chromates,
+cycloalkanes, phenols, organochlorines, nitrites, sulfonates, and
+triazines: classes of chemicals with known or plausible carcinogenicity
+[@IARC_1987; @IARC_2014; @IARC_2017]. As the US prepares for a boom in
+domestic automotive manufacturing, occupational exposure to MWF will
+remain an important concern for worker health [@Armbrust_2021;
+@Carr_2022; @Keilman_2023].
+
+One challenge in estimating the causal effects of occupational exposures
+on worker health is the Healthy Worker Survivor Effect (HWSE), the
+process by which healthier individuals remain at work where they
+accumulate more exposure while those more susceptible to the deleterious
+health effects leave work [@Arrighi_1994]. A well-known analytical
+method for causal inference in observational studies where the HWSE or
+other forms of time-varying confounding affected by past exposure may be
+operating is the parametric g-formula [@Robins_1986; @Taubman_2009;
+@Richardson_2013]. A central requirement necessary for causal
+interpretation of any analysis is positivity (overlap) ie adequate
+variation in the exposure of interest within strata formed by confounder
+and exposure history [@Petersen_2012]. Here, we specify hypothetical
+interventions on exposure to soluble MWF in the United Auto
+Workers-General Motors (UAW-GM) occupational cohort whose effects can be
+estimated with guaranteed positivity. In particular, we estimate the
+cumulative incidence of NHL between 1985 and 2015 under well-supported
+(supportable) interventions by applying the the hazard-extended
+iterative conditional expectation (ICE) parametric g-formula
+[@Arrighi_1994; @Wen_2021].
+
 <!-- The parametric g-formula has become increasingly popular among epidemiologists in the last decade, and there are several exemplary tutorial papers and illustrative examples [@Taubman_2009;@Breskin_2020]. This analytic approach is attractive in part because it allows investigators to estimate the population-level effect of realistic interventions on exposures that may depend on individuals' covariate history as well as their natural value of exposure. In addition to yielding estimates with a population-level interpretation, the parametric g-formula is also capable of adjusting for time-varying confounding possibly affected by past exposure in longitudinal settings, which is not possible with standard regression methods. In their seminal 2009 paper, Taubman et alia describe the parametric g-formula and illustrate its application in the estimation of the counterfactual risks under several interventions in the Nurses' Health Study [@Taubman_2009]. They introduced a non-iterative conditional expectation parametric g-formula that requires parametric specification of the full joint distribution of confounders, exposures, and outcomes over time. -->
 
 <!-- Full parameterization is an attractive choice for investigators seeking to embed real causal knowledge into the estimation problem. For those who are not completely comfortable with the full set of parametric assumptions, the iterative conditional expectation (ICE) parametric g-formula may be a good alternative. The ICE g-formula was introduced as early as 2004 [@Robins_2004], but its parametric implementations remain far less common in practice than its non-ICE counterpart. Like the non-ICE parametric g-formula, the ICE expression enables adjustment for time-varying confounding possibly affected by past exposure. However, the ICE parametric g-formula requires the parametric specification of models for the outcome only, and not the confounders or exposure. Hence, it requires fewer parametric assumptions than the non-ICE parametric g-formula. Furthermore, the elegance of the ICE parametric g-formula allows analysts to implement the method using standard statistical software, which offers the prospect of greater interpretability and transparency than using "black box" implementations. -->
 
-<!-- Here, we describe the hazard-extended ICE parametric g-formula, an extension of the ICE parametric g-formula for causal survival analyses, and apply it to estimate counterfactual cumulative incidences of non-Hodgkin lymphoma under hypothetical interventions on annual average daily exposure to soluble metalworking fluids (MWF) in the UAW-GM autoworkers cohort between 1984 and 2005. The interventions we evaluate are modified longitudinal treatment policies which depend on the natural value of exposure [@Taubman_2009;@Richardson_2013;@Haneuse_2013;@Young_2014;@Diaz_2021]. -->
-
 <!-- In recent years, there has been a surge in optimism for growth in American manufacturing [@Carr_2022;@Armbrust_2021]. While it may be easy to imagine a factory floor crowded with workers and heavy machinery, an essential part of the industrial production of physical goods is easy to overlook: lubricants and coolants. In industries that require metalworking, from cutting wafers for semiconductor production to stamping metals for electric vehicle battery casings, metalworking fluids (MWF) are essential. During use in drawing, stamping, cutting, and grinding operations, MWF are sprayed and poured onto tools and parts to provide lubrication and cooling. Parts may even be submerged in MWF in precision manufacturing applications [@Arrabiyeh_2020]. -->
-
-Non-Hodgkin Lymphoma (NHL) incidence in the United States doubled between 1973 and 1994, before plateauing at around 19 per 100,000 persons per year, making it the seventh most common cancer in the country [@seer_1994;@Ekstrom-Smedby_2006]. The strongest known risk factor of NHL is immunosuppression, both congenital and acquired [@Filipovich_1992;@Chiu_2015]. Modulation of immune function contributes to the pathogenesis of NHL directly by perturbing lymphocyte function or indirectly by reducing immunosurveillance against neoplasms. Immunodeficiency may also interact with infection with Epstein-Barr Virus, resulting in uncontrolled B-cell proliferation [@Oertel_2002]. Acquired immunodeficiency through infection with human immunodeficiency virus (HIV) can lead to genetic lesions and dysregulation while increasing vulnerability to infection by other oncogenic agents [@Grulich_1999;@Alexander_2007]. However, since immunodeficiency and infection with HIV are rare, they cannot fully explain the historic rise or present burden of NHL [@Shiels_2013]. The rise in NHL incidence coincided with a period of rapid and extensive chemicalization in industry, agriculture and warfare, suggesting that environmental and occupational exposures may have an important explanatory role in the epidemiology of NHL [@Nelson_2005;@Romero_2021].
-
-Pesticide exposure in agricultural occupational settings was a common target of NHL research in recent decades. A meta-analysis of 44 articles published between 1980 and 2014 found statistically significant associations between NHL and exposure to several classes of pesticides including carbamate, organophosporus, triazine, and organochlorine [@Schinasi_2014]. Occupations associated with NHL are not limited to the agricultural sector, however. Metal processors, health workers, salespeople, machinists, and electricians have all been identified as occupational groups with higher risk of NHL [@Fritschi_2005a; @Mester_2006; @Ekstrom-Smedby_2006]. Workers in these occupational groups often come into contact with industrial chemicals such as gasoline, solvents, coolants, and lubricants such as metalworking fluids.
-
-Metalworking fluids (MWF) are complex mixtures of oil, water, and chemical additives that optimize metal machining operations. During shaping, grinding, and cutting operations, MWF are misted, poured, or blasted at high pressure onto work surfaces to remove debris, cool metal, improve efficiency, and prevent deterioration of tools. Although MWFs provide essential engineering benefits to manufacturing processes, they may also present a potential health hazard to exposed workers, who may inhale or ingest aerosolized MWFs. There are three general types of MWF: straight, soluble, and synthetic. The type of MWF applied has changed over the decades in response to engineering, economic, and health considerations.
-
-Straight MWF, the oldest class of MWF, is comprised mostly of mineral oils, which were classified as carcinogenic by the International Agency for Research on Cancer (IARC) in 1973, citing studies of occupational exposures among workers in oil, textile, and metal industries [@IARC_1973]. In the same decade, additional factors including the high cost of oil and the introduction of performance-enhancing water-soluble chemical additives spurred the gradual replacement of straight MWF with water-based soluble and synthetic MWFs for many, but not all metalworking operations [@Childers_2005]. Although water-based MWF contain little to no mineral oil, they contain a richer cocktail of additives including chromates, cycloalkanes, phenols, organochlorines, nitrites, sulfonates, and triazines: classes of chemicals with known or plausible carcinogenicity [@IARC_1987;@IARC_2014;@IARC_2017]. With policy makers and companies anticipating a boom in domestic manufacturing, occupational exposure to MWFs will remain an important concern for worker health in the US [@Armbrust_2021;@Carr_2022;@Keilman_2023].
-
-Here, we assess the effect of hypothetical MWF exposure limits on cumulative incidence of NHL from 1985 to 2014 in the United Auto Workers-General Motors (UAW-GM) occupational cohort study. A recent study of cancer incidence in this cohort linked NHL with exposure to soluble MWF in a Cox proportional hazards regression [@Colbeth_2023]. Standard regression methods are vulnerable to downward bias due to the healthy worker survivor effect (HWSE), the process by which healthier individuals remain at work where they accumulate more occupational exposure. Therefore, we further explored this association using an estimator capable of adjusting for the HWSE and other sources of time-varying confounding and censoring affected by past exposure: the hazard-extended iterative conditional expectation (ICE) parametric g-formula [@Arrighi_1994;@Wen_2021]. Like other causal estimators in statistics, the hazard-extended ICE g-formula yields marginal effect estimates of hypothetical interventions, which may be more interpretable under a population health framework than conditional measures.
-
-<!-- The healthy worker survivor effect (HWSE) is a key concern in occupational studies. The HWSE is the dynamic selection process by which healthier individuals remain at work, where they accumulate more occupational exposure, and less healthy individuals leave work [@Arrighi_1994]. Standard analyses of occupational cohorts affected by the HWSE result in a downward bias on the exposure-outcome associations of interest, as less healthy workers typically accrue less exposure than healthier workers. One analytic approach for addressing potential bias due to the HWSE and other time-varying confounders affected by past exposure is the application of longitudinal causal estimators such as the parametric g-formula [@Taubman_2009]. -->
 
 # Methods
 
-We estimated NHL cumulative incidence from 1985 to 2014 under hypothetical limits on annual average daily exposure to soluble MWF by applying the hazard-extended ICE parametric g-formula estimator [@Wen_2020]. First, we estimated the expected number of NHL cases that we would observe if there were no censoring by competing risks. Then, we contrasted this counterfactual cumulative incidence to that under interventions enforcing one of five hypothetical exposure limits in addition to no censoring, when positivity allows. The five limits we evaluated were (1) 2.0 mg/m^3^, (2) 1.0 mg/m^3^, (3) 0.5 mg/m^3^, (4) 0.25 mg/m^3^, and 
-(5) 0.05 mg/m^3^. The National Institute for Occupational Safety and Health (NIOSH) Recommended Exposure Limit (REL) for total particulate mass (PM) composed of MWFs is 0.5 mg/m^3^ [@niosh_1998]. These interventions reduce exposures above the hypothetical limit, but allow exposures below the limit to vary according to their natural distribution. To prevent extrapolation, interventions considered reduce above-limit exposures to the highest limit-abiding exposure observed among other workers in the study population with the same confounder and exposure history at that time. If no such peers existed, the above-limit exposures among those workers would retain their natural distribution.
-
-<!-- These interventions are known as threshold interventions that depend on the natural value of exposure. In general, threshold interventions set exposure to the hypothetical limit of interest when the natural value of exposure is beyond the threshold. Otherwise, these interventions leave exposure at the natural value. Such interventions are analogous to longitudinal stochastic interventions where the intervention distribution of exposure is the distribution of exposure induced by the threshold intervention rule [@Taubman_2009;@Young_2014;@Diaz_2021]. -->
+We estimated NHL cumulative incidence from 1985 to 2015 under
+supportable interventions on average daily exposure to soluble MWF by
+applying the hazard-extended ICE parametric g-formula estimator
+[@Wen_2020]. First, we estimated the expected number of NHL cases that
+we would observe if there were no censoring by competing risks. Then, we
+contrasted this case count to that under supportable interventions based
+on five hypothetical target exposure limits and no competing risks. The
+five target exposure limits were (1) 2.0, (2) 1.0, (3) 0.5, (4) 0.25,
+and (5) 0.05 mg/m^3^. The National Institute for Occupational Safety and
+Health (NIOSH) recommended exposure limit (REL) for total particulate
+mass (PM) composed of MWF is 0.5 mg/m^3^ [@niosh_1998]. For each target
+exposure limit, period of follow-up, and unique combination of
+confounder and exposure histories, we also defined a supportable
+exposure limit, which was the maximum observed value of exposure at or
+below the target exposure limit or no limit when all of the observed
+values were above the target limit. For each target exposure limit, we
+specified an intervention rule that reduced exposures above the
+supportable exposure limit to that limit, but allowed exposures at or
+below the limit to vary according to their natural distribution.
+Applying this intervention rule to the observed distribution of exposure
+produced the intervention distribution that defined the stochastic
+dynamic intervention with guaranteed positivity.
 
 ## Study population
 
-We used data from the UAW-GM cohort, which included all hourly workers at three automobile manufacturing plants in Michigan who had worked at least three years by 1985. Past papers provide detailed descriptions of the cohort [@Eisen_1992;@Eisen_2001]. The large size of the study population and rich time-varying, quantitative MWF exposure data provide an opportunity to study a relatively rare cancer and evaluate realistic interventions on MWF exposure in a longitudinal cohort setting. The present study population (N = 33,134) was restricted to the autoworkers who were at work in 1941 or not yet hired, missing no more than half of their employment history, and still alive at the start of follow-up. Autoworkers in the study population were followed for NHL incidence from January 1, 1985 until NHL diagnosis, death, December 31, 2014 (20 years after the end of employment record availability), or the oldest observed age at death (108 years), whichever came earlier.
+We used data from the UAW-GM cohort, which included all hourly workers
+at three automobile manufacturing plants in Michigan who had worked at
+least three years by 1985. Past papers provide detailed descriptions of
+the cohort [@Eisen_1992; @Eisen_2001]. The large size of the study
+population and rich time-varying, quantitative MWF exposure data provide
+an opportunity to study this relatively rare cancer and evaluate
+realistic interventions on MWF exposure in a longitudinal cohort
+setting. The present study population (N = 33,134) was restricted to the
+autoworkers who were at work in 1941 or not yet hired, missing no more
+than half of their employment history, and still alive at the start of
+follow-up. Autoworkers in the study population were followed for NHL
+incidence from January 1, 1985 until NHL diagnosis, death, December 31,
+2014 (30 years after the end of employment record availability), or the
+oldest observed age at death (108 years), whichever came earlier.
 
 ## Outcome and covariates
 
-We identified incident cancers in the UAW-GM cohort that occurred between 1985 and 2014 by linkage to the Michigan Cancer Registry (MCR). Workers at Plants 1 and 2, located in the greater Detroit metropolitan area, were also linked to the Detroit Regional Registry of the Surveillance, Epidemiology, and End Results (SEER) Program. Cancer types were distinguished using site and histology codes conforming to the International classification of Diseases for Oncology, 3^rd^ edition (ICD-O-3). Non-Hodgkin lymphoma was defined by cancers with any of the following ICD-O-3 Histology codes: 9590-9597, 9670-9671, 9673, 9675, 9678-9680, 9684, 9687-9691, 9695, 9698-9702, 9705, 9708-9709, 9712, 9714-9719, 9724-9729, 9735, 9737-9738, 9811-9818, 9823, 9827, 9837. Details regarding cancer incidence follow-up are described elsewhere [@Colbeth_2023]. Vital status was ascertained from company records and by linkage to Social Security Administration, National Death Index, and state mortality files.
+We identified incident cancers in the UAW-GM cohort between 1985 and
+2014 by linkage to the Michigan Cancer Registry (MCR). Workers at Plants
+1 and 2, located in the greater Detroit metropolitan area, were also
+linked to the Detroit Regional Registry of the Surveillance,
+Epidemiology, and End Results (SEER) Program. Cancer types were
+distinguished using site and histology codes conforming to the
+International classification of Diseases for Oncology, 3^rd^ edition
+(ICD-O-3). Non-Hodgkin lymphoma was defined by cancers with any of the
+following ICD-O-3 histology codes: 9590-9597, 9670-9671, 9673, 9675,
+9678-9680, 9684, 9687-9691, 9695, 9698-9702, 9705, 9708-9709, 9712,
+9714-9719, 9724-9729, 9735, 9737-9738, 9811-9818, 9823, 9827, 9837.
+Details regarding cancer incidence follow-up are described elsewhere
+[@Colbeth_2023]. Vital status was ascertained from company records and
+by linkage to Social Security Administration, National Death Index, and
+state mortality files.
 
-Covariates including year of hire, sex, race, and plant location were obtained from company records. Race was missing for about 16% of the cohort, most commonly among workers hired before 1960 in Plant 2. In analyses, missing race was considered a distinct category. All covariates were coded as categorical variables. Cut-points for categorizing continuous covariates were determined according to the quantiles among cases.
+Potential confounders including year of hire, sex, race, time off,
+employment status, and plant location were obtained from company
+records. Race was missing for about 16% of the cohort, most commonly
+among workers hired before 1960 in Plant 2. In analyses, missing race
+was considered a distinct category. All potential confounders were coded
+as categorical variables. Cut-points for categorizing continuous
+covariates were determined according to the quantiles among cases.
 
 ## Exposure
 
-Quantitative measurement of time-varying MWF exposure is a distinguishing strength of the UAW-GM cohort study relative to other occupational cohort studies. Exposure assessment was based on direct air sampling as well as company records. Company industrial hygienists collected several hundred personal and area samples for total particulate matter (mg/m^3^) composed of MWF over many decades. Research industrial hygienists collected additional air sampling data when the cohort study was launched in the mid 1980s. These additional data were combined with the historical data and company records to construct a job-exposure matrix of quantitative 8-hour time-weighted average daily exposure estimates to soluble, straight, and synthetic MWFs for each combination of job, department, and plant over time. 
-Workers' time-weighted annual average daily exposure to each MWF type was determined by combining this job-exposure matrix with employment records, which recorded time-varying job type, department, and plant for each employee from hire to termination or 1994, whichever came sooner. For employment records that were at least half complete, gaps in the record were interpolated by carrying forward the last known job type. The exposure assessment is described in detail elsewhere [@Hallock_1994;@Woskie_1994;@Woskie_2003].
+Quantitative measurement of time-varying MWF exposure is a
+distinguishing strength of the UAW-GM cohort study relative to other
+occupational cohort studies. Exposure assessment was based on direct air
+sampling as well as company records. Company industrial hygienists
+collected several hundred personal and area samples for total
+particulate matter (mg/m^3^) composed of MWF over many decades. Research
+industrial hygienists collected additional air sampling data when the
+cohort study was launched in the mid 1980s. These additional data
+combined with historical data and company records constituted a
+job-exposure matrix of quantitative 8-hour time-weighted average daily
+exposure estimates to soluble, straight, and synthetic MWF for each
+combination of job, department, and plant over time. Workers' average
+daily exposure to each MWF type was determined by combining this
+job-exposure matrix with employment records, which recorded time-varying
+job type, department, and plant for each employee from hire to
+termination or 1995, whichever came sooner. For employment records that
+were at least half complete, gaps in the record were interpolated by
+carrying forward the last known job type. The exposure assessment is
+described in detail elsewhere [@Hallock_1994; @Woskie_1994;
+@Woskie_2003].
 
-Previous analyses of NHL applied exposure lags of 1 to 20 years to account for disease latency; we lagged cumulative MWF exposures by 20 years and therefore ended follow-up on January 1, 2015 [@Smith_2007;@Karipidis_2007;@Zhang_2019]. In analyses, MWF exposure at start of follow-up was summarized as the cumulative sum of annual exposure intensities. Exposure was coded as categorical variables with cut-points at zero and the quintiles of exposure among cases. In analyses, we estimated the effects of interventions on soluble MWF while treating exposure to straight and synthetic MWFs as potential confounders.
+Previous analyses of NHL applied exposure lags of 1 to 20 years to
+account for disease latency; we lagged cumulative MWF exposures by 20
+years and therefore ended follow-up on January 1, 2015 [@Smith_2007;
+@Karipidis_2007; @Zhang_2019]. In analyses, MWF exposure history at
+start of follow-up was summarized as the cumulative sum of annual
+exposure intensities. Exposure was coded as categorical variables with
+cut-points at zero and the quintiles of nonzero exposure among cases. We
+estimated the effects of interventions on soluble MWF, the type of MWF
+used most widely and in the greatest quantities. We treated exposure to
+straight and synthetic MWF as potential confounders.
 
 ## Hazard-extended ICE parametric g-formula
 
-We split the 30-year follow-up period into ten time periods based on the deciles of the dates of diagnosis of NHL. The number of years per period range from two  to four years. The hazard-extended ICE parametric g-formula involves two stages. In the first, we estimate counterfactual discrete hazards over the person-periods. In the second, we pool those estimates to estimate counterfactual risk over the entire follow-up period. During pooling, we iteratively combine estimates of the counterfactual hazard starting with the last two periods, then the last three, then the last four, and so forth. In each iteration, we perform model-based standardization over exposure and covariate histories before combining the counterfactual discrete hazard with that pooled over subsequent periods. This iterative process results in a sequentially standardized estimate of NHL cumulative incidence over the entire follow-up period under the post-intervention distribution of exposure.
+We split the 30-year follow-up period into ten time periods based on the
+deciles of the dates of diagnosis of NHL. The number of years per period
+ranged from two to four years. The hazard-extended ICE parametric
+g-formula involved two stages. In the first, we estimated counterfactual
+discrete hazards over the person-periods. In the second, we pooled those
+estimates to estimate the counterfactual risk over the entire follow-up
+period. During pooling, we iteratively combined estimates of the
+counterfactual hazard starting with the last two periods, then the last
+three, then the last four, and so forth. In each iteration, we performed
+model-based standardization over exposure and covariate histories before
+combining the counterfactual discrete hazard with the risk over
+subsequent periods. This iterative process resulted in a sequentially
+standardized estimate of the counterfactual cumulative incidence of NHL
+when the intervention of interest is enforced over all follow-up
+periods. We took exposure to straight and synthetic MWF, employment
+status, cumulative time off, age, duration of employment, sex
+(male/female), race (Black/white/unknown), and plant (Plant 1/Plant
+2/Plant 3) to be potential confounders. Exposure to MWF, employment
+status, time off, and duration of employment were lagged 20 years. An
+overview of the general steps of the estimation procedure are presented
+below. Note that we refer to discrete hazards simply as hazards.
 
-At the start of follow-up and in the first stage of estimation, we summarized history of exposure to soluble MWF as the cumulative sum of average daily exposure. In the first stage, we fitted a pooled logistic regression for NHL over at-risk person-periods given cumulative exposure to straight, soluble, and synthetic MWFs, employment status, cumulative time off, age, duration of employment, sex (male/female), race (Black/white/unknown), and plant (Plant 1/Plant 2/Plant 3). Exposure to MWFs, employment status, time off, and duration of employment were lagged 20 years. All continuous variables were represented as categorical variables with cut points determined by the quantiles of nonzero values among NHL cases. In the second stage, we conducted model-based standardization using logistic regression on the entire set of exposure and covariate histories. An overview of the general steps of the estimation procedure are presented below. Note that we refer to discrete hazards simply as hazards.
+1.  Fit a pooled logistic regression of NHL on covariates and exposure
+    over all at-risk person-periods.
 
-1.  Fit a pooled logistic regression of NHL on covariates
-		and exposure over all at-risk person-periods.
-2.  Predict the hazard for each person-period for each possible level of exposure
-		using the model from step 1.
-3.  Within strata formed by unique combinations of covariates, obtain the
-    post-intervention distribution of exposure by applying the intervention rule
-    to the observed exposure distribution.
-4.  Within strata, estimate the counterfactual hazard for each 
-		person-period by taking a weighted sum of the predicted hazards from step 2.
+2.  Predict the hazard for each person-period for each possible level of
+    exposure using the model from step 1.
+
+3.  Within strata formed by unique combinations of covariates, obtain
+    the intervention distribution of exposure by applying the
+    intervention rule to the observed exposure distribution.
+
+4.  Within strata, estimate the counterfactual hazard for each
+    person-period by taking a weighted sum of the predicted hazards from
+    step 2.
+
 5.  Starting at the penultimate period of follow-up, estimate the pooled
     counterfactual hazard:
 
-    a)  Regress the counterfactual hazard pooled over all subsequent periods on
-        exposure and covariate history at the current period.
-    b)  Predict the pooled hazard for each person at risk at the start of the
-    		period and each possible level of exposure using the model from (a).
-    		Retrieve the predicted hazards from step 2. For each person and level
-    		of exposure, multiply the predicted pooled hazard by one minus the 
-    		corresponding predicted hazard and add the predicted hazard to the
-    		product.
-    c)  Within strata formed by exposure and covariate history, obtain the
-        post-intervention distribution of exposure by applying the 
+    a)  Regress the counterfactual hazard pooled over all subsequent
+        periods on exposure and covariate history at the current period.
+    b)  Predict the pooled hazard for each person at risk at the start
+        of the period and each possible level of exposure using the
+        model from (a). Retrieve the predicted hazards from step 2. For
+        each person and level of exposure, multiply the predicted pooled
+        hazard by one minus the corresponding predicted hazard and add
+        the predicted hazard to the product.
+    c)  Within strata formed by exposure and covariate history, obtain
+        the intervention distribution of exposure by applying the
         intervention rule to the observed exposure distribution.
-    d)  Within strata, estimate the counterfactual hazard pooled over the present
-    		and subsequent periods for each person by taking a weighted sum of the
-    		predicted pooled hazards from (b).
-    e)  If the present period is not first period, set the reference period to the
-    		preceding period and return to (a).
+    d)  Within strata, estimate the counterfactual hazard pooled over
+        the present and subsequent periods for each person by taking a
+        weighted sum of the predicted pooled hazards from (b).
+    e)  If the present period is not first period, set the reference
+        period to the preceding period and return to (a).
 
-6.  Compute the counterfactual risk by averaging the counterfactual hazard over
-		the entire follow-up period across all persons.
+6.  Compute the counterfactual risk by averaging the counterfactual
+    hazard over the entire follow-up period across all persons.
 
-To account for censoring, fit the models in step 1 and step 5a among those who were
-not censored and obtain predicted hazards for all at-risk person-periods, including
-those that were censored.
+To account for censoring, fit the models in step 1 and step 5a among
+those who were not censored and obtain predicted hazards for all at-risk
+person-periods, including those that were censored.
 
-We estimated cumulative incidence under the observed distribution of soluble MWF exposure (natural course) and under the six interventions. We contrasted the cumulative incidence under intervention to that under the natural course by computing the number of cases averted and the cumulative incidence ratios. Confidence intervals were computed using the basic nonparametric bootstrap with 1000 Monte Carlo samples from the population at the start of follow-up. All the necessary script used to reproduce the analyses are available on [GitHub](https://github.com/kvntchn/gm-nhl-ice).
-
+We estimated cumulative incidence under the observed distribution of
+soluble MWF exposure (natural course) and under the five supportable
+exposure limits. We contrasted the cumulative incidence under
+supportable limits to that under the natural course by computing the
+number of cases averted and the cumulative incidence ratios. Confidence
+intervals were computed using the basic nonparametric bootstrap with
+1000 Monte Carlo samples from the population at the start of follow-up.
+All the necessary script used to reproduce the analyses are available on
+[GitHub](https://github.com/kvntchn/gm-nhl-ice).
 
 # Results
 
@@ -200,7 +410,19 @@ tab1 <- tab1[!grepl("Years of follow-up", rownames(tab1)),]
 tab1$variable[1] <- "N (person-years)"
 ```
 
-Table 1 presents summary statistics of exposure and covariates for the full study population and for those diagnosed with NHL between 1985 and 2005. The cohort is predominantly white (66%) and male (87%). The median year of hire among those diagnosed with NHL was 1959 whereas the median year of hire in the full study population was almost a decade later. Age at hire was approximately the same among those with NHL and the full study population. Median lagged cumulative exposure to all three MWF types was higher among NHL cases. Soluble MWFs were the most widely used MWF type, with approximately 90% of workers ever exposed. Median cumulative exposure among the exposed was 6.5 times higher for soluble than for straight MWFs. Figure 1 shows median annual average daily exposure to the three MWF types among exposed workers over calendar time. Exposure to MWF generally followed a downward trend over time.
+Table 1 presents summary statistics of exposure and covariates for the
+full study population and for those diagnosed with NHL between 1985 and
+2005. The cohort is predominantly white (66%) and male (87%). The median
+year of hire among those diagnosed with NHL was 1959 whereas the median
+year of hire in the full study population was almost a decade later. Age
+at hire was approximately the same among those with NHL and the full
+study population. Median lagged cumulative exposure to all three MWF
+types was higher among NHL cases. Soluble MWF were the most widely used
+MWF type, with approximately 90% of workers ever exposed. Median
+cumulative exposure among the exposed was 6.5 times higher for soluble
+than for straight MWF. Figure 1 shows median annual average daily
+exposure to the three MWF types among exposed workers over calendar
+time. Exposure to MWF generally followed a downward trend over time.
 
 ```{r}
 # tab1 <- tab1[tab1.which,]
@@ -215,7 +437,7 @@ tab1[c(1:13, 15, 14, 16:27, 29, 28, 30),-grep("hspace.logical", colnames(tab1))]
   width(1, 2.2) |> width(c(3, 6), 1.1) |> width(c(2, 5), 0.65) |>
   flextable::compose(
     i = grep("Cumulative exposure", rownames(tab1)), j = 1,
-    value = as_paragraph("Cumulative exposure to MWFs (mg/m",
+    value = as_paragraph("Cumulative exposure to MWF (mg/m",
                          as_sup("3"), "-years)")) |>
   flextable::align(j = 2:6, align = "center", part = "all") |>
   footnote(i = grep("Plant$", rownames(tab1)), j = 1, value = as_paragraph(
@@ -244,9 +466,12 @@ tab1[c(1:13, 15, 14, 16:27, 29, 28, 30),-grep("hspace.logical", colnames(tab1))]
   hline_bottom(part = "footer") |> font(fontname = 'arial') |>
   set_caption(caption = "Summary of population characteristics. Statistics shown above the horizontal line are count (%). Those shown below are median (quartile 1, quartile 3).")
 ```
+
 \
 
-![Figure 1. Median annual average daily exposure to soluble, straight, and synthetic metalworking fluids among exposed workers over time.](../../resources/images/exposure.png){width=6.5in}
+![Figure 1. Median annual average daily exposure to soluble, straight,
+and synthetic metalworking fluids among exposed workers over
+time.](../../resources/images/exposure.png){width="6.5in"}
 
 ```{r}
 load(here::here("resources", paste0("estimates.rdata")))
@@ -274,6 +499,7 @@ point_estimates <- data.table(
                 mean(estimates[[1]]))
 )
 ```
+
 ```{r}
 # Calculate risk ratios for each bootstrap sample
 rr <- merge(
@@ -293,6 +519,7 @@ rr <- rr[,.(
   ),
 variable]
 ```
+
 ```{r}
 # Calculate risk differences for each bootstrap sample
 rd <- merge(
@@ -409,29 +636,59 @@ mwf.flextable <- function(x, n_col = 7) {
 }
 ```
 
-The observed number of NHL cases over the 20-year follow-up period was 231 (corresponding to a 20-year risk of 6.65 per 1000). Table 2 presents the hazard-extended ICE parametric g-formula estimates of the counterfactual number of cases, number of cases averted, and cumulative incidence ratios contrasting hypothetical limits on exposure to soluble MWF to no limit, after elimination of competing risks. Under an intervention eliminating competing risks, the estimated number of cases under no limit on MWF exposure was 332 (285, 380). Stronger limits on annual average daily exposure to soluble MWFs resulted in monotonically stronger reductions in the cumulative incidence of NHL. Capping annual average daily exposure to soluble MWFs at 0.5 mg/m^3^, 0.25 mg/m^3^, and 0.05 mg/m^3^ resulted in 44 (-6, 91), 52 (-5, 106), and 71 (12, 129) fewer NHL cases, respectively. These correspond to cumulative incidence ratios 0.87 (0.73, 1.02), 0.84 (0.68, 1.01), and 0.79 (0.61, 0.97).
+The observed number of NHL cases over the 30-year follow-up period was
+339. Table 2 presents the hazard-extended ICE parametric g-formula
+estimates of the counterfactual number of cases, number of cases
+averted, and cumulative incidence ratios contrasting hypothetical
+interventions on exposure to soluble MWF based on different target
+exposure limits and no competing risks. Under an intervention
+eliminating competing risks, the estimated number of cases was 502 (95%
+CI: 439, 555). Interventions based on stronger limits on average daily
+exposure to soluble MWF resulted in monotonically stronger reductions in
+the estimated cumulative incidence of NHL. Setting the target exposure
+limit at the NIOSH REL 0.5 mg/m^3^ would have averted 112 (95% CI: 57,
+181) NHL cases.
 
 ```{r, eval=F}
-tikzDevice::tikz(here::here("reports/ACIC (2022)/poster/resources/rr.tex"),
-                 width = 4, height = 1.75,
-                 standAlone = T)
-contrasts.tab[grepl("sol|natural\\.Any", variable) & !grepl(
-  "[a-z]", label),] |> ggplot(
-    aes(x = factor(label, rev(c("0.5", "0.25", "0.05"))),
-        y = rd, ymin = rd_lower, ymax = rd_upper)
+tikzDevice::tikz(here::here("reports/private/SER (2023)/resources/rd.tex"),
+                 width = 3.75, height = 2.25,
+								 documentDeclaration = "\\documentclass{beamer}",
+                 bareBones = T)
+contrasts.tab[,.(
+     label,
+     # `Person-years intervened (%)` = clean_percent_py(variable),
+     `Cases averted`    = rd * N,
+     rd_lower,
+     rd_upper,
+     result = paste0(
+     	round(rd * N),
+     	" (", round(rd_lower), ", ", round(rd_upper), ")")
+   )][c(6, 3, 2, 5, 4, 1),] -> gg.tab 
+gg.tab[label != "None"] |> ggplot(
+    aes(x = factor(
+    	label,
+    	levels = c("0.05", "0.25", "0.5", "1.0", "2.0",  "None"),
+    	labels = c("0.05", "0.25", "0.50", "1.00", "2.00",  "None")),
+        y = `Cases averted`, ymin = rd_lower, ymax = rd_upper)
   ) +
-  geom_errorbar(linewidth = 0.5, width = 0.15, color = '#102451') +
-  geom_point(size = 0.9, color = '#102451') + 
-  geom_hline(yintercept = 1, lty = 2, color = '#102451', alpha = 0.7) +
+	geom_label(aes(y = 270, label = result), size = 8/.pt, 
+						 label.padding = unit(5, "pt")) +
+  geom_errorbar(linewidth = 4 / .pt, width = 0.15, color = '#003c61') +
+  geom_point(size = 4 / .pt, color = '#003c61') + 
+  geom_hline(yintercept = 0, lty = 2, , alpha = 0.7) +
   labs(
     y = "Cases averted",
-    x = "Hypothetical limit (mg/m$^3$)") +
+    x = "Target limit (mg/m$^3$)") +
   mytheme +
-  coord_flip(ylim = c(-15, 130)) +
-  theme(panel.grid = element_blank())
+  coord_flip(ylim = c(-10, 320)) +
+  theme(panel.grid = element_blank(),
+  			axis.text = element_text(size = 9, colour = 'black'),
+  			panel.border = element_rect(colour = "black", size = 0.75),
+  			axis.title.y = element_text(size = 9, margin = margin(r = 6)),
+  			axis.title.x = element_text(size = 9, margin = margin(t = 6)),
+  			plot.margin = margin(l = 6, r = 6)
+  )
 dev.off()
-
-lualatex(directory = here::here("reports/ACIC (2022)/poster/resources"))
 ```
 
 ```{r}
@@ -472,39 +729,187 @@ sol.tab |> flextable() |>
 
 ```
 
-
 # Discussion
 
-Although NIOSH concluded that there exists substantial evidence linking MWF exposure to several different cancers, their REL of 0.5 mg/m^3^ for total particulate matter derived from any type of MWF targeted risk of acute respiratory disorders rather than on cancer [@niosh_1998;@Mirer_2003]. Hence, they may be inadequate for protecting against cancer risk. Using the hazard-extended ICE parametric g-formula, We estimated the counterfactual expected number of NHL cases from 1985 to 2005 in the UAW-GM cohort if annual average daily exposure to soluble MWF were limited to the NIOSH REL, half the REL, and a tenth of the REL and found a monotonic exposure-dependent relationship with lower cumulative incidence estimates arising from stronger limits.
+Although NIOSH concluded that there exists substantial evidence linking
+MWF exposure to several different cancers, their REL of 0.5 mg/m^3^ for
+total particulate matter derived from any type of MWF targeted risk of
+respiratory disorders rather than cancer [@niosh_1998; @Mirer_2003].
+Exposure limits stronger than the NIOSH REL may provide additional
+health protections not previously considered by policy makers. Using the
+hazard-extended ICE parametric g-formula, We estimated the
+counterfactual expected number of NHL cases from 1985 to 2015 in the
+UAW-GM cohort if we enforced exposure limits based on five different
+target exposure limits and found a monotonic exposure-dependent
+relationship where stronger target exposure limits yielded lower NHL
+case count estimates.
 
-The g-formula is a well-known approach in causal inference used for the identification of causal effects in the presence of time-varying confounding affected by past exposure [@Robins_1986]. Standard representations of the g-formula include (1) a non-iterated expectation over the joint density of covariates, (2) the ICE over time, and (3) an inverse probability weighted expectation. The parametric g-formula is a plug in estimator for the g-formula under its first, non-iterative, representation. It involves the parametric modeling of the full joint distribution of the outcome, exposure, and covariates under study for each time point [@Taubman_2009;@Young_2014]. Counterfactual quantities under hypothetical interventions of interest are computed from Monte Carlo samples from distributions implied by the fitted parametric models. In longitudinal settings, this approach often requires specifying and fitting large number of models in order to satisfy the exchangeability assumptions necessary for causal identification.
+The g-formula is a well-known approach in causal inference used for the
+identification and estimation of causal effects in the presence of
+time-varying confounding affected by past exposure [@Robins_1986].
+Standard representations of the g-formula include (1) a non-iterated
+expectation over the joint density of covariates, (2) the ICE over time,
+and (3) an inverse probability weighted expectation. The parametric
+g-formula is a plug in estimator for the g-formula under its first,
+non-iterative, representation. It involves the parametric modeling of
+the full joint distribution of the outcome, exposure, and covariates
+under study for each time point [@Taubman_2009; @Young_2014].
+Counterfactual quantities under hypothetical interventions of interest
+are computed from Monte Carlo samples from distributions implied by the
+fitted parametric models. In longitudinal settings, this approach often
+requires specifying and fitting large number of models in order to
+satisfy the exchangeability assumptions necessary for causal
+identification.
 <!-- Since applications of the parametric g-formula are often context-laden, there are no unified guidelines for model specification. -->
 
-Parametric estimators using the ICE representation of the g-formula require modeling only the conditional outcome distributions, so they require fewer parametric assumptions than non-iterative parametric g-formula estimators. Counterfactual outcome estimates over the follow-up period are computed from interval-specific conditional estimates by applying the tower rule of expectation. Under the assumptions of conditional exchangeability at all time points, positivity, counterfactual consistency, and correct model specification, the hazard-extended parametric g-formula yields unbiased estimates of counterfactual risk with greater statistical efficiency than both propensity score-based estimators and the classical ICE g-formula.
+Parametric estimators using the ICE representation of the g-formula
+require modeling only the conditional outcome distributions, so they
+require fewer parametric assumptions than non-iterative parametric
+g-formula estimators. Counterfactual outcome estimates over the
+follow-up period are computed from interval-specific conditional
+estimates by applying the tower rule of expectation. Under the
+assumptions of conditional exchangeability at all time points,
+positivity, counterfactual consistency, and correct model specification,
+the hazard-extended parametric g-formula yields unbiased estimates of
+counterfactual risk with greater statistical efficiency than both
+propensity score-based estimators and the classical ICE g-formula.
 
+Conditional exchangeability means that for all time points, there is no
+confounding of the relationship between exposure/censoring and both
+future exposure/censoring and NHL status given the observed past,
+including past exposure and covariates [@Richardson_2013; @Diaz_2021]. A
+major threat to conditional exchangeability in longitudinal occupational
+studies is the HWSE. We limit potential bias due to the HWSE by
+conditioning on cumulative exposure, employment status, and cumulative
+time off history at each time point. Cumulative time off and employment
+status are reasonable mediators of the causal paths linking past health
+to future exposure and health, but adjustment for these variables may
+not be sufficient for eliminating bias due to the HWSE. Declines in a
+worker's health may lead to reductions in work-related exposure without
+affecting employment status or time off work [@Garcia_2017]. We expect
+the absence of time-varying measures of worker health over the life
+course to result in bias toward the null.
 
-Under the assumptions of conditional exchangeability, positivity, consistency, and correct model specification, our estimates are unbiased for the true counterfactual risk under the hypothetical interventions. Conditional exchangeability means that for all time points, there is no confounding of the relationship between exposure/censoring and both future exposure/censoring and NHL status given the observed past, including past exposure and covariates [@Richardson_2013;@Diaz_2021]. A major threat to conditional exchangeability in longitudinal occupational studies is the HWSE. We limit potential bias due to the HWSE by conditioning on cumulative exposure, employment status, and cumulative time off history at each time point. Cumulative time off and employment status are reasonable mediators of the causal paths linking past health to future exposure and health, but adjustment for these variables may not be sufficient for eliminating bias due to the HWSE. Declines in a worker's health may lead to reductions in work-related exposure without affecting employment status or time off work [@Garcia_2017]. We expect the absence of time-varying measures of worker health over the life course to result in bias toward the null.
-
-Positivity refers to the need for adequate variation in future exposure among strata formed by observed covariate and intervention-compliant exposure histories. Even under conditional exchangeability, where exposures within these strata may be considered the result of experimental assignment, expected counterfactual outcomes under different exposures may not be estimable if there is excessive sparsity in the observed distribution of exposures [@Maldonado_2002]. We investigated static and dynamic stochastic interventions on soluble MWF exposure that intervened only when annual average daily exposure exceeded the hypothetical limit under consideration. Hence, our parameters of interest achieve positivity more easily than those for static deterministic interventions e.g. setting all to a single level of exposure. Nonetheless, violations in positivity were still of concern due to the high dimensionality of covariates, as is common in longitudinal settings. We addressed sparsity by summarizing the 20 years of follow-up over a coarser timescale with only 8 follow-up periods and by representing covariates using fewer categories. Coarsening limits the comprehensiveness of confounding control, but improves positivity. In practice, causal inference using observational data must always balance positivity, covariate adjustment, and model specification [@Petersen_2012].
+Positivity refers to the need for adequate variation in future exposure
+among strata formed by observed covariate and intervention-compliant
+exposure histories. Even under conditional exchangeability, where
+exposures within these strata may be considered the result of
+experimental assignment, expected counterfactual outcomes under
+different exposures may not be estimable if there is excessive sparsity
+in the observed distribution of exposures [@Maldonado_2002]. We
+investigated static and dynamic stochastic interventions on soluble MWF
+exposure that intervened only when average daily exposure exceeded the
+hypothetical limit under consideration. Hence, our parameters of
+interest achieve positivity more easily than those for static
+deterministic interventions e.g. setting all to a single level of
+exposure. Nonetheless, violations in positivity were still of concern
+due to the high dimensionality of covariates, as is common in
+longitudinal settings. We addressed sparsity by summarizing the 20 years
+of follow-up over a coarser timescale with only 8 follow-up periods and
+by representing covariates using fewer categories. Coarsening limits the
+comprehensiveness of confounding control, but improves positivity. In
+practice, causal inference using observational data must always balance
+positivity, covariate adjustment, and model specification
+[@Petersen_2012].
 <!-- When estimating causal effects using estimators that do not require exposure modeling, as is the case with ICE g-formula methods, concerns over potential bias due to practical violations in positivity may be relaxed if correct model specification, discussed below, is attained. -->
 
-The consistency assumption, also known as the no-multiple-versions-of-treatment or stable unit treatment value assumption, is that counterfactual outcomes under each possible exposure value take on a unique value [@Cole_2009;@VanderWeele_2013]. This assumption would be violated if there were multiple versions of treatment causally associated with different outcomes. This basic notion of consistency is violated in our analysis because our exposure of interest is a complex mixture of diverse components with substantial variation over time due to changes in formulation as well as the natural physical, chemical, and biological changes in the MWF over the course of its use and reuse [@Howell_2006]. However, causal effect estimates under violations in the consistency assumption are still valid and unbiased if there is adequate adjustment for confounders of the exposure-version relationship [@VanderWeele_2013]. This may be thought of as conditional consistency within strata, in which there is only one version of treatment. Our analysis indexed time periods over calendar time and adjusted for age, year of hire, and plant. In this way, we limited potential for bias due to variation in MWF composition.
+The consistency assumption, also known as the
+no-multiple-versions-of-treatment or stable unit treatment value
+assumption, is that counterfactual outcomes under each possible exposure
+value take on a unique value [@Cole_2009; @VanderWeele_2013]. This
+assumption would be violated if there were multiple versions of
+treatment causally associated with different outcomes. This basic notion
+of consistency is violated in our analysis because our exposure of
+interest is a complex mixture of diverse components with substantial
+variation over time due to changes in formulation as well as the natural
+physical, chemical, and biological changes in the MWF over the course of
+its use and reuse [@Howell_2006]. However, causal effect estimates under
+violations in the consistency assumption are still valid and unbiased if
+there is adequate adjustment for confounders of the exposure-version
+relationship [@VanderWeele_2013]. This may be thought of as conditional
+consistency within strata, in which there is only one version of
+treatment. Our analysis indexed time periods over calendar time and
+adjusted for age, year of hire, and plant. In this way, we limited
+potential for bias due to variation in MWF composition.
 
-Correct model specification is a standard assumption in all parametric and semi-parametric analyses. The estimator we applied offers greater statistical efficiency than the classical ICE parametric g-formula estimator because it leverages greater parametric smoothing. In causal analyses of longitudinal cohort studies, both the hazard-extended and classical ICE parametric g-formula estimators are less common than the NICE parametric g-formula [@Keil_2014]. However, a major limitation of the NICE g-formula is the g-null paradox: the guaranteed misspecification of parametric models resulting in the false rejection of the null hypothesis when the null is true and when there is time-varying confounding affected by past exposure [@Naimi_2015;@McGrath_2022]. As with all ICE g-formula estimators, the estimator we applied is not subject to the g-null paradox. Furthermore, simulation studies show that the variance of the hazard-extended ICE parametric g-formula is similar to that of the NICE parametric g-formula, so we expect the former to be no less conservative than the latter [@Wen_2020].
+Correct model specification is a standard assumption in all parametric
+and semi-parametric analyses. The estimator we applied offers greater
+statistical efficiency than the classical ICE parametric g-formula
+estimator because it leverages greater parametric smoothing. In causal
+analyses of longitudinal cohort studies, both the hazard-extended and
+classical ICE parametric g-formula estimators are less common than the
+NICE parametric g-formula [@Keil_2014]. However, a major limitation of
+the NICE g-formula is the g-null paradox: the guaranteed
+misspecification of parametric models resulting in the false rejection
+of the null hypothesis when the null is true and when there is
+time-varying confounding affected by past exposure [@Naimi_2015;
+@McGrath_2022]. As with all ICE g-formula estimators, the estimator we
+applied is not subject to the g-null paradox. Furthermore, simulation
+studies show that the variance of the hazard-extended ICE parametric
+g-formula is similar to that of the NICE parametric g-formula, so we
+expect the former to be no less conservative than the latter
+[@Wen_2020].
 
 <!-- In the last several decades, there have been substantial changes in the formulation of MWF, including the exclusion of nitrogenous compounds and the use of highly-refined mineral oils. The recent establishment of the Ecolabel for lubricants in the European Union reflects the shift toward prioritizing sustainability and health in the design and production of MWF and other lubricants [@EU_2018;@Skerlos_2008]. However, water-based MWF that satisfy Ecolabel criteria are nonetheless susceptible to the accumulation of dirt, metals, microbes, products of microbial metabolism, and unemulsified oil. These contaminants and their control strategies may also induce risks to human health. Furthermore, adoption of this new class of MWF remains limited, as is evidence of their safety. Considering the evolving complexity in MWF composition, epidemiologic investigations remain an invaluable approach for developing evidence-based occupational health policy and estimating their causal effect. -->
 
-Much of the existing epidemiologic literature linking occupational and environmental exposures to NHL report findings from case-control studies where exposures are measured crudely as binary indicators of exposure or membership in a particular occupational group [@Cano_2001;@Costantini_2001;@Karunanayake_2008;@t-Mannetje_2016]. Associations between occupations and NHL risk vary considerably, but one study of working men in Kansas and Nebraska found strong associations between NHL risk and occupations involving metalworking and motor vehicles [@Zheng_2002]. Both of these occupations may entail exposure to soluble MWFs, which contain a number of additives of concern for human health and for NHL risk in particular. Organic compounds containing phosphorous, chlorine, sulfur, nitrogen, and boron are commonly added to soluble MWF to control microbial growth, improve performance under high heat/pressure, and inhibit corrosion [@Evans_2020]. Organophosphorus compounds include organophosphate pesticides, which have been linked to cancer risk in epidemiologic and animal studies. Some were classified as possibly carcinogenic by the IARC [@IARC_2017]. Studies of occupational exposure to chlorinated solvents and pesticides have also been linked to NHL risk [@Cocco_2008;@Purdue_2011;@Cocco_2013;@Vlaanderen_2013;@Callahan_2018]. In 2014, the IARC classified trichloroethylene, tetrachloroethylene, and other chlorinated agents as Group 1 carcinogens [@IARC_2014]. Chlorinated solvents are commonly used as degreasers in industrial settings, but their use in the plants under study here was rare [@Shrestha_2016]. The structural characteristics shared by MWF additives and known/suspected carcinogens suggest potential similarities in their behavior in biological systems.
+Much of the existing epidemiologic literature linking occupational and
+environmental exposures to NHL report findings from case-control studies
+where exposures are measured crudely as binary indicators of exposure or
+membership in a particular occupational group [@Cano_2001;
+@Costantini_2001; @Karunanayake_2008; @t-Mannetje_2016]. Associations
+between occupations and NHL risk vary considerably, but one study of
+working men in Kansas and Nebraska found strong associations between NHL
+risk and occupations involving metalworking and motor vehicles
+[@Zheng_2002]. Both of these occupations may entail exposure to soluble
+MWF, which contain a number of additives of concern for human health and
+for NHL risk in particular. Organic compounds containing phosphorous,
+chlorine, sulfur, nitrogen, and boron are commonly added to soluble MWF
+to control microbial growth, improve performance under high
+heat/pressure, and inhibit corrosion [@Evans_2020]. Organophosphorus
+compounds include organophosphate pesticides, which have been linked to
+cancer risk in epidemiologic and animal studies. Some were classified as
+possibly carcinogenic by the IARC [@IARC_2017]. Studies of occupational
+exposure to chlorinated solvents and pesticides have also been linked to
+NHL risk [@Cocco_2008; @Purdue_2011; @Cocco_2013; @Vlaanderen_2013;
+@Callahan_2018]. In 2014, the IARC classified trichloroethylene,
+tetrachloroethylene, and other chlorinated agents as Group 1 carcinogens
+[@IARC_2014]. Chlorinated solvents are commonly used as degreasers in
+industrial settings, but their use in the plants under study here was
+rare [@Shrestha_2016]. The structural characteristics shared by MWF
+additives and known/suspected carcinogens suggest potential similarities
+in their behavior in biological systems.
 
-This study investigated the effect of hypothetical limits on MWF exposure by comparing the standardized distributions of NHL under various distributions of cumulative exposure induced by applying upper bounds to annual average daily exposure to soluble MWF. We selected these hypothetical limits based on the NIOSH REL of 0.5 mg/m^3^ [@niosh_1998]. In the real world, there is no enforcement of the REL, but we nonetheless observed annual average daily exposures below the REL in these GM plants for many years. If the REL were enforced in the real world, we would not expect reductions in exposure for these low-exposure person-years. Hence, contrasting the counterfactual scenario where all workers experienced annual average daily exposure at the REL to one where all workers experienced annual average daily exposure at some higher level would result in an overestimate of the expected real-world benefit of REL enforcement.
+This study investigated the effect of hypothetical limits on MWF
+exposure by comparing the standardized distributions of NHL under
+various distributions of cumulative exposure induced by applying upper
+bounds to average daily exposure to soluble MWF. We selected these
+hypothetical limits based on the NIOSH REL of 0.5 mg/m^3^ [@niosh_1998].
+In the real world, there is no enforcement of the REL, but we
+nonetheless observed average daily exposures below the REL in these GM
+plants for many years. If the REL were enforced in the real world, we
+would not expect reductions in exposure for these low-exposure
+person-years. Hence, contrasting the counterfactual scenario where all
+workers experienced average daily exposure at the REL to one where all
+workers experienced average daily exposure at some higher level would
+result in an overestimate of the expected real-world benefit of REL
+enforcement.
 
-<!-- The interventions we considered are stochastic interventions resulting in post-intervention distributions of exposure that better reflect what we would expect if exposure limits were enforced in the real world. The interventions which ignore exposure to straight and synthetic MWFs are static. The interventions which reduce exposure to soluble MWF by a quantity determined by exposure to other MWF are dynamic. The dynamic stochastic interventions respect the fact that the REL is for total MWF, not just soluble MWF. If an individual experienced a large amount of exposure to straight and synthetic MWF in one year, then their exposure to soluble MWF should be bounded at a lower level so that the sum of their exposure to soluble, straight, and synthetic MWFs is no greater than the hypothetical limit.  -->
+<!-- The interventions we considered are stochastic interventions resulting in post-intervention distributions of exposure that better reflect what we would expect if exposure limits were enforced in the real world. The interventions which ignore exposure to straight and synthetic MWF are static. The interventions which reduce exposure to soluble MWF by a quantity determined by exposure to other MWF are dynamic. The dynamic stochastic interventions respect the fact that the REL is for total MWF, not just soluble MWF. If an individual experienced a large amount of exposure to straight and synthetic MWF in one year, then their exposure to soluble MWF should be bounded at a lower level so that the sum of their exposure to soluble, straight, and synthetic MWF is no greater than the hypothetical limit.  -->
 
 # Conclusions
 
-Associations between several occupations and risk of NHL have been reported previously, but none evaluated the potential effect of hypothetical limits on occupational exposures [@Ekstrom-Smedby_2006;@Chiu_2015;@t-Mannetje_2016;@Callahan_2018]. We found evidence that exposure to soluble MWF was associated with NHL incidence after adjustment for time-varying confounding affected by prior exposure using the hazard-extended ICE parametric g-formula. Reducing cumulative exposure to soluble MWF by enforcing hypothetical, but realistic, interventions on annual average daily exposure would reduce NHL incidence.
+Associations between several occupations and risk of NHL have been
+reported previously, but none evaluated the potential effect of
+hypothetical limits on occupational exposures [@Ekstrom-Smedby_2006;
+@Chiu_2015; @t-Mannetje_2016; @Callahan_2018]. We found evidence that
+exposure to soluble MWF was associated with NHL incidence after
+adjustment for time-varying confounding affected by prior exposure using
+the hazard-extended ICE parametric g-formula. Reducing cumulative
+exposure to soluble MWF by enforcing hypothetical, but realistic,
+interventions on average daily exposure would reduce NHL incidence.
 \newpage
 
 # Citations
 
-<div id="refs"></div>
+::: {#refs}
+:::
