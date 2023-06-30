@@ -152,37 +152,39 @@ soluble_combo_distributions <- rbindlist(list(
 ), idcol = T)
 
 soluble_combo_distributions[,.id := factor(.id, labels = c(
-	"Supported exposure limit $=$ target limit",
-	"Supported exposure limit $<$ target limit",
-	"No limit (all observed exposures $>$ target limit)"
+	"Target exposure limit is supported",
+	"Supportable exposure limit below target",
+	"None below target exposure limit"
 ))]
 
 
 
 mytheme <- theme_bw() +
-		theme(legend.position = 'bottom',
-					legend.box = 'vertical',
-					legend.margin = margin(t = -5, b = 5),
-					panel.grid = element_blank(),
-					panel.border = element_rect(color = "black", linewidth = 8 / .pt),
-					strip.background = element_rect(color = 'black', fill="lightgrey", linewidth = 8 / .pt),
-					legend.key.size = unit(12, 'pt'),
-					legend.title = element_text(size = 9, colour = 'black'),
-					legend.text = element_text(size = 9, colour = 'black'),
-					legend.spacing.x = unit(5, 'pt'),
-					axis.text = element_text(size = 9, colour = 'black'),
-					axis.ticks = element_line(linewidth = 8 / .pt),
-					axis.title.y = element_text(size = 9, margin = margin(r = 6)),
-					axis.title.x = element_text(size = 9, margin = margin(t = 6)),
-					plot.margin = margin(l = 6, r = 6)
-		)
+	theme(legend.position = 'bottom',
+				legend.box = 'vertical',
+				legend.margin = margin(t = 5, b = 5),
+				panel.grid = element_blank(),
+				panel.border = element_rect(color = "black", linewidth = 1 / .pt),
+				strip.background = element_rect(
+					color = 'black', fill="lightgrey", linewidth = 1 / .pt),
+				axis.ticks = element_line(linewidth = 1 / .pt),
+				legend.key.size = unit(8, 'pt'),
+				legend.spacing.x = unit(2, 'pt'),
+				legend.spacing.y = unit(2, 'pt'),
+				legend.title = element_text(size = 8, colour = 'black'),
+				legend.text  = element_text(size = 8, colour = 'black'),
+				axis.text    = element_text(size = 8, colour = 'black'),
+				axis.title.y = element_text(size = 8, margin = margin(r = 6)),
+				axis.title.x = element_text(size = 8, margin = margin(t = 6)),
+				plot.margin = margin(t = 6, b = 6, l = 6, r = 6)
+	)
 
-tikz('reports/private/SER (2023)/resources/intervention-density.tex',
+tikz('reports/SER (2023)/resources/intervention-density.tex',
 		 width = 3.75, height = 2.7,
 		 documentDeclaration = "\\documentclass{beamer}",
 		 bareBones = T, standAlone = F)
 melt(soluble_distribution[Observed > 0, -'studyno'],
-							measure.vars = names(soluble_distribution[,-'studyno'])) -> ggdat
+		 measure.vars = names(soluble_distribution[,-'studyno'])) -> ggdat
 ggdat[grep("Post", variable), variable := "Post-intervention\\ \\ \\ \\ "]
 ggdat[,variable := factor(variable, levels = rev(unique(variable)))]
 print(
@@ -193,7 +195,7 @@ print(
 		geom_histogram(position = 'identity',
 									 aes(y = after_stat(density)),
 									 breaks = exp(seq(log(1e-3), log(10), 0.5))
-									 ) +
+		) +
 		geom_vline(aes(lty = '0.25 mg/m\\textsuperscript{3}', xintercept = a),
 							 linewidth = 4 / .pt) +
 		scale_linetype_manual(values = 2) +
@@ -218,43 +220,54 @@ print(
 dev.off()
 # lualatex(directory = 'reports/private/SER (2023)/resources')
 
-tikz('reports/private/SER (2023)/resources/intervention-density-witnin-combos.tex',
-		 # width = (3.5 - 0.5) * 3 + 0.5, height = 2.5,
-		 width = 3.75, height = 1.85 * 3 + 0.5,
-		 documentDeclaration = "\\documentclass{beamer}",
-		 bareBones = T, standAlone = F)
-melt(soluble_combo_distributions[Observed > 0, .(Observed, `Post-intervention`, .id)],
-							measure.vars = c('Observed', 'Post-intervention')) -> ggdat
-ggdat[grep("Post", variable), variable := "Post-intervention\\ \\ \\ \\ "]
-ggdat[,variable := factor(variable, levels = rev(unique(variable)))]
-print(
-	ggplot(ggdat,
-				 aes(x = value, col = variable, fill = variable,
-				 		alpha = variable, linewidth = variable)) +
-		geom_histogram(position = 'identity',
-									 aes(y = after_stat(density)),
-									 breaks = seq(0, 0.65, 0.025)) +
-		geom_vline(aes(lty = '0.25 mg/m\\textsuperscript{3}', xintercept = a),
-							 linewidth = 4 / .pt) +
-		scale_linetype_manual(values = 2) +
-		labs(x = "Exposure to soluble MWF (mg/m\\textsuperscript{3})",
-				 y = "Density",
-				 col = "Distribution:\\ \\ \\ ",
-				 fill = "Distribution:\\ \\ \\ ",
-				 alpha = "Distribution:\\ \\ \\ ",
-				 linewidth = "Distribution:\\ \\ \\ ",
-				 lty = "Target exposure limit:") +
-		scale_color_manual(values = c("#A3CFEB", "#ba8123")) +
-		scale_fill_manual(values = c("#A3CFEB", "#ffffff")) +
-		scale_alpha_manual(values = 1:0) +
-		scale_linewidth_manual(values = c(0, 8 / .pt)) +
-		guides(col = guide_legend(override.aes = list(
-			linewidth = 4))) +
-		facet_wrap(. ~ .id, ncol = 1) +
-		mytheme
-)
-dev.off()
-# lualatex(directory = 'reports/private/SER (2023)/resources')
+for (i in 1:3) {
+	fig.name <- paste0('reports/paper/resources/intervention-density-witnin-combos-',
+										 letters[i], '.tex')
+	tikz(fig.name,
+			 width = 3.5, height = 2.5,
+			 # width = 3.75, height = 1.85 * 3 + 0.5,
+			 # documentDeclaration = "\\documentclass{beamer}",
+			 bareBones = F, standAlone = T)
+	melt(soluble_combo_distributions[Observed > 0, .(Observed, `Post-intervention`, .id)],
+			 measure.vars = c('Observed', 'Post-intervention')) -> ggdat
+	ggdat[grep("Post", variable), variable := "Post-intervention"]
+	ggdat[,variable := factor(variable, levels = rev(unique(variable)))]
+	print(cowplot::plot_grid(
+		ggplot(ggdat[.id == levels(.id)[i],],
+					 aes(x = value, col = variable, fill = variable,
+					 		alpha = variable, linewidth = variable)) +
+			geom_histogram(position = 'identity',
+										 aes(y = after_stat(density)),
+										 breaks = seq(0, 0.65, 0.025)) +
+			geom_vline(aes(lty = '0.25 mg/m$^3$', xintercept = a),
+								 linewidth = 1 / .pt) +
+			scale_linetype_manual(values = 5) +
+			labs(x = "Exposure to soluble MWF (mg/m$^3$)",
+					 y = "Density",
+					 col = "Distribution:",
+					 fill = "Distribution:",
+					 alpha = "Distribution:",
+					 linewidth = "Distribution:",
+					 lty = "Target exposure limit:") +
+			scale_color_manual(values = c("lightgrey", "black")) +
+			scale_fill_manual(values = c("lightgrey", "#ffffff")) +
+			scale_alpha_manual(values = 1:0) +
+			scale_linewidth_manual(values = c(0, 1 / .pt)) +
+			# facet_wrap(. ~ .id, ncol = 3) +
+			mytheme + theme(
+				legend.position = c(ifelse(i != 3, 1, 0.01), 0.8),
+				legend.justification = ifelse(i != 3, "right", "left"),
+				legend.margin = margin(t = 0, r = 0, b = 2.5, l = 0),
+				legend.box.margin = margin(t = 0, r = 2, b = 0, l = 2),
+				plot.margin = margin(t = 15, l = 12, 6, 6)
+				# legend.background = element_rect(color = 'black')
+			),
+		labels = paste0(letters[i], ")"), label_fontface = "plain", label_size = 10,
+		hjust = -0.25, vjust = 1.5
+	))
+	dev.off()
+	}
+lualatex(directory = 'reports/paper/resources')
 
 
 # tikz('reports/private/SER (2023)/resources/intervention-density-combined.tex',
