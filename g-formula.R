@@ -130,17 +130,24 @@ ice_gcomp <- function(
 			# Get non-followers
 			dta.probs_not_followed <- dta[
 				get(paste0("followed_", a)) == 0 & I == k,
-				dynamic.which, with = F]
+				c(dynamic.which, intervene.which), with = F]
+
+			# Get lowest exposure among non-followers
+			dta.probs_not_followed[,`:=`(
+				Exposure = levels(get(intervene.which))[
+					min(as.numeric(get(intervene.which)))]
+			), eval(dynamic.which)]
 
 			# Add rule-abiding exposure if positivity allows
-			dta.probs_not_followed <- dta.probs_not_followed[
-					dta.probs_barely_followed,
+			dta.probs_not_followed <- dta.probs_barely_followed[
+				dta.probs_not_followed,
 					on = dynamic.which
 				]
+			dta.probs_not_followed[is.na(Exposure), Exposure := i.Exposure]
 
 			# Combine distribution to get the intervention distribution
 			dta.probs <- rbindlist(list(
-				dta.probs_followed, dta.probs_not_followed
+				dta.probs_followed, dta.probs_not_followed[,names(dta.probs_followed), with = F]
 			))
 
 			# Get counts within exposure levels
@@ -348,17 +355,24 @@ ice_gcomp <- function(
 			# Get non-followers
 			dta.probs_not_followed <- dta.wide[
 				followed == 0 ,
-				dynamic.which, with = F]
+				c(dynamic.which, intervene.which.k), with = F]
+
+			# Get lowest exposure among non-followers
+			dta.probs_not_followed[,`:=`(
+				Exposure = levels(get(intervene.which.k))[
+					min(as.numeric(get(intervene.which.k)))]
+			), eval(dynamic.which)]
 
 			# Add rule-abiding exposure if positivity allows
-			dta.probs_not_followed <- dta.probs_not_followed[
-					dta.probs_barely_followed,
+			dta.probs_not_followed <- dta.probs_barely_followed[
+					dta.probs_not_followed,
 					on = dynamic.which
 				]
+			dta.probs_not_followed[is.na(Exposure), Exposure := i.Exposure]
 
 			# Combine distribution to get the intervention distribution
 			dta.probs <- rbindlist(list(
-				dta.probs_followed, dta.probs_not_followed
+				dta.probs_followed, dta.probs_not_followed[,names(dta.probs_followed), with = F]
 			))
 
 			dta.probs <- lapply(

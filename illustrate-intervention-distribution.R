@@ -120,7 +120,7 @@ a <- 0.25
 post_intervention <- dta.wide[,.(soluble = {
 	if (sum(get(paste0('soluble_', k)) <= a) > 0) {
 		max(get(paste0('soluble_', k))[get(paste0('soluble_', k)) <= a])
-	} else {NaN}
+	} else {min(get(paste0('soluble_', k)))}
 }), eval(dynamic.which)]
 
 soluble_distribution <- post_intervention[
@@ -138,13 +138,6 @@ soluble_combos <- dta.wide[, c('studyno', dynamic.which), with = F][
 	soluble_distribution, on = 'studyno'
 ]
 
-i <- 0; foo <- a
-while (i <= ncol(soluble_combos) & foo > a - 0.2) {
-	i <- i + 1
-	foo <- soluble_combos[soluble_combos[,.N, dynamic.which][order(N, decreasing = T)][i,], on = dynamic.which]
-	foo <- max(foo$`Post-intervention`)
-}
-
 soluble_combo_distributions <- rbindlist(list(
 	soluble_combos[soluble_combos[,.N, dynamic.which][order(N, decreasing = T)][1,], on = dynamic.which],
 	soluble_combos[soluble_combos[,.N, dynamic.which][order(N, decreasing = T)][8,], on = dynamic.which],
@@ -154,10 +147,8 @@ soluble_combo_distributions <- rbindlist(list(
 soluble_combo_distributions[,.id := factor(.id, labels = c(
 	"Target exposure limit is supported",
 	"Supportable exposure limit below target",
-	"None below target exposure limit"
+	"Supportable exposure limit above target"
 ))]
-
-
 
 mytheme <- theme_bw() +
 	theme(legend.position = 'bottom',

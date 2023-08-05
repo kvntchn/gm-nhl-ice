@@ -113,6 +113,7 @@ B <- 1e3
 # 	B = B,
 # 	interventions = list("Any", "200", "100", "50", "25", "05"))
 # # })
+# # 9.33 hours since get.bs() was called.
 # saveRDS(estimates.bs, here::here("resources", paste0("estimates.bs.rds")))
 
 # Examine BS sampling distribution ####
