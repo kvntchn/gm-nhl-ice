@@ -34,12 +34,15 @@ library(ggplot2); library(magrittr)
 **Manuscript title:** Hypothetical interventions on workplace exposure
 with guaranteed positivity
 
-**Authors:** Kevin T. Chen^a^, Sally Picciotto^b^, Ellen A. Eisen^b^
+**Authors:** Kevin T. Chen\^a, b\^, Sally Picciotto^c^, Ellen A.
+Eisen^c^
 
 ^a^ University of California, Berkeley School of Public Health, Division
 of Epidemiology & Biostatistics
 
-^b^ University of California, Berkeley School of Public Health, Division
+^b^ University of California, Berkeley Department of Statistics
+
+^c^ University of California, Berkeley School of Public Health, Division
 of Environmental Health Sciences
 
 **Corresponding author:**\
@@ -48,15 +51,14 @@ Kevin T. Chen\
 Room 5302, Desk 5305-1\
 Berkeley, CA 94720-7360\
 kevchen\@berkeley.edu\
-(510) 387-3327
+(510) 816-3408
 
-**Running head suggestion:** Supportable interventions for reducing NHL
-risk.
+**Running head suggestion:** Hypothetical interventions with guaranteed positivity
 
 **Conflicts of interests:** Authors declare no conflicts of interest.
 
 **Sources of financial support:** This work was supported by Training
-Grant T42OH008429 and Research Project Grant R01OH011092, both funded by
+Grant T42OH008429 and Research Project Grant R01OH011092, both from
 the National Institute for Occupational Safety and Health (NIOSH) /
 Centers for Disease Control and Prevention (CDC).
 
@@ -68,7 +70,7 @@ are available upon reasonable request.
 metalworking fluid, occupational exposure, non-Hodgkin lymphoma, cancer,
 iterated conditional expectation, healthy-worker effect
 
-**Word count** **(Limit: 1500 to 4000 words):** 3812 (approx)
+**Word count** **(Limit: 1500 to 4000 words):** 3842 (approx)
 
 \newpage
 
@@ -85,36 +87,37 @@ relation to NHL risk in the same cohort of autoworkers. Estimation of
 causal effects requires positivity, which we guarantee by investigating
 causal contrasts that are supportable by the data.
 
-**Methods:** We estimated counterfactual risk of NHL between 1985 and
-2015 in the UAW-GM cohort of autoworkers at three Michigan plants (n =
-33,134) under hypothetical supportable interventions on exposure to
-soluble MWF. A supportable intervention reduces annual daily average
-exposures above a specific target limit to that limit when supported by
-data. Otherwise, the supportable intervention reduces exposure to the
-highest level below the target limit or not at all, depending on
-support.
+**Methods:** We defined hypothetical supportable interventions that
+reduce annual daily average exposures above a specific target limit to
+that limit when supported by data. When the target limit is not
+supported, the intervention reduces exposure to the nearest supported
+level of exposure. We estimated counterfactual risk of NHL between 1985
+and 2015 in the UAW-GM cohort of autoworkers at three Michigan plants (n
+= 33,134) under hypothetical supportable interventions on exposure to
+soluble MWF.
 
 **Results:** 339 NHL cases occurred over the 30-year follow-up period.
 Stronger target limits on soluble MWF exposure resulted in monotonic
 reductions in NHL risk. Setting the target exposure limit at 0.5
-mg/m^3^, the NIOSH recommended exposure limit, would have prevented 112
-(95% CI: 57, 181) cases.
+mg/m^3^, the NIOSH recommended exposure limit, would have prevented 124
+(95% CI: 66, 202) cases.
 
 **Conclusion:** More stringent limits on exposure to soluble MWF provide
-stronger protections against NHL. We expect the effects of enforcing the
-target exposure limits uniformly to have even stronger protective
-effects. Strengthening exposure limits for MWF may protect workers from
-NHL during the anticipated boom in domestic manufacturing.
+stronger protections against NHL. We expect that uniformly enforcing the
+target exposure limits, regardless of data support, would have even
+stronger protective effects. Strengthening exposure limits for MWF may
+protect workers from NHL during the anticipated boom in domestic
+manufacturing.
 
 \newpage
 
 # Introduction
 
 Non-Hodgkin Lymphoma (NHL) incidence in the United States doubled
-between 1973 and 1994, before plateauing at around 19 per 100,000
-persons per year, making it the seventh most common cancer in the
-country [@seer_1994; @Ekstrom-Smedby_2006]. The strongest known risk
-factor of NHL is immunosuppression, both congenital and acquired
+between 1973 and 1994 before plateauing at around 19 per 100,000 persons
+per year, making it the seventh most common cancer in the country
+[@seer_1994; @Ekstrom-Smedby_2006]. The strongest known risk factor of
+NHL is immunosuppression, both congenital and acquired
 [@Filipovich_1992; @Chiu_2015]. However, since immunodeficiency and
 infection with HIV are rare, they cannot fully explain the historic rise
 or present burden of NHL [@Shiels_2013]. The rise in NHL incidence
@@ -157,22 +160,22 @@ One challenge in estimating the causal effects of occupational exposures
 on worker health is the Healthy Worker Survivor Effect (HWSE), the
 process by which healthier individuals remain at work where they
 accumulate more exposure while those more susceptible to the deleterious
-health effects of exposure leave work [@Arrighi_1994]. An early causal
-inference method in statistics developed to estimate causal effects in
-longitudinal observational studies where the HWSE or other forms of
-time-varying confounding/selection bias affected by past exposure may be
-operating is the parametric g-formula [@Robins_1986; @Taubman_2009;
+health effects of exposure leave work [@Arrighi_1994]. The parametric
+g-formula is an early causal inference method in statistics developed to
+estimate causal effects in longitudinal observational studies where the
+HWSE or other forms of time-varying confounding/selection bias affected
+by past exposure may be operating [@Robins_1986; @Taubman_2009;
 @Richardson_2013]. A central requirement necessary for causal inference
-from observational data is positivity (overlap) ie adequate variation in
-the exposure of interest within strata formed by confounder and exposure
-histories [@Petersen_2012].
+from observational data is positivity (overlap), *i.e.,* adequate
+variation in the exposure of interest within strata formed by confounder
+and exposure histories [@Petersen_2012].
 
 Common approaches for addressing violations in positivity are
 model-based smoothing when using outcome regression methods, weight
 truncation when using propensity methods, or a combination of both.
 Another approach is to only consider causal contrasts that are supported
-by the observed data ie those involving hypothetical interventions with
-propensity score strictly greater than zero. Here, we defined
+by the observed data, *i.e.,* those involving hypothetical interventions
+with propensity score strictly greater than zero. Here, we defined
 hypothetical supportable interventions on exposure to soluble MWF in the
 United Auto Workers-General Motors (UAW-GM) occupational cohort and
 estimated their effects on NHL incidence between 1985 and 2015 relative
@@ -188,7 +191,7 @@ to no exposure intervention while guaranteeing positivity.
 
 We estimated the cumulative incidence of NHL between 1985 and 2015 under
 supportable interventions based on selected target exposure limits on
-annual average daily exposure to soluble MWF by applying the the
+annual average daily exposure to soluble MWF by applying the
 hazard-extended iterative conditional expectation (ICE) parametric
 g-formula [@Wen_2020]. First, we estimated the expected number of NHL
 cases that we would observe if there were no censoring and no limit on
@@ -205,7 +208,7 @@ by unique combinations of confounder and exposure histories, we found a
 supportable exposure limit, which was the maximum observed value of
 exposure at or below the target exposure limit, if such a value exists.
 If all of the observed values were above the target limit, the
-supportable limit was simply the maximum observed value. The supportable
+supportable limit was the minimum observed value. The supportable
 intervention rule then reduces exposures above the supportable exposure
 limit to that limit, but allows exposures at or below the limit to vary
 according to their observed distribution. Applying the supportable
@@ -223,9 +226,9 @@ supportable exposure limit is equal to the target exposure limit as some
 individuals with that particular set of potential confounder and
 exposure histories were observed to have experienced exposure at that
 level. In Figure 1b, the supportable exposure limit is below the target
-exposure limit. In Figure 1c, there is no limit on exposure because no
-individuals in that stratum experienced exposure below the target
-exposure limit.
+exposure limit. In Figure 1c, the supportable exposure limit, the
+minimum observed level of exposure in that stratum, is greater than the
+target exposure limit.
 
 ::: {#fig-rules layout-ncol="2"}
 ![](resources/images/intervention-density-witnin-combos-a.png){#fig-1a
@@ -247,14 +250,14 @@ workers at three automobile manufacturing plants in Michigan who had
 worked at least three years by 1985. Past papers provide detailed
 descriptions of the cohort [@Eisen_1992; @Eisen_2001]. The large size of
 the study population and rich time-varying, quantitative MWF exposure
-data enable the study of a relatively rare cancer and evaluate realistic
-interventions on MWF exposure in a longitudinal cohort setting. The
-present study population (N = 33,134) was restricted to the autoworkers
-who were at work in 1941 or not yet hired, missing no more than half of
-their employment history, and still alive at the start of follow-up for
-cancer incidence on January 1, 1941. Autoworkers in the study population
-were followed until NHL diagnosis, death, December 31, 2014, or the
-oldest observed age at death, whichever came earlier.
+data enable the study of a relatively rare cancer and evaluation of
+realistic interventions on MWF exposure in a longitudinal cohort
+setting. The present study population (N = 33,134) was restricted to the
+autoworkers who were at work in 1941 or not yet hired, missing no more
+than half of their employment history, and still alive at the start of
+follow-up for cancer incidence on January 1, 1985. Autoworkers in the
+study population were followed until NHL diagnosis, death, December 31,
+2014, or the oldest observed age at death, whichever came earlier.
 
 ## Outcome and potential confounders
 
@@ -293,18 +296,18 @@ samples for total particulate mass (mg/m^3^) composed of MWF over many
 decades. Research industrial hygienists collected additional air
 sampling data when the cohort study was launched in the mid 1980s
 [@Woskie_1994; @Woskie_1994a]. These additional data combined with
-historical data and company records constituted a job-exposure matrix of
-quantitative 8-hour time-weighted average daily exposure estimates to
-soluble, straight, and synthetic MWF for each combination of job,
-department, and plant over time [@Hallock_1994]. Workers' annual average
-daily exposure to each MWF type was determined by combining this
-job-exposure matrix with employment records, which recorded time-varying
-job type, department, and plant for each employee from hire to
-termination or 1995, whichever came sooner. For employment records that
-were at least half complete, gaps in the record were interpolated by
-carrying forward the last known job type. The exposure assessment is
-described in detail elsewhere [@Hallock_1994; @Woskie_1994;
-@Woskie_2003].
+historical data and company records were used to construct a
+job-exposure matrix of quantitative 8-hour time-weighted average daily
+exposure estimates to soluble, straight, and synthetic MWF for each
+combination of job, department, and plant over time [@Hallock_1994].
+Workers' annual average daily exposure to each MWF type was determined
+by combining this job-exposure matrix with employment records, which
+recorded time-varying job type, department, and plant for each employee
+from hire to termination or 1995, whichever came sooner. For employment
+records that were at least half complete, gaps in the record were
+interpolated by carrying forward the last known job type. The exposure
+assessment is described in detail elsewhere [@Hallock_1994;
+@Woskie_1994; @Woskie_2003].
 
 In previous analyses of NHL, exposure lags of 1 to 20 years were applied
 to account for disease latency; we lagged cumulative MWF exposures by 20
@@ -336,7 +339,7 @@ incidence of NHL when the intervention of interest is enforced over all
 follow-up periods.
 
 We investigated supportable interventions that guarantee positivity:
-every value of exposure that could be assigned under the our stochastic
+every value of exposure that could be assigned under our stochastic
 dynamic intervention has propensity score strictly greater than zero. We
 treated co-exposure to straight and synthetic MWF, employment status,
 cumulative time off, age, duration of employment, sex (male/female),
@@ -683,7 +686,7 @@ eliminating censoring, the estimated number of cases was 502 (95% CI:
 439, 555). Interventions based on stronger target exposure limits on
 soluble MWF resulted in monotonically stronger reductions in the
 estimated cumulative incidence of NHL. Setting the target exposure limit
-at the NIOSH REL 0.5 mg/m^3^ would have averted 112 (95% CI: 57, 181)
+at the NIOSH REL 0.5 mg/m^3^ would have averted 124 (95% CI: 66, 202)
 NHL cases.
 
 ```{r, eval=F}
@@ -843,7 +846,7 @@ with all ICE g-formula estimators, the estimator we applied is not
 subject to the g-null paradox. Furthermore, since ICE g-formula
 estimators require fewer parametric modeling requirements than the
 classic parametric g-formula, correct model specification may be
-achieved more readily.
+achieved (or approximated) more readily.
 
 The consistency assumption, also known as the
 no-multiple-versions-of-treatment or stable unit treatment value

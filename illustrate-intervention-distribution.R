@@ -161,7 +161,7 @@ mytheme <- theme_bw() +
 				axis.ticks = element_line(linewidth = 1 / .pt),
 				legend.key.size = unit(8, 'pt'),
 				legend.spacing.x = unit(2, 'pt'),
-				legend.spacing.y = unit(2, 'pt'),
+				legend.spacing.y = unit(2.5, 'pt'),
 				legend.title = element_text(size = 8, colour = 'black'),
 				legend.text  = element_text(size = 8, colour = 'black'),
 				axis.text    = element_text(size = 8, colour = 'black'),
@@ -251,7 +251,6 @@ for (i in 1:3) {
 				legend.margin = margin(t = 0, r = 0, b = 2.5, l = 0),
 				legend.box.margin = margin(t = 0, r = 2, b = 0, l = 2),
 				plot.margin = margin(t = 15, l = 12, 6, 6)
-				# legend.background = element_rect(color = 'black')
 			),
 		labels = paste0(letters[i], ")"), label_fontface = "plain", label_size = 10,
 		hjust = -0.25, vjust = 1.5
