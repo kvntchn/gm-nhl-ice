@@ -1,5 +1,4 @@
 # Get data for cancer incidence ####
-# Kevin Chen
 # November 3, 2020
 
 library(here)

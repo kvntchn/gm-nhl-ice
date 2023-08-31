@@ -1,5 +1,4 @@
 # Figures for illustrating intervention ####
-# Kevin Chen
 # May 25, 2023
 
 library(here)

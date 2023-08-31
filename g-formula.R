@@ -1,5 +1,4 @@
 # Parametric g-formula ####
-# Kevin Chen
 # November 3, 2020
 
 library(here)

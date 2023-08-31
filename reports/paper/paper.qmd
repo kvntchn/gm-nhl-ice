@@ -34,8 +34,7 @@ library(ggplot2); library(magrittr)
 **Manuscript title:** Hypothetical interventions on workplace exposure
 with guaranteed positivity
 
-**Authors:** Kevin T. Chen\^a, b\^, Sally Picciotto^c^, Ellen A.
-Eisen^c^
+**Authors:** Kevin T. Chen^a,b^, Sally Picciotto^c^, Ellen A. Eisen^c^
 
 ^a^ University of California, Berkeley School of Public Health, Division
 of Epidemiology & Biostatistics
@@ -53,14 +52,12 @@ Berkeley, CA 94720-7360\
 kevchen\@berkeley.edu\
 (510) 816-3408
 
-**Running head suggestion:** Hypothetical interventions with guaranteed positivity
-
 **Conflicts of interests:** Authors declare no conflicts of interest.
 
 **Sources of financial support:** This work was supported by Training
-Grant T42OH008429 and Research Project Grant R01OH011092, both from
-the National Institute for Occupational Safety and Health (NIOSH) /
-Centers for Disease Control and Prevention (CDC).
+Grant T42OH008429 and Research Project Grant R01OH011092, both from the
+National Institute for Occupational Safety and Health (NIOSH) / Centers
+for Disease Control and Prevention (CDC).
 
 **Data and computing code:** Code for reproducing analyses and reports
 are available on [Github](https://github.com/kvntchn/gm-nhl-ice). Data
@@ -70,44 +67,35 @@ are available upon reasonable request.
 metalworking fluid, occupational exposure, non-Hodgkin lymphoma, cancer,
 iterated conditional expectation, healthy-worker effect
 
-**Word count** **(Limit: 1500 to 4000 words):** 3842 (approx)
+**Word count** **(Limit: 4000 words):** 3842
 
 \newpage
 
 # Abstract
 
-(Limit: 250 words)
+(Limit: 200 words)
 
-**Background:** Non-Hodgkin lymphoma (NHL) incidence has increased
-substantially in the US and was recently linked to workplace exposure to
-soluble metalworking fluids (MWF) in a standard survival analysis of the
-United Auto Workers-General Motors (UAW-GM) cohort. Here, we estimate
-the effects of hypothetical interventions on soluble MWF exposure in
-relation to NHL risk in the same cohort of autoworkers. Estimation of
-causal effects requires positivity, which we guarantee by investigating
-causal contrasts that are supportable by the data.
-
-**Methods:** We defined hypothetical supportable interventions that
-reduce annual daily average exposures above a specific target limit to
-that limit when supported by data. When the target limit is not
-supported, the intervention reduces exposure to the nearest supported
-level of exposure. We estimated counterfactual risk of NHL between 1985
-and 2015 in the UAW-GM cohort of autoworkers at three Michigan plants (n
-= 33,134) under hypothetical supportable interventions on exposure to
-soluble MWF.
-
-**Results:** 339 NHL cases occurred over the 30-year follow-up period.
-Stronger target limits on soluble MWF exposure resulted in monotonic
-reductions in NHL risk. Setting the target exposure limit at 0.5
-mg/m^3^, the NIOSH recommended exposure limit, would have prevented 124
-(95% CI: 66, 202) cases.
-
-**Conclusion:** More stringent limits on exposure to soluble MWF provide
-stronger protections against NHL. We expect that uniformly enforcing the
-target exposure limits, regardless of data support, would have even
-stronger protective effects. Strengthening exposure limits for MWF may
-protect workers from NHL during the anticipated boom in domestic
-manufacturing.
+Non-Hodgkin lymphoma (NHL) incidence was recently linked to exposure to
+metalworking fluid (MWF) in a standard survival analysis of the United
+Auto Workers-General Motors cohort. To provide results more directly
+relevant to guiding exposure limits, we estimated the counterfactual
+risks of NHL under hypothetical supportable interventions on exposure to
+MWF in the same cohort (n = 33,134) for 1985-2015 using the
+hazard-extended iterative conditional expectation g-formula. We
+addressed potential bias due to the healthy worker survivor effect while
+investigating stochastic dynamic interventions that avoid extrapolation
+beyond observed conditional exposure distributions, thus guaranteeing
+positivity by design. These interventions reduced exposures above
+specified target limits to the nearest supported level of exposure but
+allowed exposures below the limit to vary naturally. 339 NHL cases
+occurred over the 30-year follow-up period. Stronger target limits on
+MWF exposure resulted in monotonic reductions in NHL risk. Setting the
+target exposure limit at 0.5 mg/m^3^, the NIOSH recommended exposure
+limit, would have prevented 124 (95% CI: 66, 202) cases. We expect that
+uniformly enforcing the target exposure limits, regardless of data
+support, would have yielded even stronger protective effects.
+Strengthening protections against exposure to MWF may protect workers
+from NHL during the anticipated boom in domestic manufacturing.
 
 \newpage
 

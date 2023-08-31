@@ -1,5 +1,4 @@
 # Shaping data for parametric g-formula and the sdr lmtp ####
-# Kevin Chen
 # November 3, 2020
 
 library(here)
