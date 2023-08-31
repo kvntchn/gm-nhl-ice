@@ -29,48 +29,6 @@ library(data.table)
 library(ggplot2); library(magrittr)
 ```
 
-**Type of manuscript:** Original Research Article
-
-**Manuscript title:** Hypothetical interventions on workplace exposure
-with guaranteed positivity
-
-**Authors:** Kevin T. Chen^a,b^, Sally Picciotto^c^, Ellen A. Eisen^c^
-
-^a^ University of California, Berkeley School of Public Health, Division
-of Epidemiology & Biostatistics
-
-^b^ University of California, Berkeley Department of Statistics
-
-^c^ University of California, Berkeley School of Public Health, Division
-of Environmental Health Sciences
-
-**Corresponding author:**\
-Kevin T. Chen\
-2121 Berkeley Way\
-Room 5302, Desk 5305-1\
-Berkeley, CA 94720-7360\
-kevchen\@berkeley.edu\
-(510) 816-3408
-
-**Conflicts of interests:** Authors declare no conflicts of interest.
-
-**Sources of financial support:** This work was supported by Training
-Grant T42OH008429 and Research Project Grant R01OH011092, both from the
-National Institute for Occupational Safety and Health (NIOSH) / Centers
-for Disease Control and Prevention (CDC).
-
-**Data and computing code:** Code for reproducing analyses and reports
-are available on [Github](https://github.com/kvntchn/gm-nhl-ice). Data
-are available upon reasonable request.
-
-**Keywords:** Positivity, overlap, causal inference, g-formula,
-metalworking fluid, occupational exposure, non-Hodgkin lymphoma, cancer,
-iterated conditional expectation, healthy-worker effect
-
-**Word count** **(Limit: 4000 words):** 3842
-
-\newpage
-
 # Abstract
 
 (Limit: 200 words)
