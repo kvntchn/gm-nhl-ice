@@ -55,7 +55,7 @@ dat[,`:=`(
 	off = shift(off, exposure.lag, 0),
 	cum_off = shift(cum_off, exposure.lag, 0)
 )]
-# dat <- dat[yin <= as.Date("1983-01-01") & year >= 1985 & year <= 1994 + exposure.lag]
+dat <- dat[yin >= as.Date("1985-01-01") - exposure.lag * 365.25]
 # Get data analytic ####
 get.coxph(
 	cohort_name = "dat",
@@ -69,13 +69,17 @@ dat <- copy(nhl.dat)
 cancer <- box_read('512727972584')
 setDT(cancer)
 
-nhl_morphology <- merge(dat[status == 1, .(studyno, yoi)],
-												unique(cancer[morph %in% c(
-													9590:9597, 9670:9671, 9673, 9675, 9678:9680, 9684, 9687:9691, 9695, 9698:9702, 9705, 9708:9709, 9712, 9714:9719, 9724:9729, 9735, 9737:9738, 9811:9818, 9823, 9827, 9837,
-													9590:9597, 9670:9671, 9673, 9675, 9678:9680, 9684, 9687, 9688, 9689:9691, 9695, 9698:9702, 9705, 9708:9709, 9712, 9714:9719, 9724:9729, 9735, 9737, 9738,
-													9811:9818, 9823, 9827, 9837
-												),.(studyno, yoi = ddiag, morph)]),
-												by = c("studyno", "yoi"))
+nhl_morphology <- merge(
+	dat[status == 1, .(studyno, yoi)],
+	unique(cancer[morph %in% c(
+		9590:9597, 9670:9671, 9673, 9675, 9678:9680, 9684, 9687:9691,
+		9695, 9698:9702, 9705, 9708:9709, 9712, 9714:9719, 9724:9729,
+		9735, 9737:9738, 9811:9818, 9823, 9827, 9837, 9590:9597,
+		9670:9671, 9673, 9675, 9678:9680, 9684, 9687, 9688, 9689:9691,
+		9695, 9698:9702, 9705, 9708:9709, 9712, 9714:9719, 9724:9729,
+		9735, 9737, 9738, 9811:9818, 9823, 9827, 9837
+	),.(studyno, yoi = ddiag, morph)]),
+	by = c("studyno", "yoi"))
 
 dat <- merge(
 	dat, nhl_morphology[,.(studyno, morph = as.integer(morph))],
@@ -110,9 +114,12 @@ dat[I == N & status == 0 & year == floor(yod.gm),
 dat[is.na(`Other event`),
 		`Other event` := 0]
 # Lag employment status and duration of employment ####
-dat[, `Employment status` := ifelse(year > floor(jobloss.date.gm) + exposure.lag, "Left work", "At work")]
-dat[, employment.years := apply(data.frame(jobloss.date.gm, year + 1), 1, min) - yin.gm, studyno]
-dat[, employment.years := shift(employment.years, exposure.lag, 0), studyno]
+dat[, `Employment status` := ifelse(
+	year > floor(jobloss.date.gm) + exposure.lag, "Left work", "At work")]
+dat[, employment.years := apply(
+	data.frame(jobloss.date.gm, year + 1), 1, min) - yin.gm, studyno]
+dat[, employment.years := shift(
+	employment.years, exposure.lag, 0), studyno]
 
 covariates_to_lag <- c(
 	"Employment status", "employment.years"
@@ -177,7 +184,7 @@ dat <- box_read(737540256124)
 
 # # Population characteristics ####
 # get.tab1 <- function(
-# 		df = dat[year >= 1985 & year <= 1994 + exposure.lag],
+		# 		df = dat[year >= 1985 & year <= 1994 + exposure.lag],
 # 		table.engine = "pander",
 # 		use_finrace = T,
 # 		incidence = F,
@@ -480,19 +487,19 @@ dat[immortal == 0 & year >= 1985, I := 1:.N, studyno]
 
 mwf.breaks[,cum_soluble := cum_soluble5]
 
-soluble.cutpoints <- quantile(dat[status == 1 & soluble > 0, soluble], seq(0, 1, length.out = 5))
+soluble.cutpoints <- quantile(dat[status == 1 & soluble > 0, soluble], seq(0, 1, length.out = 10))
 soluble.cutpoints[c(length(soluble.cutpoints))] <- max(dat$soluble, na.rm = T)
 soluble.cutpoints <- unique(c(-Inf, 0, soluble.cutpoints))
 
-cum_soluble.cutpoints <- quantile(dat[status == 1 & cum_soluble > 0.05, cum_soluble], seq(0, 1, length.out = 5))
+cum_soluble.cutpoints <- quantile(dat[status == 1 & cum_soluble > 0.05, cum_soluble], seq(0, 1, length.out = 10))
 cum_soluble.cutpoints[c(length(cum_soluble.cutpoints))] <- max(dat$cum_soluble, na.rm = T)
 cum_soluble.cutpoints <- unique(c(-Inf, 0.05, cum_soluble.cutpoints))
 
-cum_straight.cutpoints <- quantile(dat[status == 1 & cum_straight > 0, cum_straight], seq(0, 1, length.out = 4))
+cum_straight.cutpoints <- quantile(dat[status == 1 & cum_straight > 0, cum_straight], seq(0, 1, length.out = 10))
 cum_straight.cutpoints[c(length(cum_straight.cutpoints))] <- max(dat$cum_straight, na.rm = T)
 cum_straight.cutpoints <- unique(c(-Inf, 0, cum_straight.cutpoints))
 
-cum_synthetic.cutpoints <- quantile(dat[status == 1 & cum_synthetic > 0, cum_synthetic], seq(0, 1, length.out = 4))
+cum_synthetic.cutpoints <- quantile(dat[status == 1 & cum_synthetic > 0, cum_synthetic], seq(0, 1, length.out = 10))
 cum_synthetic.cutpoints[c(length(cum_synthetic.cutpoints))] <- max(dat$cum_synthetic, na.rm = T)
 cum_synthetic.cutpoints <- unique(c(-Inf, 0, cum_synthetic.cutpoints))
 
@@ -576,8 +583,7 @@ box_write(dat,
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 dat[status == 1 & year <= 1994 + exposure.lag, I] %>% table
 
-times <- quantile(dat[status == 1, I], na.rm = T, seq(0, 1, 1/10))
-times[c(1, length(times))] <- c(0, max(times) + 1)
+times <- seq(0, max(dat[status == 1, I], na.rm = T) + 1, by = 4)
 
 data.frame(
 	time = times[-1],
@@ -585,7 +591,7 @@ data.frame(
 		dat[year <= 1994 + exposure.lag, sum(
 			status[I <= times[i] & I > times[i - 1]],
 			na.rm = T)]})
-	)
+)
 
 reduce.data <- function(
 		df = data.table::copy(dat),
@@ -613,7 +619,7 @@ reduce.data <- function(
 		return(d[I == I.which])
 	}))
 	setorder(df, studyno, year)
-		df[immortal == 0, I := 1:.N, by = .(studyno)]
+	df[immortal == 0, I := 1:.N, by = .(studyno)]
 	return(df)
 }
 

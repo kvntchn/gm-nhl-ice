@@ -60,17 +60,22 @@ from NHL during the anticipated boom in domestic manufacturing.
 # Introduction
 
 Non-Hodgkin Lymphoma (NHL) incidence in the United States doubled
-between 1973 and 1994 before plateauing at around 19 per 100,000 persons
-per year, making it the seventh most common cancer in the country
-[@seer_1994; @Ekstrom-Smedby_2006]. The strongest known risk factor of
-NHL is immunosuppression, both congenital and acquired
-[@Filipovich_1992; @Chiu_2015]. However, since immunodeficiency and
-infection with HIV are rare, they cannot fully explain the historic rise
-or present burden of NHL [@Shiels_2013]. The rise in NHL incidence
-coincided with a period of rapid and extensive chemicalization in
-industry, agriculture and warfare; environmental and occupational
-exposures may play an important explanatory role in the epidemiology of
-NHL [@Nelson_2005; @Romero_2021].
+between 1973 and 1994 before plateauing at around 19 per 100,000
+persons per year, making it the seventh most common cancer in the
+country [@seer_1994; @Ekstrom-Smedby_2006]. The strongest known risk
+factors of NHL are autoimmune disease and immunosuppression
+[@Filipovich_1992; @Chiu_2015]. The relationship between autoimmune
+diseases NHL is specific in that each disease is associated with a
+particular subtype of NHL [@Thandra_2021]. Immunosuppression and
+infection with HIV are strongly associated with Burkitt lymphoma
+[@Thandra_2021]. These risk factors cannot fully explain the historic
+rise or present burden of NHL, however [@Shiels_2013]. Since the
+rise in NHL incidence coincided with a period of rapid and extensive
+chemicalization in industry, agriculture and warfare; environmental
+and occupational exposures may play an important explanatory role in
+the epidemiology of NHL [@Nelson_2005; @Romero_2021]. Existing
+epidemiologic studies suggest that occupational exposures may increase
+the risk of NHL without subtype specificity [@Thandra_2021].
 
 Pesticide exposure among workers in agricultural settings was a common
 target of NHL research in recent decades. A meta-analysis of 44 articles
@@ -116,16 +121,19 @@ from observational data is positivity (overlap), *i.e.,* adequate
 variation in the exposure of interest within strata formed by confounder
 and exposure histories [@Petersen_2012].
 
-Common approaches for addressing violations in positivity are
-model-based smoothing when using outcome regression methods, weight
-truncation when using propensity methods, or a combination of both.
-Another approach is to only consider causal contrasts that are supported
-by the observed data, *i.e.,* those involving hypothetical interventions
-with propensity score strictly greater than zero. Here, we defined
-hypothetical supportable interventions on exposure to soluble MWF in the
-United Auto Workers-General Motors (UAW-GM) occupational cohort and
-estimated their effects on NHL incidence between 1985 and 2015 relative
-to no exposure intervention while guaranteeing positivity.
+When positivity is not satisfied, causal inference methods that rely
+only on models for the counterfactual outcome, and not the treatment
+mechanism, may still yield valid causal estimates, if the models are
+correctly specified. We evaluated how hypothetical interventions on
+exposure to soluble MWF would affect the incidence of NHL between 1985
+and 2015 in the United Auto Workers-General Motors (UAW-GM)
+occupational cohort using the iterative conditional expectation (ICE)
+parametric g-formula, which relies on models for the outcome only. To
+further address potential violations in positivity, we defined and
+evaluated hypothetical interventions resulting in post-intervention
+exposure histories whose propensity score is strictly greater than 
+zero _i.e._, exposure histories that can be found in the observed
+data. We call these hypothetical interventions "supportable".
 
 <!-- The parametric g-formula has become increasingly popular among epidemiologists in the last decade, and there are several exemplary tutorial papers and illustrative examples [@Taubman_2009;@Breskin_2020]. This analytic approach is attractive in part because it allows investigators to estimate the population-level effect of realistic interventions on exposures that may depend on individuals' covariate history as well as their natural value of exposure. In addition to yielding estimates with a population-level interpretation, the parametric g-formula is also capable of adjusting for time-varying confounding possibly affected by past exposure in longitudinal settings, which is not possible with standard regression methods. In their seminal 2009 paper, Taubman et alia describe the parametric g-formula and illustrate its application in the estimation of the counterfactual risks under several interventions in the Nurses' Health Study [@Taubman_2009]. They introduced a non-iterative conditional expectation parametric g-formula that requires parametric specification of the full joint distribution of confounders, exposures, and outcomes over time. -->
 
@@ -138,8 +146,7 @@ to no exposure intervention while guaranteeing positivity.
 We estimated the cumulative incidence of NHL between 1985 and 2015 under
 supportable interventions based on selected target exposure limits on
 annual average daily exposure to soluble MWF by applying the
-hazard-extended iterative conditional expectation (ICE) parametric
-g-formula [@Wen_2020]. First, we estimated the expected number of NHL
+hazard-extended ICE parametric  we estimated the expected number of NHL
 cases that we would observe if there were no censoring and no limit on
 exposure. Then, we contrasted this case count to that under supportable
 interventions based on five hypothetical target exposure limits and no
