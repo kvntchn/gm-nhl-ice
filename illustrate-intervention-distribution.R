@@ -1,6 +1,7 @@
 # Figures for illustrating intervention ####
 # May 25, 2023
 
+library(data.table)
 library(here)
 library(boxr); box_auth()
 
@@ -26,7 +27,8 @@ options(
 # dat <- box_read(1179471733155)
 # dat <- dat[yin.gm >= 1965]
 dat.reduced <- box_read(928445783979)
-N <- length(unique(dat.reduced[!is.na(I)]$studyno))
+setDT(dat.reduced)
+N <- length(unique(dat.reduced[!is.na(I), studyno]))
 message(sum(dat.reduced[!is.na(I)]$status))
 source(here("g-formula.R"))
 dat.reduced[,.(year1 = min(year), year2 = max(year)), I]
@@ -169,46 +171,46 @@ mytheme <- theme_bw() +
 				plot.margin = margin(t = 6, b = 6, l = 6, r = 6)
 	)
 
-tikz('reports/SER (2023)/resources/intervention-density.tex',
-		 width = 3.75, height = 2.7,
-		 documentDeclaration = "\\documentclass{beamer}",
-		 bareBones = T, standAlone = F)
-melt(soluble_distribution[Observed > 0, -'studyno'],
-		 measure.vars = names(soluble_distribution[,-'studyno'])) -> ggdat
-ggdat[grep("Post", variable), variable := "Post-intervention\\ \\ \\ \\ "]
-ggdat[,variable := factor(variable, levels = rev(unique(variable)))]
-print(
-	ggplot(ggdat,
-				 aes(x = value, col = variable, fill = variable,
-				 		alpha = variable, linewidth = variable)) +
-		# geom_density(fill = NA, bw = 0.1, linewidth = 8 / .pt) +
-		geom_histogram(position = 'identity',
-									 aes(y = after_stat(density)),
-									 breaks = exp(seq(log(1e-3), log(10), 0.5))
-		) +
-		geom_vline(aes(lty = '0.25 mg/m\\textsuperscript{3}', xintercept = a),
-							 linewidth = 4 / .pt) +
-		scale_linetype_manual(values = 2) +
-		labs(x = "Exposure to soluble MWF (mg/m\\textsuperscript{3})",
-				 y = "Density",
-				 col = "Distribution:\\ \\ \\ ",
-				 fill = "Distribution:\\ \\ \\ ",
-				 alpha = "Distribution:\\ \\ \\ ",
-				 linewidth = "Distribution:\\ \\ \\ ",
-				 lty = "Target exposure limit:") +
-		scale_color_manual(values = c("#A3CFEB", "#ba8123")) +
-		scale_fill_manual(values = c("#A3CFEB", "#ffffff")) +
-		scale_alpha_manual(values = 1:0) +
-		scale_linewidth_manual(values = c(0, 8 / .pt)) +
-		scale_x_continuous(trans = 'log',
-											 breaks = c(1e-3, 0.05, 1, 10),
-											 labels = c(1e-3, 0.05, 1, 10)) +
-		guides(linewidth = guide_legend(override.aes = list(
-			linewidth = 4))) +
-		mytheme
-)
-dev.off()
-# lualatex(directory = 'reports/private/SER (2023)/resources')
+# tikz('reports/SER (2023)/resources/intervention-density.tex',
+# 		 width = 3.75, height = 2.7,
+# 		 documentDeclaration = "\\documentclass{beamer}",
+# 		 bareBones = T, standAlone = F)
+# melt(soluble_distribution[Observed > 0, -'studyno'],
+# 		 measure.vars = names(soluble_distribution[,-'studyno'])) -> ggdat
+# ggdat[grep("Post", variable), variable := "Post-intervention\\ \\ \\ \\ "]
+# ggdat[,variable := factor(variable, levels = rev(unique(variable)))]
+# print(
+# 	ggplot(ggdat,
+# 				 aes(x = value, col = variable, fill = variable,
+# 				 		alpha = variable, linewidth = variable)) +
+# 		# geom_density(fill = NA, bw = 0.1, linewidth = 8 / .pt) +
+# 		geom_histogram(position = 'identity',
+# 									 aes(y = after_stat(density)),
+# 									 breaks = exp(seq(log(1e-3), log(10), 0.5))
+# 		) +
+# 		geom_vline(aes(lty = '0.25 mg/m\\textsuperscript{3}', xintercept = a),
+# 							 linewidth = 4 / .pt) +
+# 		scale_linetype_manual(values = 2) +
+# 		labs(x = "Exposure to soluble MWF (mg/m\\textsuperscript{3})",
+# 				 y = "Density",
+# 				 col = "Distribution:\\ \\ \\ ",
+# 				 fill = "Distribution:\\ \\ \\ ",
+# 				 alpha = "Distribution:\\ \\ \\ ",
+# 				 linewidth = "Distribution:\\ \\ \\ ",
+# 				 lty = "Target exposure limit:") +
+# 		scale_color_manual(values = c("#A3CFEB", "#ba8123")) +
+# 		scale_fill_manual(values = c("#A3CFEB", "#ffffff")) +
+# 		scale_alpha_manual(values = 1:0) +
+# 		scale_linewidth_manual(values = c(0, 8 / .pt)) +
+# 		scale_x_continuous(trans = 'log',
+# 											 breaks = c(1e-3, 0.05, 1, 10),
+# 											 labels = c(1e-3, 0.05, 1, 10)) +
+# 		guides(linewidth = guide_legend(override.aes = list(
+# 			linewidth = 4))) +
+# 		mytheme
+# )
+# dev.off()
+# # lualatex(directory = 'reports/private/SER (2023)/resources')
 
 for (i in 1:3) {
 	fig.name <- paste0('reports/paper/resources/intervention-density-witnin-combos-',
@@ -251,7 +253,7 @@ for (i in 1:3) {
 				legend.box.margin = margin(t = 0, r = 2, b = 0, l = 2),
 				plot.margin = margin(t = 15, l = 12, 6, 6)
 			),
-		labels = paste0(letters[i], ")"), label_fontface = "plain", label_size = 10,
+		# labels = paste0(letters[i], ")"), label_fontface = "plain", label_size = 10,
 		hjust = -0.25, vjust = 1.5
 	))
 	dev.off()
