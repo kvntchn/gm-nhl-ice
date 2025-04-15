@@ -140,9 +140,9 @@ soluble_combos <- dta.wide[, c('studyno', dynamic.which), with = F][
 ]
 
 soluble_combo_distributions <- rbindlist(list(
-	soluble_combos[soluble_combos[,.N, dynamic.which][order(N, decreasing = T)][1,], on = dynamic.which],
-	soluble_combos[soluble_combos[,.N, dynamic.which][order(N, decreasing = T)][8,], on = dynamic.which],
-	soluble_combos[soluble_combos[,.N, dynamic.which][order(N, decreasing = T)][46,], on = dynamic.which]
+	soluble_combos[soluble_combos[,.N, dynamic.which][order(N, decreasing = T)][1,], on = eval(dynamic.which)],
+	soluble_combos[soluble_combos[,.N, dynamic.which][order(N, decreasing = T)][8,], on = eval(dynamic.which)],
+	soluble_combos[soluble_combos[,.N, dynamic.which][order(N, decreasing = T)][45,], on = eval(dynamic.which)]
 ), idcol = T)
 
 soluble_combo_distributions[,.id := factor(.id, labels = c(
